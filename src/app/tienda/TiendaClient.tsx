@@ -3,8 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import './tienda.css';
+import { CartProvider, useCart } from '@/lib/cart-context';
+import { books } from '@/lib/books';
+import CartDrawer from '@/components/tienda/CartDrawer';
+import { formatCOP } from '@/lib/format';
 
-type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Gratuitos' | 'Tarjeta de regalo';
+type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Gratuitos' | 'Tarjeta de regalo' | 'Libros';
 
 interface Product {
   title: string;
@@ -35,7 +39,7 @@ const products: Product[] = [
   { title: 'Gift Card', price: 'USD $25–USD $200', category: 'Tarjeta de regalo', img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Tarjeta-de-regalo-TMC-PRODUCT-600x600.jpg' },
 ];
 
-const categories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Gratuitos', 'Tarjeta de regalo'];
+const categories: Category[] = ['Todos', 'Libros', 'Sueño infantil', 'Alimentación', 'Gratuitos', 'Tarjeta de regalo'];
 
 const WHATSAPP_NUMBER = '573102158656';
 
@@ -44,12 +48,46 @@ function whatsappHref(title: string, price: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 }
 
-export default function TiendaClient() {
+function BookCard({ book }: { book: (typeof books)[number] }) {
+  const { addBook, items } = useCart();
+  const inCart = items.some((item) => item.id === book.id);
+
+  return (
+    <div className="tienda-card">
+      <div className="tienda-card-image">
+        {book.img ? (
+          <img src={book.img} alt={book.title} loading="lazy" />
+        ) : (
+          <div className="libro-cover-placeholder">
+            <span>{book.title}</span>
+          </div>
+        )}
+      </div>
+      <h3 className="tienda-card-title font-inter">{book.title}</h3>
+      <p className="tienda-card-price font-inter">{formatCOP(book.price)}</p>
+      <button
+        type="button"
+        className="tienda-card-btn font-inter"
+        onClick={() => addBook(book)}
+      >
+        {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+      </button>
+    </div>
+  );
+}
+
+function TiendaContent() {
   const [activeCategory, setActiveCategory] = useState<Category>('Todos');
 
   const visibleProducts = activeCategory === 'Todos'
     ? products
-    : products.filter((p) => p.category === activeCategory);
+    : activeCategory === 'Libros'
+      ? []
+      : products.filter((p) => p.category === activeCategory);
+
+  const visibleBooks = activeCategory === 'Todos' || activeCategory === 'Libros' ? books : [];
+
+  const totalCount = products.length + books.length;
 
   return (
     <div className="tienda-main">
@@ -58,7 +96,7 @@ export default function TiendaClient() {
 
         <h1 className="tienda-title font-forum">Tienda</h1>
         <p className="tienda-subtitle font-inter">
-          Guías, recetarios, programas y asesorías para acompañarte en cada etapa. Mostrando los {products.length} productos.
+          Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa. Mostrando los {totalCount} productos.
         </p>
 
         <div className="tienda-categories">
@@ -74,6 +112,9 @@ export default function TiendaClient() {
         </div>
 
         <div className="tienda-grid">
+          {visibleBooks.map((book) => (
+            <BookCard key={book.id} book={book} />
+          ))}
           {visibleProducts.map((product, idx) => (
             <div className="tienda-card" key={idx}>
               <div className="tienda-card-image">
@@ -93,6 +134,16 @@ export default function TiendaClient() {
           ))}
         </div>
       </div>
+
+      <CartDrawer />
     </div>
+  );
+}
+
+export default function TiendaClient() {
+  return (
+    <CartProvider>
+      <TiendaContent />
+    </CartProvider>
   );
 }
