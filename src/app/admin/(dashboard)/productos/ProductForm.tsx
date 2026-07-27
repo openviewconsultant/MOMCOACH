@@ -104,6 +104,18 @@ export default function ProductForm({ product }: { product?: Product }) {
         />
       </label>
 
+      {productType === 'service' && (
+        <label>
+          Link de Cal.com / Calendario de reserva (ej: open-view-consultant-7ng550/alimentacion)
+          <input
+            type="text"
+            name="cal_link"
+            placeholder="open-view-consultant-7ng550/alimentacion"
+            defaultValue={product?.cal_link ?? ''}
+          />
+        </label>
+      )}
+
       <div className="admin-form-row">
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <span>Tipo de precio</span>

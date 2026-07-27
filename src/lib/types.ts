@@ -10,6 +10,7 @@ export interface Product {
   features?: string[] | null;
   is_popular?: boolean;
   whatsapp_text?: string | null;
+  cal_link?: string | null;
   cover_image_url: string | null;
   file_path: string | null;
   is_published: boolean;

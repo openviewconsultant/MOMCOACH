@@ -43,6 +43,7 @@ export async function saveProductAction(
     : [];
   const isPopular = formData.get('is_popular') === 'on';
   const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
+  const calLink = (formData.get('cal_link') as string | null)?.trim() || null;
 
   if (!title) {
     return { error: 'El título es obligatorio' };
@@ -63,6 +64,7 @@ export async function saveProductAction(
     features,
     is_popular: isPopular,
     whatsapp_text: whatsappText,
+    cal_link: calLink,
     is_published: isPublished,
     cover_image_url: coverImageUrl,
     file_path: filePath,

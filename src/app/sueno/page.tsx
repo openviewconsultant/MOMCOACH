@@ -93,6 +93,7 @@ export default async function SuenoPage() {
     desc: p.description,
     features: Array.isArray(p.features) ? p.features : [],
     whatsappText: p.whatsapp_text || `Hola! Quiero información sobre ${p.title}`,
+    calLink: p.cal_link || 'open-view-consultant-7ng550/30min',
     popular: Boolean(p.is_popular),
   })) : fallbackServices;
 
@@ -175,6 +176,7 @@ export default async function SuenoPage() {
                 whatsappText={service.whatsappText}
                 popular={service.popular}
                 buttonText="Reservar Asesoría"
+                calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
               />
             </div>
           ))}

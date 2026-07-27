@@ -79,6 +79,7 @@ export default async function AlimentacionPage() {
     desc: p.description,
     features: Array.isArray(p.features) ? p.features : [],
     whatsappText: p.whatsapp_text || `Hola! Quiero información sobre ${p.title}`,
+    calLink: p.cal_link || 'open-view-consultant-7ng550/alimentacion',
     popular: Boolean(p.is_popular),
   })) : fallbackServices;
 
@@ -161,7 +162,7 @@ export default async function AlimentacionPage() {
                 whatsappText={service.whatsappText}
                 popular={service.popular}
                 buttonText="Solicitar Asesoría"
-                calLink="open-view-consultant-7ng550/alimentacion"
+                calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
               />
             </div>
           ))}
