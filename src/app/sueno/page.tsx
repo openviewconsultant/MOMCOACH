@@ -123,7 +123,7 @@ export default async function SuenoPage() {
         </div>
 
         {/* Services Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginBottom: '80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 500px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
           {sleepServices.map((service) => (
             <div
               key={service.id}

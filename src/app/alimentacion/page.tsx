@@ -109,7 +109,7 @@ export default async function AlimentacionPage() {
         </div>
 
         {/* Services Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginBottom: '80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 500px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
           {foodServices.map((service) => (
             <div
               key={service.id}
