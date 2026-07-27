@@ -9,31 +9,23 @@ interface DownloadModalProps {
 }
 
 export default function DownloadModal({ productId, productTitle, onClose }: DownloadModalProps) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
+    if (!name || !email) return;
     setStatus('loading');
 
+    // Save in localStorage for analytics tracking
+    localStorage.setItem('tmc_visitor_name', name);
+    localStorage.setItem('tmc_visitor_email', email);
+
+    // Track analytics event
+    const vid = localStorage.getItem('tmc_visitor_id') || 'anon';
     try {
-      const res = await fetch('/api/productos/enviar-descarga', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, email }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error al enviar');
-
-      // Save email in localStorage for analytics
-      localStorage.setItem('tmc_visitor_email', email);
-
-      // Track in analytics
-      const vid = localStorage.getItem('tmc_visitor_id') || 'anon';
-      fetch('/api/analytics', {
+      await fetch('/api/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -42,63 +34,69 @@ export default function DownloadModal({ productId, productTitle, onClose }: Down
           event_type: 'product_download',
           page_url: window.location.pathname,
           product_id: productId,
-          metadata: { title: productTitle },
+          metadata: { name, title: productTitle },
         }),
-      }).catch(() => {});
-
-      setStatus('sent');
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Error inesperado');
-      setStatus('error');
+      });
+    } catch {
+      // Proceed even if tracking fetch fails
     }
+
+    setStatus('done');
+
+    // Automatically trigger the download redirect
+    window.location.href = `/api/productos/${productId}/descargar`;
   }
 
   return (
     <div className="download-modal-overlay" onClick={onClose}>
       <div className="download-modal-card" onClick={e => e.stopPropagation()}>
-        {status === 'sent' ? (
+        {status === 'done' ? (
           <div className="download-modal-success">
             <div className="download-modal-success-icon">🎉</div>
-            <h3 className="font-forum">¡Listo! Revisa tu correo</h3>
+            <h3 className="font-forum">¡Iniciando tu descarga!</h3>
             <p className="font-inter">
-              Te enviamos el enlace de descarga a <strong>{email}</strong>.<br />
-              Si no lo ves, revisa tu carpeta de spam.
+              Gracias <strong>{name}</strong>. Tu archivo comenzará a descargarse en unos segundos.
             </p>
-            <button className="download-modal-btn-primary font-inter" onClick={onClose}>
+            <button className="download-modal-btn-primary font-inter" onClick={onClose} style={{ marginTop: '16px' }}>
               Cerrar
             </button>
           </div>
         ) : (
           <>
             <button className="download-modal-close" onClick={onClose} aria-label="Cerrar">✕</button>
-            <div className="download-modal-icon">📩</div>
-            <h3 className="download-modal-title font-forum">Casi listo para descargar</h3>
+            <div className="download-modal-icon">🎁</div>
+            <h3 className="download-modal-title font-forum">Descarga gratuita</h3>
             <p className="download-modal-desc font-inter">
-              Ingresa tu correo y te enviamos el enlace de descarga de
+              Ingresa tus datos para descargar gratis
               <br /><strong>{productTitle}</strong>
             </p>
             <form onSubmit={handleSubmit} className="download-modal-form">
               <input
-                type="email"
-                placeholder="tucorreo@ejemplo.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                type="text"
+                placeholder="Nombre completo"
+                value={name}
+                onChange={e => setName(e.target.value)}
                 required
                 className="download-modal-input font-inter"
                 autoFocus
               />
-              {status === 'error' && (
-                <p className="download-modal-error font-inter">{errorMsg}</p>
-              )}
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                className="download-modal-input font-inter"
+              />
               <button
                 type="submit"
                 className="download-modal-btn-primary font-inter"
                 disabled={status === 'loading'}
               >
-                {status === 'loading' ? 'Enviando…' : 'Enviarme el enlace 📩'}
+                {status === 'loading' ? 'Procesando…' : 'Descargar ahora 📥'}
               </button>
               <p className="download-modal-note font-inter">
-                Solo te usaremos para enviarte el archivo y novedades relacionadas.
+                Tus datos están seguros y los usaremos para personalizar tu experiencia.
               </p>
             </form>
           </>

@@ -248,3 +248,123 @@ a:hover {
   margin-bottom: 6px;
 }
 
+/* Download Modal Styles */
+.download-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.download-modal-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  text-align: center;
+}
+
+.download-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.download-modal-close:hover {
+  color: var(--foreground);
+}
+
+.download-modal-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.download-modal-title {
+  font-size: 1.8rem;
+  color: var(--color-blue-gray);
+  margin-bottom: 8px;
+}
+
+.download-modal-desc {
+  font-size: 0.95rem;
+  color: var(--foreground);
+  opacity: 0.85;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.download-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.download-modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.download-modal-input:focus {
+  border-color: var(--color-turquoise);
+}
+
+.download-modal-btn-primary {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-coral);
+  border: none;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 4px;
+}
+
+.download-modal-btn-primary:hover {
+  background: #ba736f;
+}
+
+.download-modal-btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.download-modal-note {
+  font-size: 0.78rem;
+  color: var(--foreground);
+  opacity: 0.55;
+  margin-top: 8px;
+}
+
+.download-modal-success {
+  padding: 12px 0;
+}
+
+.download-modal-success-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+

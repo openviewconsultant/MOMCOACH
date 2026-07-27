@@ -5,6 +5,7 @@ import Link from 'next/link';
 import './tienda.css';
 import { CartProvider, useCart } from '@/lib/cart-context';
 import CartDrawer from '@/components/tienda/CartDrawer';
+import DownloadModal from '@/components/tienda/DownloadModal';
 import { formatCOP } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
@@ -48,7 +49,13 @@ function whatsappHref(title: string, price: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 }
 
-function SupabaseProductCard({ product }: { product: SupabaseProduct }) {
+function SupabaseProductCard({
+  product,
+  onDownloadClick,
+}: {
+  product: SupabaseProduct;
+  onDownloadClick: (p: SupabaseProduct) => void;
+}) {
   const { addBook, items } = useCart();
   const inCart = items.some((item) => item.id === product.id);
   const isFree = product.price === 0;
@@ -67,12 +74,13 @@ function SupabaseProductCard({ product }: { product: SupabaseProduct }) {
       <h3 className="tienda-card-title font-inter">{product.title}</h3>
       <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
       {isFree ? (
-        <a
-          href={`/api/productos/${product.id}/descargar`}
+        <button
+          type="button"
+          onClick={() => onDownloadClick(product)}
           className="tienda-card-btn font-inter"
         >
           Descargar gratis
-        </a>
+        </button>
       ) : (
         <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
           {inCart ? 'Añadir otro' : 'Añadir al carrito'}
@@ -101,6 +109,8 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
     : products.filter((p) => p.category === activeCategory);
 
   const totalCount = staticProducts.length + products.length;
+
+  const [downloadingProduct, setDownloadingProduct] = useState<SupabaseProduct | null>(null);
 
   return (
     <div className="tienda-main">
@@ -135,7 +145,11 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
       <div className="tienda-container">
         <div className="tienda-grid">
           {visibleSupabaseProducts.map((product) => (
-            <SupabaseProductCard key={product.id} product={product} />
+            <SupabaseProductCard
+              key={product.id}
+              product={product}
+              onDownloadClick={(p) => setDownloadingProduct(p)}
+            />
           ))}
           {visibleStaticProducts.map((product, idx) => (
             <div className="tienda-card" key={idx}>
@@ -156,6 +170,14 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
           ))}
         </div>
       </div>
+
+      {downloadingProduct && (
+        <DownloadModal
+          productId={downloadingProduct.id}
+          productTitle={downloadingProduct.title}
+          onClose={() => setDownloadingProduct(null)}
+        />
+      )}
 
       <CartDrawer />
     </div>

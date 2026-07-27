@@ -111,7 +111,7 @@ export default function AlimentacionPage() {
                 </ul>
               </div>
               <Link href={`https://wa.me/573102158656?text=${encodeURIComponent(service.whatsappText)}`} target="_blank">
-                <Button variant={service.popular ? 'primary' : 'outline'} style={{ width: '100%' }}>
+                <Button variant={service.popular ? 'primary' : 'secondary'} style={{ width: '100%' }}>
                   Solicitar Asesoría
                 </Button>
               </Link>
@@ -135,7 +135,7 @@ export default function AlimentacionPage() {
                 <h4 className="font-forum" style={{ fontSize: '1.1rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{p.title}</h4>
                 <p className="font-inter" style={{ fontWeight: 600, color: 'var(--color-turquoise)', marginBottom: '16px' }}>{p.price}</p>
                 <Link href={p.link}>
-                  <Button variant="outline" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ver en la Tienda</Button>
+                  <Button variant="secondary" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ver en la Tienda</Button>
                 </Link>
               </div>
             ))}

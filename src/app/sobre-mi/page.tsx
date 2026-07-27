@@ -35,7 +35,7 @@ export default function SobreMiPage() {
                 <Button variant="primary">Hablar por WhatsApp</Button>
               </Link>
               <Link href="/sueno">
-                <Button variant="outline">Ver planes de sueño</Button>
+                <Button variant="secondary">Ver planes de sueño</Button>
               </Link>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function SobreMiPage() {
         </div>
 
         {/* Certifications Grid */}
-        <div style={{ textCenter: 'center', textAlign: 'center', marginBottom: '64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Acreditaciones
           </span>
@@ -116,7 +116,7 @@ export default function SobreMiPage() {
               <Button variant="secondary">Agendar por WhatsApp</Button>
             </Link>
             <Link href="/tienda">
-              <Button variant="outline" style={{ color: 'white', borderColor: 'white' }}>Ver la Tienda</Button>
+              <Button variant="secondary" style={{ color: 'white', borderColor: 'white' }}>Ver la Tienda</Button>
             </Link>
           </div>
         </div>
