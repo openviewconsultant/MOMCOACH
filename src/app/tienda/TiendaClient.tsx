@@ -110,7 +110,7 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
 
           <h1 className="tienda-title font-forum">Tienda</h1>
           <p className="tienda-subtitle font-inter">
-            Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa. Mostrando los {totalCount} productos.
+            Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa.
           </p>
 
           <div className="tienda-categories">
