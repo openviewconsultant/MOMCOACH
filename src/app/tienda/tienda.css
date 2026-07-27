@@ -4,17 +4,20 @@
 }
 
 .tienda-container {
-  padding: 0 5% 100px;
+  /* padding-top = alto del navbar fijo, para que el encabezado sticky de
+     abajo arranque justo debajo de él y no detrás. */
+  padding: 118px 5% 100px;
 }
 
-/* Encabezado fijo: no debe hacer scroll bajo ningún motivo. Queda anclado
-   justo debajo del navbar; el contenido de la grilla se desplaza por debajo. */
+/* Encabezado "pegajoso": no debe hacer scroll bajo ningún motivo. Con
+   `sticky` reserva su propio espacio (se adapta a cualquier alto, incluso
+   si las categorías envuelven a dos líneas) y luego queda anclado justo
+   debajo del navbar mientras el resto del contenido se desplaza. */
 .tienda-header {
-  position: fixed;
+  position: sticky;
   top: 118px;
-  left: 0;
-  right: 0;
   z-index: 40;
+  margin: 0 -5%;
   background-color: var(--color-cream);
 }
 
@@ -75,8 +78,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 28px;
-  /* Espacio reservado para que el encabezado fijo de arriba no tape productos. */
-  padding-top: 340px;
+  margin-top: 24px;
 }
 
 .tienda-card {
@@ -139,9 +141,27 @@
   opacity: 1;
 }
 
+/* Mismo breakpoint que usa el navbar (sections.css) para achicarse:
+   navbar-wrapper padding 16px + navbar height 60px = 92px. */
+@media (max-width: 768px) {
+  .tienda-container {
+    padding-top: 92px;
+  }
+
+  .tienda-header {
+    top: 92px;
+  }
+}
+
 @media (max-width: 600px) {
   .tienda-container {
-    padding: 0 6% 80px;
+    padding-left: 6%;
+    padding-right: 6%;
+    padding-bottom: 80px;
+  }
+
+  .tienda-header {
+    margin: 0 -6%;
   }
 
   .tienda-header-inner {
@@ -159,6 +179,5 @@
   .tienda-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
-    padding-top: 300px;
   }
 }

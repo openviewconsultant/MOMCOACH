@@ -10,7 +10,7 @@ const navItems = [
   { href: '#about', label: 'Sobre mi' },
   { href: '#sleep', label: 'Sueño' },
   { href: '#food', label: 'Alimentación' },
-  { href: '#shop', label: 'Shop' },
+  { href: '/tienda', label: 'Shop' },
   { href: '#blog', label: 'Blog' },
   { href: '#contact', label: 'Contacto' },
 ];
