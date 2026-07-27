@@ -172,7 +172,6 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
           {visibleStaticProducts.map((product, idx) => {
             const isSuenoService = product.title.includes('Plan de Sueño') || product.title.includes('Llamada de consulta') || product.title.includes('Programa Recién');
             const isFoodService = product.title.includes('Asesoría en alimentación') || product.title.includes('Curso para el Inicio');
-            const targetPage = isSuenoService ? '/sueno' : isFoodService ? '/alimentacion' : null;
 
             return (
               <div className="tienda-card" key={idx}>
