@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Forum, Fraunces, Montserrat } from "next/font/google";
 import SiteChrome from "@/components/layout/SiteChrome";
+import { CookieBanner } from "@/components/analytics/CookieBanner";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import "./globals.css";
 
 const forum = Forum({
@@ -40,7 +42,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://calendly.com" />
       </head>
       <body>
+        <AnalyticsTracker />
         <SiteChrome>{children}</SiteChrome>
+        <CookieBanner />
       </body>
     </html>
   );

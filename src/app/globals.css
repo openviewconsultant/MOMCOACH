@@ -130,3 +130,121 @@ a:hover {
   background-color: var(--color-turquoise);
   transform: translateY(-3px);
 }
+
+/* Cookie Banner Styles */
+.cookie-banner-overlay {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  max-width: 420px;
+  width: calc(100% - 48px);
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cookie-banner-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(113, 176, 180, 0.2);
+}
+
+.cookie-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cookie-banner-header h3 {
+  font-size: 1.25rem;
+  color: var(--color-blue-gray);
+  margin: 0;
+}
+
+.cookie-icon {
+  font-size: 1.5rem;
+}
+
+.cookie-banner-text {
+  font-size: 0.9rem;
+  color: var(--foreground);
+  opacity: 0.85;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.cookie-banner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cookie-banner-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.cookie-banner-input:focus {
+  border-color: var(--color-turquoise);
+}
+
+.cookie-banner-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.cookie-btn-secondary {
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cookie-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.cookie-btn-primary {
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background: var(--color-turquoise);
+  border: none;
+  font-size: 0.85rem;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.cookie-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.cookie-banner-thanks {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.cookie-banner-thanks h3 {
+  font-size: 1.3rem;
+  color: var(--color-turquoise);
+  margin-bottom: 6px;
+}
+
