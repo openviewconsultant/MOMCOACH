@@ -25,6 +25,7 @@ const fallbackServices = [
       'Acceso a videollamada o resolución de dudas',
     ],
     whatsappText: 'Hola! Quiero información sobre el Programa Recién Nacidos',
+    calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
   },
   {
@@ -40,6 +41,7 @@ const fallbackServices = [
       '2 semanas de seguimiento diario vía WhatsApp',
     ],
     whatsappText: 'Hola! Quiero reservar el Plan de Sueño Infantil (4m a 6 años)',
+    calLink: 'open-view-consultant-7ng550/30min',
     popular: true,
   },
   {
@@ -54,6 +56,7 @@ const fallbackServices = [
       'Recomendaciones escritas al finalizar',
     ],
     whatsappText: 'Hola! Quiero agendar una Llamada de consulta de sueño',
+    calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
   },
 ];

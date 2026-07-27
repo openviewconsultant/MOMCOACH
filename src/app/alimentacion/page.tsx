@@ -25,6 +25,7 @@ const fallbackServices = [
       'Acceso a material descargable y recetario',
     ],
     whatsappText: 'Hola! Quiero información del Curso de Alimentación Complementaria',
+    calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: true,
   },
   {
@@ -40,6 +41,7 @@ const fallbackServices = [
       'Plan de acción escrito + seguimiento',
     ],
     whatsappText: 'Hola! Quiero reservar la Asesoría para Picky Eaters',
+    calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
   },
 ];

@@ -15,6 +15,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
+  const [productType, setProductType] = useState<'digital' | 'service'>(product?.product_type ?? 'digital');
 
   async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -63,7 +64,7 @@ export default function ProductForm({ product }: { product?: Product }) {
 
       <label>
         Modalidad
-        <select name="product_type" defaultValue={product?.product_type ?? 'digital'}>
+        <select name="product_type" value={productType} onChange={(e) => setProductType(e.target.value as 'digital' | 'service')}>
           <option value="digital">Producto Digital (Recetario, Guía, PDF)</option>
           <option value="service">Servicio / Asesoría (Programa, Consulta 1 a 1)</option>
         </select>
