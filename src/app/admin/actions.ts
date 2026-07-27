@@ -35,6 +35,15 @@ export async function saveProductAction(
   const coverImageUrl = (formData.get('cover_image_url') as string | null) || null;
   const filePath = (formData.get('file_path') as string | null) || null;
 
+  const productType = (formData.get('product_type') as string | null) || 'digital';
+  const subtitle = (formData.get('subtitle') as string | null)?.trim() || null;
+  const featuresRaw = (formData.get('features') as string | null)?.trim() || '';
+  const features = featuresRaw
+    ? featuresRaw.split('\n').map((line) => line.trim()).filter(Boolean)
+    : [];
+  const isPopular = formData.get('is_popular') === 'on';
+  const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
+
   if (!title) {
     return { error: 'El título es obligatorio' };
   }
@@ -49,6 +58,11 @@ export async function saveProductAction(
     description,
     price,
     category,
+    product_type: productType,
+    subtitle,
+    features,
+    is_popular: isPopular,
+    whatsapp_text: whatsappText,
     is_published: isPublished,
     cover_image_url: coverImageUrl,
     file_path: filePath,
@@ -65,6 +79,8 @@ export async function saveProductAction(
 
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
+  revalidatePath('/alimentacion');
+  revalidatePath('/sueno');
   redirect('/admin/productos');
 }
 

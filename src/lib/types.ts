@@ -5,6 +5,11 @@ export interface Product {
   price: number;
   currency: string;
   category: string;
+  product_type?: 'digital' | 'service';
+  subtitle?: string | null;
+  features?: string[] | null;
+  is_popular?: boolean;
+  whatsapp_text?: string | null;
   cover_image_url: string | null;
   file_path: string | null;
   is_published: boolean;

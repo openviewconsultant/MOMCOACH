@@ -1,14 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { createClient } from '@/lib/supabase/server';
+import type { Product } from '@/lib/types';
 
 export const metadata = {
   title: 'Alimentación Infantil & BLW | The Mom Coach',
   description: 'Asesorías de alimentación complementaria, manejo de picky eaters y recetarios saludables.',
 };
 
-const foodServices = [
+const fallbackServices = [
   {
+    id: 'f-1',
     title: 'Curso Inicio de Alimentación Complementaria',
     price: 'USD $85',
     tag: 'BLW & BLISS & Mixto',
@@ -23,6 +26,7 @@ const foodServices = [
     popular: true,
   },
   {
+    id: 'f-2',
     title: 'Asesoría para Picky Eaters (Comedores Selectivos)',
     price: 'USD $120',
     tag: 'Acompañamiento Personalizado',
@@ -34,18 +38,55 @@ const foodServices = [
       'Plan de acción escrito + seguimiento',
     ],
     whatsappText: 'Hola! Quiero reservar la Asesoría para Picky Eaters',
+    popular: false,
   },
 ];
 
-const foodProducts = [
-  { title: 'Guía: Destete progresivo, guiado por la madre', price: 'USD $32', link: '/tienda' },
-  { title: 'Guía: Todo sobre los Picky Eaters', price: 'USD $32', link: '/tienda' },
-  { title: 'Recetario Booster Calórico', price: 'USD $16', link: '/tienda' },
-  { title: 'Recetario: Postres Saludables', price: 'USD $10', link: '/tienda' },
-  { title: 'Recetario Completo - The Mom Coach', price: 'USD $18', link: '/tienda' },
+const fallbackProducts = [
+  { id: 'fp-1', title: 'Guía: Destete progresivo, guiado por la madre', price: 'USD $32', link: '/tienda' },
+  { id: 'fp-2', title: 'Guía: Todo sobre los Picky Eaters', price: 'USD $32', link: '/tienda' },
+  { id: 'fp-3', title: 'Recetario Booster Calórico', price: 'USD $16', link: '/tienda' },
+  { id: 'fp-4', title: 'Recetario: Postres Saludables', price: 'USD $10', link: '/tienda' },
+  { id: 'fp-5', title: 'Recetario Completo - The Mom Coach', price: 'USD $18', link: '/tienda' },
 ];
 
-export default function AlimentacionPage() {
+export default async function AlimentacionPage() {
+  const supabase = await createClient();
+  const { data: rawProducts } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true)
+    .eq('category', 'Alimentación')
+    .order('created_at', { ascending: false });
+
+  const productsList = (rawProducts ?? []) as Product[];
+
+  const dbServices = productsList.filter(
+    (p) => p.product_type === 'service' || (p.features && p.features.length > 0)
+  );
+
+  const dbProducts = productsList.filter(
+    (p) => p.product_type !== 'service' && (!p.features || p.features.length === 0)
+  );
+
+  const foodServices = dbServices.length > 0 ? dbServices.map((p) => ({
+    id: p.id,
+    title: p.title,
+    price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+    tag: p.subtitle || 'Alimentación',
+    desc: p.description,
+    features: Array.isArray(p.features) ? p.features : [],
+    whatsappText: p.whatsapp_text || `Hola! Quiero información sobre ${p.title}`,
+    popular: Boolean(p.is_popular),
+  })) : fallbackServices;
+
+  const foodProducts = dbProducts.length > 0 ? dbProducts.map((p) => ({
+    id: p.id,
+    title: p.title,
+    price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+    link: '/tienda',
+  })) : fallbackProducts;
+
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
@@ -69,9 +110,9 @@ export default function AlimentacionPage() {
 
         {/* Services Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginBottom: '80px' }}>
-          {foodServices.map((service, idx) => (
+          {foodServices.map((service) => (
             <div
-              key={idx}
+              key={service.id}
               style={{
                 background: 'white',
                 borderRadius: '24px',
@@ -102,13 +143,15 @@ export default function AlimentacionPage() {
                 <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
                   {service.desc}
                 </p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
-                  {service.features.map((feat, fIdx) => (
-                    <li key={fIdx} className="font-inter" style={{ fontSize: '0.88rem', color: 'var(--foreground)', opacity: 0.9, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: 'var(--color-turquoise)', fontWeight: 'bold' }}>✓</span> {feat}
-                    </li>
-                  ))}
-                </ul>
+                {service.features.length > 0 && (
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
+                    {service.features.map((feat, fIdx) => (
+                      <li key={fIdx} className="font-inter" style={{ fontSize: '0.88rem', color: 'var(--foreground)', opacity: 0.9, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ color: 'var(--color-turquoise)', fontWeight: 'bold' }}>✓</span> {feat}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <Link href={`https://wa.me/573102158656?text=${encodeURIComponent(service.whatsappText)}`} target="_blank">
                 <Button variant={service.popular ? 'primary' : 'secondary'} style={{ width: '100%' }}>
@@ -120,27 +163,29 @@ export default function AlimentacionPage() {
         </div>
 
         {/* Recipe books & Guides */}
-        <div style={{ background: 'white', borderRadius: '24px', padding: '48px 36px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>
-              Recetarios y Guías de Alimentación
-            </h2>
-            <p className="font-inter" style={{ fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.8 }}>
-              Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día.
-            </p>
+        {foodProducts.length > 0 && (
+          <div style={{ background: 'white', borderRadius: '24px', padding: '48px 36px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+              <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>
+                Recetarios y Guías de Alimentación
+              </h2>
+              <p className="font-inter" style={{ fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.8 }}>
+                Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día.
+              </p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+              {foodProducts.map((p) => (
+                <div key={p.id} style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center', background: 'var(--color-cream)' }}>
+                  <h4 className="font-forum" style={{ fontSize: '1.1rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{p.title}</h4>
+                  <p className="font-inter" style={{ fontWeight: 600, color: 'var(--color-turquoise)', marginBottom: '16px' }}>{p.price}</p>
+                  <Link href={p.link}>
+                    <Button variant="secondary" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ver en la Tienda</Button>
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-            {foodProducts.map((p, idx) => (
-              <div key={idx} style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center', background: 'var(--color-cream)' }}>
-                <h4 className="font-forum" style={{ fontSize: '1.1rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{p.title}</h4>
-                <p className="font-inter" style={{ fontWeight: 600, color: 'var(--color-turquoise)', marginBottom: '16px' }}>{p.price}</p>
-                <Link href={p.link}>
-                  <Button variant="secondary" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ver en la Tienda</Button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
 
       </div>
     </div>

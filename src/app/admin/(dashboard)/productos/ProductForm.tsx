@@ -62,8 +62,21 @@ export default function ProductForm({ product }: { product?: Product }) {
       <input type="hidden" name="file_path" value={filePath} />
 
       <label>
+        Modalidad
+        <select name="product_type" defaultValue={product?.product_type ?? 'digital'}>
+          <option value="digital">Producto Digital (Recetario, Guía, PDF)</option>
+          <option value="service">Servicio / Asesoría (Programa, Consulta 1 a 1)</option>
+        </select>
+      </label>
+
+      <label>
         Título
         <input type="text" name="title" defaultValue={product?.title} required />
+      </label>
+
+      <label>
+        Subtítulo / Etiqueta corta (ej: "BLW & BLISS & Mixto", "Previene problemas de sueño")
+        <input type="text" name="subtitle" defaultValue={product?.subtitle ?? ''} />
       </label>
 
       <label>
@@ -71,9 +84,29 @@ export default function ProductForm({ product }: { product?: Product }) {
         <textarea name="description" defaultValue={product?.description} />
       </label>
 
+      <label>
+        Beneficios / Incluye (escribe una característica por línea)
+        <textarea
+          name="features"
+          rows={4}
+          placeholder={`Cortes seguros y presentación de alimentos\nPrevención de atragantamiento\nPlanificación de menú`}
+          defaultValue={Array.isArray(product?.features) ? product.features.join('\n') : ''}
+        />
+      </label>
+
+      <label>
+        Mensaje predeterminado de WhatsApp (para botón de "Solicitar Asesoría")
+        <input
+          type="text"
+          name="whatsapp_text"
+          placeholder="Hola! Quiero información sobre este servicio"
+          defaultValue={product?.whatsapp_text ?? ''}
+        />
+      </label>
+
       <div className="admin-form-row">
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <span>Tipo de producto</span>
+          <span>Tipo de precio</span>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'normal' }}>
               <input type="radio" name="priceType" checked={isFree} onChange={() => setIsFree(true)} />
@@ -96,9 +129,9 @@ export default function ProductForm({ product }: { product?: Product }) {
 
         <label style={{ flex: 1 }}>
           Categoría
-          <select name="category" defaultValue={product?.category ?? 'Sueño infantil'} required>
-            <option value="Sueño infantil">Sueño infantil</option>
+          <select name="category" defaultValue={product?.category ?? 'Alimentación'} required>
             <option value="Alimentación">Alimentación</option>
+            <option value="Sueño infantil">Sueño infantil</option>
             <option value="Gratuitos">Gratuitos</option>
             <option value="Tarjeta de regalo">Tarjeta de regalo</option>
             <option value="Libros">Libros</option>
@@ -124,10 +157,17 @@ export default function ProductForm({ product }: { product?: Product }) {
         </div>
       </label>
 
-      <label className="admin-checkbox-row">
-        <input type="checkbox" name="is_published" defaultChecked={product?.is_published ?? false} />
-        Publicado (visible en la tienda)
-      </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '8px 0' }}>
+        <label className="admin-checkbox-row">
+          <input type="checkbox" name="is_popular" defaultChecked={product?.is_popular ?? false} />
+          Destacado / Recomendado (Muestra la etiqueta especial en la tarjeta)
+        </label>
+
+        <label className="admin-checkbox-row">
+          <input type="checkbox" name="is_published" defaultChecked={product?.is_published ?? true} />
+          Publicado (visible en la web)
+        </label>
+      </div>
 
       {(state.error || uploadError) && <p className="admin-error">{state.error || uploadError}</p>}
 
