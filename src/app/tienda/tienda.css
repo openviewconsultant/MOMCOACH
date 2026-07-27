@@ -17,7 +17,6 @@
   position: sticky;
   top: 118px;
   z-index: 40;
-  margin: 0 -5%;
   background-color: var(--color-cream);
 }
 
@@ -161,7 +160,7 @@
   }
 
   .tienda-header {
-    margin: 0 -6%;
+    /* Removed negative margin */
   }
 
   .tienda-header-inner {
