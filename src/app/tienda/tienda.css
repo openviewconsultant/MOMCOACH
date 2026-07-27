@@ -7,18 +7,35 @@
   padding: 0 5% 100px;
 }
 
-.tienda-title-section {
+.tienda-back-section {
   padding: 142px 5% 0; /* 118px (navbar offset) + 24px (original top padding) */
   position: relative;
-  z-index: 50;
+  z-index: 40;
+}
+
+.tienda-header-sticky {
+  position: sticky;
+  top: 0;
+  padding: 118px 5% 0; /* Top padding covers navbar transparent gap */
+  margin-top: -118px; /* Prevent padding from pushing layout down */
+  z-index: 41;
+  background-color: var(--color-cream);
+  height: 178px; /* 118px padding + 60px title content */
+  display: flex;
+  align-items: center;
+}
+
+.tienda-subtitle-section {
+  padding: 0 5%;
+  position: relative;
+  z-index: 40;
 }
 
 .tienda-filters-sticky {
   position: sticky;
-  top: 0;
-  padding: 118px 5% 20px; /* Cubre el espacio transparente detrás del navbar */
-  margin-top: -118px; /* Evita que el padding extra empuje los filtros hacia abajo */
-  z-index: 40;
+  top: 178px;
+  padding: 0 5% 20px;
+  z-index: 42;
   background-color: var(--color-cream);
 }
 
@@ -32,7 +49,7 @@
 .tienda-title {
   font-size: 2.75rem;
   color: var(--color-blue-gray);
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .tienda-subtitle {
@@ -143,13 +160,18 @@
     padding-top: 0;
   }
 
-  .tienda-title-section {
+  .tienda-back-section {
     padding-top: 116px; /* 92px + 24px */
   }
 
-  .tienda-filters-sticky {
+  .tienda-header-sticky {
     padding-top: 92px;
     margin-top: -92px;
+    height: 152px; /* 92 + 60 */
+  }
+
+  .tienda-filters-sticky {
+    top: 152px;
   }
 }
 
@@ -160,8 +182,18 @@
     padding-bottom: 80px;
   }
 
-  .tienda-title-section {
+  .tienda-back-section {
     padding-top: 108px; /* 92px + 16px */
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+
+  .tienda-header-sticky {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+
+  .tienda-subtitle-section {
     padding-left: 6%;
     padding-right: 6%;
   }

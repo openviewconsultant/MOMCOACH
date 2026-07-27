@@ -104,10 +104,15 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
 
   return (
     <div className="tienda-main">
-      <div className="tienda-title-section">
+      <div className="tienda-back-section">
         <Link href="/" className="tienda-back font-inter">← Volver al inicio</Link>
+      </div>
 
+      <div className="tienda-header-sticky">
         <h1 className="tienda-title font-forum">Tienda</h1>
+      </div>
+
+      <div className="tienda-subtitle-section">
         <p className="tienda-subtitle font-inter">
           Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa.
         </p>
