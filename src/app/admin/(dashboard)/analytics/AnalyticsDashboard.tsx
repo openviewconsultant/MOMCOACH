@@ -210,15 +210,40 @@ export default function AnalyticsDashboard({
 
   return (
     <div className="analytics-page">
-      {/* Header */}
-      <div className="analytics-header">
-        <div>
-          <h1 className="analytics-title font-forum">Analytics</h1>
-          <p className="analytics-subtitle font-inter">
-            Comportamiento de visitantes — Últimos 30 días
-          </p>
+      <div className="analytics-sticky-top">
+        {/* Header */}
+        <div className="analytics-header">
+          <div>
+            <h1 className="analytics-title font-forum">Analytics</h1>
+            <p className="analytics-subtitle font-inter">
+              Comportamiento de visitantes — Últimos 30 días
+            </p>
+          </div>
+          <div className="analytics-badge font-inter">Live</div>
         </div>
-        <div className="analytics-badge font-inter">Live</div>
+
+        {/* KPI Cards */}
+        <div className="analytics-kpis">
+          {kpis.map(k => (
+            <div key={k.label} className="analytics-kpi-card">
+              <div
+                className="analytics-kpi-icon"
+                style={{ background: k.color + '22' }}
+              >
+                {k.icon}
+              </div>
+              <div>
+                <p
+                  className="analytics-kpi-value font-forum"
+                  style={{ color: k.color }}
+                >
+                  {k.value.toLocaleString()}
+                </p>
+                <p className="analytics-kpi-label font-inter">{k.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {events.length === 0 && (
@@ -232,29 +257,6 @@ export default function AnalyticsDashboard({
           </small>
         </div>
       )}
-
-      {/* KPI Cards */}
-      <div className="analytics-kpis">
-        {kpis.map(k => (
-          <div key={k.label} className="analytics-kpi-card">
-            <div
-              className="analytics-kpi-icon"
-              style={{ background: k.color + '22' }}
-            >
-              {k.icon}
-            </div>
-            <div>
-              <p
-                className="analytics-kpi-value font-forum"
-                style={{ color: k.color }}
-              >
-                {k.value.toLocaleString()}
-              </p>
-              <p className="analytics-kpi-label font-inter">{k.label}</p>
-            </div>
-          </div>
-        ))}
-      </div>
 
       {/* Charts grid */}
       <div className="analytics-charts-grid">
