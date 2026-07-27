@@ -125,8 +125,10 @@ export default function AnalyticsDashboard({
     const map: Record<string, number> = {};
     events.forEach(e => {
       const geo = e.metadata?.geo as GeoData | undefined;
-      if (geo?.city && geo?.country) {
-        const key = `${countryFlag(geo.country)} ${geo.city}${geo.region ? ', ' + geo.region : ''}`;
+      if (geo?.country) {
+        const flag = countryFlag(geo.country);
+        const cityName = geo.city || geo.region || `${geo.country} (sin ciudad)`;
+        const key = `${flag} ${cityName}${geo.city && geo.region ? ', ' + geo.region : ''}`;
         map[key] = (map[key] || 0) + 1;
       }
     });
