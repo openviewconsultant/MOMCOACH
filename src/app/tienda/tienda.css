@@ -10,7 +10,7 @@
 .tienda-back-section {
   padding: 142px 5% 0; /* 118px (navbar offset) + 24px (original top padding) */
   position: relative;
-  z-index: 40;
+  z-index: 50;
 }
 
 .tienda-header-sticky {

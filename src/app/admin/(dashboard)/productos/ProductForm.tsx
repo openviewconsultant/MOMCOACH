@@ -14,6 +14,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [uploadingCover, setUploadingCover] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
 
   async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -71,14 +72,37 @@ export default function ProductForm({ product }: { product?: Product }) {
       </label>
 
       <div className="admin-form-row">
-        <label>
-          Precio (COP, 0 = gratis)
-          <input type="number" name="price" min={0} step={1} defaultValue={product?.price ?? 0} required />
-        </label>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <span>Tipo de producto</span>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'normal' }}>
+              <input type="radio" name="priceType" checked={isFree} onChange={() => setIsFree(true)} />
+              Gratis
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'normal' }}>
+              <input type="radio" name="priceType" checked={!isFree} onChange={() => setIsFree(false)} />
+              De pago
+            </label>
+          </div>
+          {isFree ? (
+            <input type="hidden" name="price" value={0} />
+          ) : (
+            <label style={{ marginTop: '8px' }}>
+              Precio (USD)
+              <input type="number" name="price" min={0} step={0.01} defaultValue={product?.price && product.price > 0 ? product.price : ''} required />
+            </label>
+          )}
+        </div>
 
-        <label>
+        <label style={{ flex: 1 }}>
           Categoría
-          <input type="text" name="category" defaultValue={product?.category ?? 'Libros'} required />
+          <select name="category" defaultValue={product?.category ?? 'Sueño infantil'} required>
+            <option value="Sueño infantil">Sueño infantil</option>
+            <option value="Alimentación">Alimentación</option>
+            <option value="Gratuitos">Gratuitos</option>
+            <option value="Tarjeta de regalo">Tarjeta de regalo</option>
+            <option value="Libros">Libros</option>
+          </select>
         </label>
       </div>
 
