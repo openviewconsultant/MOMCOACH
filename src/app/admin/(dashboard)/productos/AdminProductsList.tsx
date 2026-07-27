@@ -5,6 +5,14 @@ import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
 import { formatCOP } from '@/lib/format';
 
+const PREDEFINED_CATEGORIES = [
+  'Alimentación',
+  'Sueño infantil',
+  'Gratuitos',
+  'Tarjeta de regalo',
+  'Libros',
+];
+
 interface AdminProductsListProps {
   products: Product[];
 }
@@ -15,9 +23,11 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
 
+  // Always show predefined categories + any additional ones from the DB
   const categories = useMemo(() => {
-    const list = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
-    return list;
+    const dbCats = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+    const extra = dbCats.filter((c) => !PREDEFINED_CATEGORIES.includes(c));
+    return [...PREDEFINED_CATEGORIES, ...extra];
   }, [products]);
 
   const filteredProducts = useMemo(() => {
