@@ -70,28 +70,34 @@ export default function ProductForm({ product }: { product?: Product }) {
         <textarea name="description" defaultValue={product?.description} />
       </label>
 
-      <label>
-        Precio (COP, 0 = gratis)
-        <input type="number" name="price" min={0} step={1} defaultValue={product?.price ?? 0} required />
-      </label>
+      <div className="admin-form-row">
+        <label>
+          Precio (COP, 0 = gratis)
+          <input type="number" name="price" min={0} step={1} defaultValue={product?.price ?? 0} required />
+        </label>
 
-      <label>
-        Categoría
-        <input type="text" name="category" defaultValue={product?.category ?? 'Libros'} required />
-      </label>
+        <label>
+          Categoría
+          <input type="text" name="category" defaultValue={product?.category ?? 'Libros'} required />
+        </label>
+      </div>
 
       <label>
         Portada (imagen, opcional)
-        <input type="file" accept="image/*" onChange={handleCoverChange} />
-        {uploadingCover && <span>Subiendo portada…</span>}
-        {coverUrl && <img src={coverUrl} alt="Portada" style={{ maxWidth: 120, borderRadius: 8 }} />}
+        <div className="admin-file-upload">
+          <input type="file" accept="image/*" onChange={handleCoverChange} />
+          {uploadingCover && <span className="admin-upload-status">Subiendo portada…</span>}
+          {coverUrl && <img src={coverUrl} alt="Portada" className="admin-cover-preview" />}
+        </div>
       </label>
 
       <label>
         Archivo del producto (PDF u otro, para la entrega digital)
-        <input type="file" onChange={handleFileChange} />
-        {uploadingFile && <span>Subiendo archivo…</span>}
-        {filePath && <span>Archivo cargado ✓</span>}
+        <div className="admin-file-upload">
+          <input type="file" onChange={handleFileChange} />
+          {uploadingFile && <span className="admin-upload-status">Subiendo archivo…</span>}
+          {filePath && <span className="admin-upload-status">Archivo cargado ✓</span>}
+        </div>
       </label>
 
       <label className="admin-checkbox-row">

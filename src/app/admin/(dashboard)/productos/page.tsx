@@ -12,51 +12,69 @@ export default async function AdminProductsPage() {
     .order('created_at', { ascending: false });
 
   const items = (products ?? []) as Product[];
+  const publishedCount = items.filter((p) => p.is_published).length;
+  const freeCount = items.filter((p) => p.price === 0).length;
 
   return (
     <div>
-      <h1 className="admin-title font-forum">Productos</h1>
-      <Link href="/admin/productos/nuevo" className="admin-new-btn">
-        + Nuevo producto
-      </Link>
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-title font-forum">Productos</h1>
+          <p className="admin-subtitle">Publica y gestiona los libros y guías de la tienda.</p>
+        </div>
+        <Link href="/admin/productos/nuevo" className="admin-new-btn">
+          + Nuevo producto
+        </Link>
+      </div>
+
+      <div className="admin-stats">
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Total de productos</div>
+          <div className="admin-stat-value">{items.length}</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Publicados</div>
+          <div className="admin-stat-value">{publishedCount}</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Gratuitos</div>
+          <div className="admin-stat-value">{freeCount}</div>
+        </div>
+      </div>
 
       {items.length === 0 ? (
         <p className="admin-empty">Aún no has creado productos.</p>
       ) : (
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Categoría</th>
-              <th>Precio</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((product) => (
-              <tr key={product.id}>
-                <td>{product.title}</td>
-                <td>{product.category}</td>
-                <td>
-                  {product.price === 0 ? (
-                    <span className="admin-badge free">Gratis</span>
-                  ) : (
-                    formatCOP(product.price)
-                  )}
-                </td>
-                <td>
+        <div className="admin-product-grid">
+          {items.map((product) => (
+            <div className="admin-product-card" key={product.id}>
+              <div className="admin-product-card-image">
+                <div className="admin-product-card-badges">
                   <span className={`admin-badge ${product.is_published ? 'published' : 'draft'}`}>
                     {product.is_published ? 'Publicado' : 'Borrador'}
                   </span>
-                </td>
-                <td>
-                  <ProductRowActions product={product} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+                {product.cover_image_url ? (
+                  <img src={product.cover_image_url} alt={product.title} />
+                ) : (
+                  <span>{product.title}</span>
+                )}
+              </div>
+              <div className="admin-product-card-body">
+                <div className="admin-product-card-title">{product.title}</div>
+                <div className="admin-product-card-meta">
+                  <span>{product.category}</span>
+                  {product.price === 0 ? (
+                    <span className="admin-badge free">Gratis</span>
+                  ) : (
+                    <strong>{formatCOP(product.price)}</strong>
+                  )}
+                </div>
+                <ProductRowActions product={product} />
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

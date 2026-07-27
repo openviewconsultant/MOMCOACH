@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { signOutAction } from '../actions';
+import AdminSidebar from './AdminSidebar';
 import '../admin.css';
 
 export default async function AdminLayout({
@@ -19,19 +18,9 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="admin-main">
-      <div className="admin-container">
-        <nav className="admin-nav">
-          <div className="admin-nav-links">
-            <Link href="/admin/productos">Productos</Link>
-            <Link href="/admin/pedidos">Pedidos</Link>
-          </div>
-          <form action={signOutAction}>
-            <button type="submit" className="admin-signout-btn">Cerrar sesión</button>
-          </form>
-        </nav>
-        {children}
-      </div>
+    <div className="admin-shell">
+      <AdminSidebar userEmail={user.email ?? ''} />
+      <main className="admin-content">{children}</main>
     </div>
   );
 }

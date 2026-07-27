@@ -4,14 +4,29 @@
 }
 
 .tienda-container {
-  padding: 160px 5% 100px;
+  padding: 0 5% 100px;
+}
+
+/* Encabezado fijo: no debe hacer scroll bajo ningún motivo. Queda anclado
+   justo debajo del navbar; el contenido de la grilla se desplaza por debajo. */
+.tienda-header {
+  position: fixed;
+  top: 118px;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background-color: var(--color-cream);
+}
+
+.tienda-header-inner {
+  padding: 24px 5% 20px;
 }
 
 .tienda-back {
   display: inline-block;
   color: var(--color-blue-gray);
   font-size: 0.95rem;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .tienda-title {
@@ -24,7 +39,7 @@
   font-size: 1.05rem;
   color: var(--foreground);
   opacity: 0.8;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   max-width: 640px;
 }
 
@@ -32,7 +47,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 48px;
 }
 
 .tienda-category-btn {
@@ -61,6 +75,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 28px;
+  /* Espacio reservado para que el encabezado fijo de arriba no tape productos. */
+  padding-top: 340px;
 }
 
 .tienda-card {
@@ -125,15 +141,24 @@
 
 @media (max-width: 600px) {
   .tienda-container {
-    padding: 120px 6% 80px;
+    padding: 0 6% 80px;
+  }
+
+  .tienda-header-inner {
+    padding: 16px 6% 16px;
   }
 
   .tienda-title {
     font-size: 2rem;
   }
 
+  .tienda-subtitle {
+    margin-bottom: 16px;
+  }
+
   .tienda-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
+    padding-top: 300px;
   }
 }
