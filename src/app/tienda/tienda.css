@@ -139,7 +139,7 @@
 
 .tienda-card-btn {
   display: block;
-  margin: 0 16px 16px;
+  margin: auto 16px 16px;
   padding: 10px 16px;
   text-align: center;
   border-radius: var(--radius-full);
@@ -147,6 +147,10 @@
   color: white;
   font-size: 0.85rem;
   font-weight: 500;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
   transition: background-color 0.2s ease;
 }
 

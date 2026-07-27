@@ -73,35 +73,37 @@ function SupabaseProductCard({
           </div>
         )}
       </div>
-      <h3 className="tienda-card-title font-inter">{product.title}</h3>
-      <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
-      {isService ? (
-        <ServiceBookingButton
-          title={product.title}
-          price={formatCOP(product.price)}
-          whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
-          buttonText="Reservar Asesoría"
-          className="tienda-card-btn font-inter"
-          calLink={
-            product.cal_link ||
-            (product.category === 'Alimentación'
-              ? 'open-view-consultant-7ng550/alimentacion'
-              : 'open-view-consultant-7ng550/30min')
-          }
-        />
-      ) : isFree ? (
-        <button
-          type="button"
-          onClick={() => onDownloadClick(product)}
-          className="tienda-card-btn font-inter"
-        >
-          Descargar gratis
-        </button>
-      ) : (
-        <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
-          {inCart ? 'Añadir otro' : 'Añadir al carrito'}
-        </button>
-      )}
+      <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <h3 className="tienda-card-title font-inter">{product.title}</h3>
+        <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
+        {isService ? (
+          <ServiceBookingButton
+            title={product.title}
+            price={formatCOP(product.price)}
+            whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
+            buttonText="Reservar Asesoría"
+            className="tienda-card-btn font-inter"
+            calLink={
+              product.cal_link ||
+              (product.category === 'Alimentación'
+                ? 'open-view-consultant-7ng550/alimentacion'
+                : 'open-view-consultant-7ng550/30min')
+            }
+          />
+        ) : isFree ? (
+          <button
+            type="button"
+            onClick={() => onDownloadClick(product)}
+            className="tienda-card-btn font-inter"
+          >
+            Descargar gratis
+          </button>
+        ) : (
+          <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
+            {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -177,31 +179,33 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
                 <div className="tienda-card-image">
                   <img src={product.img} alt={product.title} loading="lazy" />
                 </div>
-                <h3 className="tienda-card-title font-inter">{product.title}</h3>
-                <p className="tienda-card-price font-inter">{product.price}</p>
-                {isSuenoService || isFoodService ? (
-                  <ServiceBookingButton
-                    title={product.title}
-                    price={product.price}
-                    whatsappText={`Hola! Quiero agendar ${product.title}`}
-                    buttonText="Reservar Asesoría"
-                    className="tienda-card-btn font-inter"
-                    calLink={
-                      isFoodService
-                        ? 'open-view-consultant-7ng550/alimentacion'
-                        : 'open-view-consultant-7ng550/30min'
-                    }
-                  />
-                ) : (
-                  <a
-                    href={whatsappHref(product.title, product.price)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="tienda-card-btn font-inter"
-                  >
-                    Comprar en WhatsApp
-                  </a>
-                )}
+                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                  <h3 className="tienda-card-title font-inter">{product.title}</h3>
+                  <p className="tienda-card-price font-inter">{product.price}</p>
+                  {isSuenoService || isFoodService ? (
+                    <ServiceBookingButton
+                      title={product.title}
+                      price={product.price}
+                      whatsappText={`Hola! Quiero agendar ${product.title}`}
+                      buttonText="Reservar Asesoría"
+                      className="tienda-card-btn font-inter"
+                      calLink={
+                        isFoodService
+                          ? 'open-view-consultant-7ng550/alimentacion'
+                          : 'open-view-consultant-7ng550/30min'
+                      }
+                    />
+                  ) : (
+                    <a
+                      href={whatsappHref(product.title, product.price)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="tienda-card-btn font-inter"
+                    >
+                      Comprar en WhatsApp
+                    </a>
+                  )}
+                </div>
               </div>
             );
           })}
