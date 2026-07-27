@@ -3,7 +3,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 const DOWNLOAD_LINK_TTL_SECONDS = 60 * 60 * 48; // 48 horas
 
-export async function GET(_request: Request, ctx: RouteContext<'/api/productos/[id]/descargar'>) {
+export async function GET(
+  _request: Request,
+  ctx: { params: Promise<{ id: string }> }
+) {
   const { id } = await ctx.params;
 
   const supabase = createAdminClient();
