@@ -38,8 +38,8 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${forum.variable} ${fraunces.variable} ${montserrat.variable}`}>
       <head>
-        <link rel="preconnect" href="https://assets.calendly.com" />
-        <link rel="preconnect" href="https://calendly.com" />
+        <link rel="preconnect" href="https://app.cal.com" />
+        <link rel="preconnect" href="https://cal.com" />
       </head>
       <body>
         <AnalyticsTracker />
