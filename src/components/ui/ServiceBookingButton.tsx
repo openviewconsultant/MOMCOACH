@@ -5,18 +5,22 @@ import { getCalApi } from '@calcom/embed-react';
 import Button from './Button';
 
 interface ServiceBookingButtonProps {
-  title: string;
-  price: string;
-  whatsappText: string;
+  title?: string;
+  price?: string;
+  whatsappText?: string;
   popular?: boolean;
   buttonText?: string;
   calLink?: string;
+  className?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
 }
 
 export default function ServiceBookingButton({
   popular = false,
   buttonText = 'Solicitar Asesoría',
   calLink = 'open-view-consultant-7ng550/30min',
+  className,
+  variant,
 }: ServiceBookingButtonProps) {
   const namespace = calLink.split('/')[1] || 'booking';
 
@@ -39,9 +43,21 @@ export default function ServiceBookingButton({
     });
   }
 
+  if (className) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={handleOpenModal}
+      >
+        {buttonText}
+      </button>
+    );
+  }
+
   return (
     <Button
-      variant={popular ? 'primary' : 'secondary'}
+      variant={variant || (popular ? 'primary' : 'secondary')}
       style={{ width: '100%' }}
       onClick={handleOpenModal}
     >

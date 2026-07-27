@@ -80,8 +80,8 @@ function SupabaseProductCard({
           title={product.title}
           price={formatCOP(product.price)}
           whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
-          popular={Boolean(product.is_popular)}
           buttonText="Reservar Asesoría"
+          className="tienda-card-btn font-inter"
           calLink={
             product.cal_link ||
             (product.category === 'Alimentación'
@@ -185,6 +185,7 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
                     price={product.price}
                     whatsappText={`Hola! Quiero agendar ${product.title}`}
                     buttonText="Reservar Asesoría"
+                    className="tienda-card-btn font-inter"
                     calLink={
                       isFoodService
                         ? 'open-view-consultant-7ng550/alimentacion'
