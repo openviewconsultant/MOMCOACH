@@ -75,13 +75,19 @@
   box-shadow: 0 4px 12px rgba(76, 87, 124, 0.4);
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
 .nav-cart-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  margin-left: 12px;
   border-radius: var(--radius-sm);
   background-color: var(--color-coral);
   color: white;
@@ -101,7 +107,6 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  margin-left: 8px;
   border-radius: var(--radius-sm);
   color: var(--color-blue-gray);
   flex-shrink: 0;

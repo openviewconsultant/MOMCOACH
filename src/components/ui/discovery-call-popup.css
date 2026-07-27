@@ -90,6 +90,26 @@
   white-space: nowrap;
 }
 
+.discovery-popup-cta {
+  position: relative;
+  margin-top: 16px;
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: var(--color-coral);
+  border: none;
+  padding: 12px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.discovery-popup-cta:hover {
+  background-color: #ba736f;
+  transform: translateY(-2px);
+}
+
 .discovery-popup-close {
   position: absolute;
   bottom: 16px;

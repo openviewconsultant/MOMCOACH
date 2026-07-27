@@ -9,10 +9,127 @@
   margin: 0 auto;
 }
 
-.admin-login-container {
-  max-width: 380px;
-  margin: 0 auto;
-  padding: 120px 5% 100px;
+.admin-login-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--color-cream), var(--color-peach) 140%);
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: white;
+  padding: 40px 32px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-login-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-turquoise);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.admin-login-title {
+  font-size: 1.6rem;
+  color: var(--color-blue-gray);
+  margin-bottom: -8px;
+}
+
+.admin-login-subtitle {
+  font-size: 0.88rem;
+  color: var(--foreground);
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.admin-login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--color-blue-gray);
+}
+
+.admin-login-label input[type="email"],
+.admin-login-label input[type="password"],
+.admin-login-label input[type="text"] {
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 0.95rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+.admin-login-label input:focus {
+  outline: none;
+  border-color: var(--color-turquoise);
+  box-shadow: 0 0 0 3px rgba(113, 176, 180, 0.18);
+}
+
+.admin-login-password-wrap {
+  position: relative;
+  display: flex;
+}
+
+.admin-login-password-wrap input {
+  padding-right: 40px !important;
+}
+
+.admin-login-toggle-password {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-blue-gray);
+  opacity: 0.6;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.admin-login-toggle-password:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.admin-login-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-blue-gray);
+  cursor: pointer;
+}
+
+.admin-login-remember input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-turquoise);
+}
+
+.admin-login-submit {
+  width: 100%;
+  text-align: center;
 }
 
 .admin-nav {
