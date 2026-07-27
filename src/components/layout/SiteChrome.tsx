@@ -7,10 +7,23 @@ import CartDrawer from '../tienda/CartDrawer';
 import Navbar from '../sections/Navbar';
 import SiteFooter from './SiteFooter';
 import DiscoveryCallPopup from '../ui/DiscoveryCallPopup';
-
 import WhatsAppButton from '../ui/WhatsAppButton';
 
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+interface PopupConfig {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  cta: string;
+  calLink: string;
+  enabled: boolean;
+}
+
+interface Props {
+  children: React.ReactNode;
+  popupConfig: PopupConfig;
+}
+
+export default function SiteChrome({ children, popupConfig }: Props) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
@@ -23,8 +36,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <Navbar />
       <main>{children}</main>
       <SiteFooter />
-      <DiscoveryCallPopup />
-
+      <DiscoveryCallPopup config={popupConfig} />
       <WhatsAppButton />
       <CartDrawer />
     </CartProvider>

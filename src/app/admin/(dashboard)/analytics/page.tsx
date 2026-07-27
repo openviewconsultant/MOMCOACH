@@ -4,16 +4,16 @@ import AnalyticsDashboard from './AnalyticsDashboard';
 export default async function AnalyticsPage() {
   const supabase = await createClient();
 
-  // Fetch last 30 days of events
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  // Fetch last 90 days so client-side filters have full range
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
   const { data: events } = await supabase
     .from('analytics_events')
     .select('*')
-    .gte('created_at', thirtyDaysAgo.toISOString())
+    .gte('created_at', ninetyDaysAgo.toISOString())
     .order('created_at', { ascending: false })
-    .limit(1000);
+    .limit(5000);
 
   const { data: products } = await supabase
     .from('products')

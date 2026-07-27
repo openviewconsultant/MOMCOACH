@@ -5,41 +5,53 @@ import { usePathname } from 'next/navigation';
 import { getCalApi } from '@calcom/embed-react';
 import './discovery-call-popup.css';
 
-const CAL_LINK = 'open-view-consultant-7ng550/30min';
+interface PopupConfig {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  cta: string;
+  calLink: string;
+  enabled: boolean;
+}
 
-export default function DiscoveryCallPopup() {
+export default function DiscoveryCallPopup({ config }: { config: PopupConfig }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const [open, setOpen] = useState(false);
 
+  const namespace = config.calLink.split('/').pop() || '30min';
+
   useEffect(() => {
     (async () => {
-      const cal = await getCalApi({ namespace: '30min' });
+      const cal = await getCalApi({ namespace });
       cal('ui', {
         theme: 'dark',
         hideEventTypeDetails: false,
         layout: 'month_view',
       });
     })();
-  }, []);
+  }, [namespace]);
 
-  // Open the popup on the visitor's first scroll
+  // Open on first scroll (only on homepage, only if enabled)
   useEffect(() => {
-    if (!isHomePage) return;
+    if (!isHomePage || !config.enabled) return;
     const showOnScroll = () => setOpen(true);
     window.addEventListener('scroll', showOnScroll, { once: true, passive: true });
     return () => window.removeEventListener('scroll', showOnScroll);
-  }, [isHomePage]);
+  }, [isHomePage, config.enabled]);
 
   async function openCalModal() {
-    const cal = await getCalApi({ namespace: '30min' });
+    const calSlug = config.calLink.startsWith('http')
+      ? config.calLink.replace(/^https?:\/\/cal\.com\//, '')
+      : config.calLink;
+    const cal = await getCalApi({ namespace });
     cal('modal', {
-      calLink: CAL_LINK,
+      calLink: calSlug,
       config: { layout: 'month_view' },
     });
   }
 
-  if (!isHomePage || !open) return null;
+  if (!isHomePage || !open || !config.enabled) return null;
 
   return (
     <div className="discovery-popup-backdrop" onClick={() => setOpen(false)}>
@@ -54,11 +66,9 @@ export default function DiscoveryCallPopup() {
             playsInline
           />
           <div className="discovery-popup-overlay">
-            <span className="discovery-popup-eyebrow">Agenda tu</span>
-            <h2 className="discovery-popup-title">
-              Llamada de descubrimiento
-            </h2>
-            <span className="discovery-popup-highlight">¡sin costo!</span>
+            <span className="discovery-popup-eyebrow">{config.eyebrow}</span>
+            <h2 className="discovery-popup-title">{config.title}</h2>
+            <span className="discovery-popup-highlight">{config.subtitle}</span>
             <button
               type="button"
               className="discovery-popup-cta"
@@ -67,7 +77,7 @@ export default function DiscoveryCallPopup() {
                 openCalModal();
               }}
             >
-              Agenda aquí
+              {config.cta}
             </button>
           </div>
         </div>

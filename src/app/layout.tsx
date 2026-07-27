@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Forum, Fraunces, Montserrat } from "next/font/google";
-import SiteChrome from "@/components/layout/SiteChrome";
+import SiteChromeServer from "@/components/layout/SiteChromeServer";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
 import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import "./globals.css";
@@ -43,7 +43,7 @@ export default function RootLayout({
       </head>
       <body>
         <AnalyticsTracker />
-        <SiteChrome>{children}</SiteChrome>
+        <SiteChromeServer>{children}</SiteChromeServer>
         <CookieBanner />
       </body>
     </html>
