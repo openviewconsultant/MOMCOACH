@@ -16,7 +16,7 @@ export default function DiscoveryCallPopup() {
 
   useEffect(() => {
     (async () => {
-      const cal = await getCalApi({ namespace: 'discovery' });
+      const cal = await getCalApi({ namespace: '30min' });
       cal('ui', {
         hideEventTypeDetails: false,
         layout: 'month_view',
@@ -56,7 +56,7 @@ export default function DiscoveryCallPopup() {
               <button
                 type="button"
                 className="discovery-popup-cta"
-                data-cal-namespace="discovery"
+                data-cal-namespace="30min"
                 data-cal-link={CAL_LINK}
                 data-cal-config='{"layout":"month_view"}'
                 onClick={(e) => e.stopPropagation()}
@@ -108,7 +108,7 @@ export default function DiscoveryCallPopup() {
               aria-label="Cerrar"
             >✕</button>
             <Cal
-              namespace="discovery"
+              namespace="30min"
               calLink={CAL_LINK}
               style={{ width: '100%', height: '100%', overflow: 'scroll' }}
               config={{ layout: 'month_view' }}

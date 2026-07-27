@@ -161,6 +161,7 @@ export default async function AlimentacionPage() {
                 whatsappText={service.whatsappText}
                 popular={service.popular}
                 buttonText="Solicitar Asesoría"
+                calLink="open-view-consultant-7ng550/alimentacion"
               />
             </div>
           ))}
