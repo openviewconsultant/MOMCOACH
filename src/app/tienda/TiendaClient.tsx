@@ -90,10 +90,15 @@ function SupabaseProductCard({
   );
 }
 
+function normalizeCategory(cat: string) {
+  return cat.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 function TiendaContent({ products }: { products: SupabaseProduct[] }) {
   const categories = useMemo(() => {
+    const normalizedBase = baseCategories.map(normalizeCategory);
     const dynamic = Array.from(new Set(products.map((p) => p.category))).filter(
-      (cat) => !baseCategories.includes(cat as Category)
+      (cat) => !normalizedBase.includes(normalizeCategory(cat))
     );
     return [...baseCategories, ...dynamic];
   }, [products]);
@@ -102,11 +107,11 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
 
   const visibleStaticProducts = activeCategory === 'Todos'
     ? staticProducts
-    : staticProducts.filter((p) => p.category === activeCategory);
+    : staticProducts.filter((p) => normalizeCategory(p.category) === normalizeCategory(activeCategory));
 
   const visibleSupabaseProducts = activeCategory === 'Todos'
     ? products
-    : products.filter((p) => p.category === activeCategory);
+    : products.filter((p) => normalizeCategory(p.category) === normalizeCategory(activeCategory));
 
   const totalCount = staticProducts.length + products.length;
 
