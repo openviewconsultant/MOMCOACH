@@ -56,7 +56,7 @@ export default function ServiceBookingButton({
         >
           <div
             style={{
-              background: 'white',
+              background: '#181818',
               borderRadius: '16px',
               width: '90vw',
               maxWidth: '900px',
@@ -73,11 +73,17 @@ export default function ServiceBookingButton({
                 top: 12,
                 right: 16,
                 zIndex: 10,
-                background: 'none',
+                background: 'rgba(255, 255, 255, 0.15)',
                 border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 cursor: 'pointer',
-                fontSize: '1.4rem',
-                color: '#888',
+                fontSize: '1.2rem',
+                color: '#ffffff',
               }}
               aria-label="Cerrar"
             >
