@@ -7,12 +7,12 @@ import './sections.css';
 
 const navItems = [
   { href: '/', label: 'Inicio' },
-  { href: '#about', label: 'Sobre mi' },
-  { href: '#sleep', label: 'Sueño' },
-  { href: '#food', label: 'Alimentación' },
+  { href: '/sobre-mi', label: 'Sobre mi' },
+  { href: '/sueno', label: 'Sueño' },
+  { href: '/alimentacion', label: 'Alimentación' },
   { href: '/tienda', label: 'Shop' },
-  { href: '#blog', label: 'Blog' },
-  { href: '#contact', label: 'Contacto' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contacto', label: 'Contacto' },
 ];
 
 export default function Navbar() {
