@@ -4,18 +4,13 @@
 }
 
 .tienda-container {
-  /* padding-top = alto del navbar fijo, para que el encabezado sticky de
-     abajo arranque justo debajo de él y no detrás. */
-  padding: 118px 5% 100px;
+  padding: 0 5% 100px;
 }
 
-/* Encabezado "pegajoso": no debe hacer scroll bajo ningún motivo. Con
-   `sticky` reserva su propio espacio (se adapta a cualquier alto, incluso
-   si las categorías envuelven a dos líneas) y luego queda anclado justo
-   debajo del navbar mientras el resto del contenido se desplaza. */
 .tienda-header {
   position: sticky;
-  top: 118px;
+  top: 0;
+  padding-top: 118px; /* Cubre el espacio transparente detrás del navbar */
   z-index: 40;
   background-color: var(--color-cream);
 }
@@ -140,15 +135,14 @@
   opacity: 1;
 }
 
-/* Mismo breakpoint que usa el navbar (sections.css) para achicarse:
-   navbar-wrapper padding 16px + navbar height 60px = 92px. */
 @media (max-width: 768px) {
   .tienda-container {
-    padding-top: 92px;
+    padding-top: 0;
   }
 
   .tienda-header {
-    top: 92px;
+    top: 0;
+    padding-top: 92px;
   }
 }
 
