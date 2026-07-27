@@ -104,26 +104,26 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
 
   return (
     <div className="tienda-main">
-      <div className="tienda-header">
-        <div className="tienda-header-inner">
-          <Link href="/" className="tienda-back font-inter">← Volver al inicio</Link>
+      <div className="tienda-title-section">
+        <Link href="/" className="tienda-back font-inter">← Volver al inicio</Link>
 
-          <h1 className="tienda-title font-forum">Tienda</h1>
-          <p className="tienda-subtitle font-inter">
-            Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa.
-          </p>
+        <h1 className="tienda-title font-forum">Tienda</h1>
+        <p className="tienda-subtitle font-inter">
+          Guías, recetarios, libros, programas y asesorías para acompañarte en cada etapa.
+        </p>
+      </div>
 
-          <div className="tienda-categories">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`tienda-category-btn font-inter ${activeCategory === cat ? 'active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+      <div className="tienda-filters-sticky">
+        <div className="tienda-categories">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`tienda-category-btn font-inter ${activeCategory === cat ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 

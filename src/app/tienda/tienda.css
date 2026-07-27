@@ -7,16 +7,19 @@
   padding: 0 5% 100px;
 }
 
-.tienda-header {
-  position: sticky;
-  top: 0;
-  padding-top: 118px; /* Cubre el espacio transparente detrás del navbar */
-  z-index: 40;
-  background-color: var(--color-cream);
+.tienda-title-section {
+  padding: 142px 5% 0; /* 118px (navbar offset) + 24px (original top padding) */
+  position: relative;
+  z-index: 50;
 }
 
-.tienda-header-inner {
-  padding: 24px 5% 20px;
+.tienda-filters-sticky {
+  position: sticky;
+  top: 0;
+  padding: 118px 5% 20px; /* Cubre el espacio transparente detrás del navbar */
+  margin-top: -118px; /* Evita que el padding extra empuje los filtros hacia abajo */
+  z-index: 40;
+  background-color: var(--color-cream);
 }
 
 .tienda-back {
@@ -140,9 +143,13 @@
     padding-top: 0;
   }
 
-  .tienda-header {
-    top: 0;
+  .tienda-title-section {
+    padding-top: 116px; /* 92px + 24px */
+  }
+
+  .tienda-filters-sticky {
     padding-top: 92px;
+    margin-top: -92px;
   }
 }
 
@@ -153,12 +160,16 @@
     padding-bottom: 80px;
   }
 
-  .tienda-header {
-    /* Removed negative margin */
+  .tienda-title-section {
+    padding-top: 108px; /* 92px + 16px */
+    padding-left: 6%;
+    padding-right: 6%;
   }
 
-  .tienda-header-inner {
-    padding: 16px 6% 16px;
+  .tienda-filters-sticky {
+    padding-left: 6%;
+    padding-right: 6%;
+    padding-bottom: 16px;
   }
 
   .tienda-title {
