@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
-import ProductRowActions from './ProductRowActions';
-import { formatCOP } from '@/lib/format';
+import AdminProductsList from './AdminProductsList';
 
 export default async function AdminProductsPage() {
   const supabase = await createClient();
@@ -20,7 +19,7 @@ export default async function AdminProductsPage() {
       <div className="admin-page-header">
         <div>
           <h1 className="admin-title font-forum">Productos</h1>
-          <p className="admin-subtitle">Publica y gestiona los libros y guías de la tienda.</p>
+          <p className="admin-subtitle">Publica y gestiona los libros, guías y servicios de la tienda.</p>
         </div>
         <Link href="/admin/productos/nuevo" className="admin-new-btn">
           + Nuevo producto
@@ -42,40 +41,7 @@ export default async function AdminProductsPage() {
         </div>
       </div>
 
-      {items.length === 0 ? (
-        <p className="admin-empty">Aún no has creado productos.</p>
-      ) : (
-        <div className="admin-product-grid">
-          {items.map((product) => (
-            <div className="admin-product-card" key={product.id}>
-              <div className="admin-product-card-image">
-                <div className="admin-product-card-badges">
-                  <span className={`admin-badge ${product.is_published ? 'published' : 'draft'}`}>
-                    {product.is_published ? 'Publicado' : 'Borrador'}
-                  </span>
-                </div>
-                {product.cover_image_url ? (
-                  <img src={product.cover_image_url} alt={product.title} />
-                ) : (
-                  <span>{product.title}</span>
-                )}
-              </div>
-              <div className="admin-product-card-body">
-                <div className="admin-product-card-title">{product.title}</div>
-                <div className="admin-product-card-meta">
-                  <span>{product.category}</span>
-                  {product.price === 0 ? (
-                    <span className="admin-badge free">Gratis</span>
-                  ) : (
-                    <strong>{formatCOP(product.price)}</strong>
-                  )}
-                </div>
-                <ProductRowActions product={product} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <AdminProductsList products={items} />
     </div>
   );
 }
