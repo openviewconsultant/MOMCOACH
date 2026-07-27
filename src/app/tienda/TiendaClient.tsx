@@ -6,6 +6,7 @@ import './tienda.css';
 import { CartProvider, useCart } from '@/lib/cart-context';
 import CartDrawer from '@/components/tienda/CartDrawer';
 import DownloadModal from '@/components/tienda/DownloadModal';
+import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatCOP } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
@@ -75,13 +76,19 @@ function SupabaseProductCard({
       <h3 className="tienda-card-title font-inter">{product.title}</h3>
       <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
       {isService ? (
-        <Link
-          href={product.category === 'Sueño infantil' ? '/sueno' : '/alimentacion'}
-          className="tienda-card-btn font-inter"
-          style={{ textDecoration: 'none', textAlign: 'center' }}
-        >
-          Ver asesorías de {product.category === 'Sueño infantil' ? 'Sueño' : 'Alimentación'}
-        </Link>
+        <ServiceBookingButton
+          title={product.title}
+          price={formatCOP(product.price)}
+          whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
+          popular={Boolean(product.is_popular)}
+          buttonText="Reservar Asesoría"
+          calLink={
+            product.cal_link ||
+            (product.category === 'Alimentación'
+              ? 'open-view-consultant-7ng550/alimentacion'
+              : 'open-view-consultant-7ng550/30min')
+          }
+        />
       ) : isFree ? (
         <button
           type="button"
@@ -172,14 +179,18 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
                 </div>
                 <h3 className="tienda-card-title font-inter">{product.title}</h3>
                 <p className="tienda-card-price font-inter">{product.price}</p>
-                {targetPage ? (
-                  <Link
-                    href={targetPage}
-                    className="tienda-card-btn font-inter"
-                    style={{ textDecoration: 'none', textAlign: 'center' }}
-                  >
-                    Ver detalles y reservar
-                  </Link>
+                {isSuenoService || isFoodService ? (
+                  <ServiceBookingButton
+                    title={product.title}
+                    price={product.price}
+                    whatsappText={`Hola! Quiero agendar ${product.title}`}
+                    buttonText="Reservar Asesoría"
+                    calLink={
+                      isFoodService
+                        ? 'open-view-consultant-7ng550/alimentacion'
+                        : 'open-view-consultant-7ng550/30min'
+                    }
+                  />
                 ) : (
                   <a
                     href={whatsappHref(product.title, product.price)}
