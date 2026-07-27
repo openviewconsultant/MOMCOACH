@@ -7,6 +7,14 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 
+interface GeoData {
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  lat?: number | null;
+  lon?: number | null;
+}
+
 interface AnalyticsEvent {
   id: string;
   visitor_id: string;
@@ -14,8 +22,16 @@ interface AnalyticsEvent {
   event_type: string;
   page_url: string;
   product_id: string | null;
-  metadata: { label?: string; href?: string; tag?: string } & Record<string, unknown>;
+  metadata: { label?: string; href?: string; tag?: string; geo?: GeoData } & Record<string, unknown>;
   created_at: string;
+}
+
+/** Country code → emoji flag */
+function countryFlag(code: string | null | undefined): string {
+  if (!code || code.length !== 2) return '🌍';
+  return String.fromCodePoint(
+    ...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt(0))
+  );
 }
 
 interface Product {
@@ -103,6 +119,39 @@ export default function AnalyticsDashboard({
       .slice(0, 8)
       .map(([label, clicks]) => ({ label, clicks }));
   }, [events]);
+
+  // ── Top cities ───────────────────────────────────────────────────────────
+  const topCities = useMemo(() => {
+    const map: Record<string, number> = {};
+    events.forEach(e => {
+      const geo = e.metadata?.geo as GeoData | undefined;
+      if (geo?.city && geo?.country) {
+        const key = `${countryFlag(geo.country)} ${geo.city}${geo.region ? ', ' + geo.region : ''}`;
+        map[key] = (map[key] || 0) + 1;
+      }
+    });
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([city, visits]) => ({ city, visits }));
+  }, [events]);
+
+  // ── Top countries ────────────────────────────────────────────────────────
+  const topCountries = useMemo(() => {
+    const map: Record<string, number> = {};
+    events.forEach(e => {
+      const geo = e.metadata?.geo as GeoData | undefined;
+      if (geo?.country) {
+        const key = `${countryFlag(geo.country)} ${geo.country}`;
+        map[key] = (map[key] || 0) + 1;
+      }
+    });
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([country, visits]) => ({ country, visits }));
+  }, [events]);
+
 
   // ── Top pages ─────────────────────────────────────────────────────────────
   const topPages = useMemo(() => {
@@ -315,7 +364,51 @@ export default function AnalyticsDashboard({
           )}
         </div>
 
-        {/* Top pages */}
+        {/* Top Cities */}
+        <div className="analytics-chart-card analytics-chart-wide">
+          <h3 className="analytics-chart-title font-forum">📍 Ciudades de origen</h3>
+          {topCities.length > 0 ? (
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart
+                data={topCities}
+                layout="vertical"
+                margin={{ top: 0, right: 16, bottom: 0, left: 170 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="city" tick={{ fontSize: 11 }} width={166} />
+                <Tooltip />
+                <Bar dataKey="visits" name="Visitas" fill="#71B0B4" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="analytics-no-data">Sin datos geo aún — los nuevos eventos incluirán la ciudad automáticamente</div>
+          )}
+        </div>
+
+        {/* Top Countries */}
+        <div className="analytics-chart-card">
+          <h3 className="analytics-chart-title font-forum">🌍 Países</h3>
+          {topCountries.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart
+                data={topCountries}
+                layout="vertical"
+                margin={{ top: 0, right: 16, bottom: 0, left: 50 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="country" tick={{ fontSize: 12 }} width={46} />
+                <Tooltip />
+                <Bar dataKey="visits" name="Visitas" fill="#4C577C" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="analytics-no-data">Sin datos geo aún</div>
+          )}
+        </div>
+
+
         <div className="analytics-chart-card">
           <h3 className="analytics-chart-title font-forum">
             Páginas más visitadas

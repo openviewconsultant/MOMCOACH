@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { visitor_id, visitor_email, event_type, page_url, product_id, metadata } = body;
@@ -9,6 +9,24 @@ export async function POST(request: Request) {
     if (!visitor_id || !event_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    // ── Vercel Geolocation headers (free, automatic) ──────────────────────
+    const city    = request.headers.get('x-vercel-ip-city')           ?? null;
+    const region  = request.headers.get('x-vercel-ip-country-region') ?? null;
+    const country = request.headers.get('x-vercel-ip-country')        ?? null;
+    const lat     = request.headers.get('x-vercel-ip-latitude')       ?? null;
+    const lon     = request.headers.get('x-vercel-ip-longitude')      ?? null;
+
+    const enrichedMetadata = {
+      ...(metadata || {}),
+      geo: {
+        city:    city    ? decodeURIComponent(city) : null,
+        region,
+        country,
+        lat:     lat  ? parseFloat(lat)  : null,
+        lon:     lon  ? parseFloat(lon)  : null,
+      },
+    };
 
     const supabase = await createClient();
 
@@ -18,11 +36,10 @@ export async function POST(request: Request) {
       event_type,
       page_url: page_url || '/',
       product_id: product_id || null,
-      metadata: metadata || {},
+      metadata: enrichedMetadata,
     });
 
     if (error) {
-      // If table doesn't exist yet, gracefully log and return success to avoid client error
       console.warn('[Analytics Error]', error.message);
       return NextResponse.json({ success: false, warning: error.message }, { status: 200 });
     }

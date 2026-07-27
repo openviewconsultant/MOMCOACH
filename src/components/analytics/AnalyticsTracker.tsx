@@ -81,21 +81,27 @@ function getHref(el: HTMLElement): string | null {
 export function AnalyticsTracker() {
   const pathname = usePathname();
 
-  // Track page views on route change
+  // Track page views on route change — skip admin pages
   useEffect(() => {
-    if (pathname) {
+    if (pathname && !pathname.startsWith('/admin')) {
       trackEvent('page_view', { page_url: pathname });
     }
   }, [pathname]);
 
-  // Track all clicks globally (fire-and-forget, non-blocking)
+  // Track all clicks globally — skip admin pages
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.location.pathname.startsWith('/admin')) return;
+
     const handleClick = (e: MouseEvent) => {
+      // Re-check at click time in case of client-side navigation
+      if (window.location.pathname.startsWith('/admin')) return;
+
       const target = e.target as HTMLElement;
       if (!target) return;
 
       const label = getClickLabel(target);
-      if (!label) return; // Ignore clicks on non-interactive elements
+      if (!label) return;
 
       const href = getHref(target);
 
@@ -111,7 +117,7 @@ export function AnalyticsTracker() {
 
     document.addEventListener('click', handleClick, { passive: true });
     return () => document.removeEventListener('click', handleClick);
-  }, []);
+  }, [pathname]);
 
   return null;
 }
