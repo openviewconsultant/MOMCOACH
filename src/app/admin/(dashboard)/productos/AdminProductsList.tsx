@@ -41,9 +41,14 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
         if (!matchesTitle && !matchesSub && !matchesCategory) return false;
       }
 
-      // Category filter
-      if (categoryFilter !== 'all' && product.category !== categoryFilter) {
-        return false;
+      // Category filter — "Gratuitos" also includes products with price === 0
+      if (categoryFilter !== 'all') {
+        if (categoryFilter === 'Gratuitos') {
+          const isGratuito = product.category === 'Gratuitos' || product.price === 0;
+          if (!isGratuito) return false;
+        } else if (product.category !== categoryFilter) {
+          return false;
+        }
       }
 
       // Type filter
