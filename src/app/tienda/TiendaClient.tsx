@@ -59,6 +59,7 @@ function SupabaseProductCard({
   const { addBook, items } = useCart();
   const inCart = items.some((item) => item.id === product.id);
   const isFree = product.price === 0;
+  const isService = product.product_type === 'service';
 
   return (
     <div className="tienda-card">
@@ -73,7 +74,15 @@ function SupabaseProductCard({
       </div>
       <h3 className="tienda-card-title font-inter">{product.title}</h3>
       <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
-      {isFree ? (
+      {isService ? (
+        <Link
+          href={product.category === 'Sueño infantil' ? '/sueno' : '/alimentacion'}
+          className="tienda-card-btn font-inter"
+          style={{ textDecoration: 'none', textAlign: 'center' }}
+        >
+          Ver asesorías de {product.category === 'Sueño infantil' ? 'Sueño' : 'Alimentación'}
+        </Link>
+      ) : isFree ? (
         <button
           type="button"
           onClick={() => onDownloadClick(product)}
@@ -151,23 +160,39 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
               onDownloadClick={(p) => setDownloadingProduct(p)}
             />
           ))}
-          {visibleStaticProducts.map((product, idx) => (
-            <div className="tienda-card" key={idx}>
-              <div className="tienda-card-image">
-                <img src={product.img} alt={product.title} loading="lazy" />
+          {visibleStaticProducts.map((product, idx) => {
+            const isSuenoService = product.title.includes('Plan de Sueño') || product.title.includes('Llamada de consulta') || product.title.includes('Programa Recién');
+            const isFoodService = product.title.includes('Asesoría en alimentación') || product.title.includes('Curso para el Inicio');
+            const targetPage = isSuenoService ? '/sueno' : isFoodService ? '/alimentacion' : null;
+
+            return (
+              <div className="tienda-card" key={idx}>
+                <div className="tienda-card-image">
+                  <img src={product.img} alt={product.title} loading="lazy" />
+                </div>
+                <h3 className="tienda-card-title font-inter">{product.title}</h3>
+                <p className="tienda-card-price font-inter">{product.price}</p>
+                {targetPage ? (
+                  <Link
+                    href={targetPage}
+                    className="tienda-card-btn font-inter"
+                    style={{ textDecoration: 'none', textAlign: 'center' }}
+                  >
+                    Ver detalles y reservar
+                  </Link>
+                ) : (
+                  <a
+                    href={whatsappHref(product.title, product.price)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="tienda-card-btn font-inter"
+                  >
+                    Comprar en WhatsApp
+                  </a>
+                )}
               </div>
-              <h3 className="tienda-card-title font-inter">{product.title}</h3>
-              <p className="tienda-card-price font-inter">{product.price}</p>
-              <a
-                href={whatsappHref(product.title, product.price)}
-                target="_blank"
-                rel="noreferrer"
-                className="tienda-card-btn font-inter"
-              >
-                Comprar en WhatsApp
-              </a>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
