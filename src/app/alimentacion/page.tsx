@@ -48,7 +48,7 @@ const foodProducts = [
 export default function AlimentacionPage() {
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ width: '100%', padding: '0 5%' }}>
         
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
           ← Volver al inicio
