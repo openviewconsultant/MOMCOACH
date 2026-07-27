@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
-import type { Book } from './books';
+import type { Product } from './types';
 
 export interface CartItem {
   id: string;
@@ -12,7 +12,7 @@ export interface CartItem {
 
 interface CartContextValue {
   items: CartItem[];
-  addBook: (book: Book) => void;
+  addBook: (product: Product) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clear: () => void;
@@ -70,15 +70,15 @@ function setCartItems(updater: (prev: CartItem[]) => CartItem[]) {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const addBook = useCallback((book: Book) => {
+  const addBook = useCallback((product: Product) => {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === book.id);
+      const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { id: book.id, title: book.title, price: book.price, quantity: 1 }];
+      return [...prev, { id: product.id, title: product.title, price: product.price, quantity: 1 }];
     });
   }, []);
 

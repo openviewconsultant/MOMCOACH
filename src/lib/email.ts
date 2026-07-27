@@ -1,20 +1,8 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-interface PurchasedBook {
+interface PurchasedItem {
   title: string;
-  driveLink: string;
-}
-
-function getTransporter() {
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) {
-    throw new Error('Faltan las variables de entorno GMAIL_USER y/o GMAIL_APP_PASSWORD');
-  }
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  });
+  downloadUrl: string;
 }
 
 function escapeHtml(value: string): string {
@@ -29,33 +17,42 @@ function escapeHtml(value: string): string {
   });
 }
 
-export async function sendBookLinksEmail(params: {
+export async function sendPurchaseEmail(params: {
   to: string;
-  books: PurchasedBook[];
+  items: PurchasedItem[];
   orderId: string;
 }): Promise<void> {
-  const transporter = getTransporter();
-  const fromName = process.env.ORDER_EMAIL_FROM_NAME || 'The Mom Coach';
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM_EMAIL;
+  if (!apiKey || !from) {
+    throw new Error('Faltan las variables de entorno RESEND_API_KEY y/o RESEND_FROM_EMAIL');
+  }
 
-  const linksHtml = params.books
+  const resend = new Resend(apiKey);
+
+  const linksHtml = params.items
     .map(
-      (book) =>
-        `<li style="margin-bottom:12px;"><strong>${escapeHtml(book.title)}</strong><br/><a href="${book.driveLink}" style="color:#2C7A7B;">Descargar libro</a></li>`
+      (item) =>
+        `<li style="margin-bottom:12px;"><strong>${escapeHtml(item.title)}</strong><br/><a href="${item.downloadUrl}" style="color:#2C7A7B;">Descargar</a></li>`
     )
     .join('');
 
-  await transporter.sendMail({
-    from: `"${fromName}" <${process.env.GMAIL_USER}>`,
+  const { error } = await resend.emails.send({
+    from,
     to: params.to,
     subject: 'Tu compra en The Mom Coach — enlaces de descarga',
     html: `
       <div style="font-family: Arial, sans-serif; color:#333; max-width:520px; margin:0 auto;">
         <h2 style="color:#2C7A7B;">¡Gracias por tu compra!</h2>
-        <p>Ya puedes descargar tu(s) libro(s) desde los siguientes enlaces:</p>
+        <p>Ya puedes descargar tu(s) producto(s) desde los siguientes enlaces. <strong>Cada enlace es válido por 48 horas.</strong></p>
         <ul style="padding-left:20px;">${linksHtml}</ul>
         <p style="font-size:0.85rem; color:#666;">Número de orden: ${escapeHtml(params.orderId)}</p>
-        <p style="font-size:0.85rem; color:#666;">Si tienes algún problema para acceder al archivo, responde a este correo y te ayudaremos.</p>
+        <p style="font-size:0.85rem; color:#666;">Si el enlace expiró o tienes algún problema, responde a este correo y te ayudaremos.</p>
       </div>
     `,
   });
+
+  if (error) {
+    throw new Error(`Resend no pudo enviar el correo: ${error.message}`);
+  }
 }

@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { getMercadoPagoClient, getSiteUrl } from '@/lib/mercadopago';
-import { getBookById } from '@/lib/books';
+import { createAdminClient } from '@/lib/supabase/admin';
+import type { Product } from '@/lib/types';
 
 interface RequestedItem {
   id?: unknown;
@@ -28,52 +28,92 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'El carrito está vacío' }, { status: 400 });
   }
 
-  const items: {
-    id: string;
-    title: string;
-    quantity: number;
-    currency_id: string;
-    unit_price: number;
-    type: string;
-    picture_url?: string;
-  }[] = [];
-
+  const requestedQuantities = new Map<string, number>();
   for (const entry of payload.items) {
-    const book = typeof entry?.id === 'string' ? getBookById(entry.id) : undefined;
+    const id = typeof entry?.id === 'string' ? entry.id : undefined;
     const quantity = Number(entry?.quantity);
-    if (!book || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
-      return NextResponse.json(
-        { error: 'Uno de los libros del carrito ya no está disponible' },
-        { status: 400 }
-      );
+    if (!id || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
+      return NextResponse.json({ error: 'El carrito contiene datos inválidos' }, { status: 400 });
     }
-    items.push({
-      id: book.id,
-      title: book.title,
-      quantity,
-      currency_id: 'COP',
-      unit_price: book.price,
-      type: 'digital',
-      picture_url: book.img,
-    });
+    requestedQuantities.set(id, quantity);
   }
 
+  const supabase = createAdminClient();
+  const { data: products, error: fetchError } = await supabase
+    .from('products')
+    .select('*')
+    .in('id', Array.from(requestedQuantities.keys()))
+    .eq('is_published', true);
+
+  if (fetchError) {
+    console.error('Error consultando productos en Supabase', fetchError);
+    return NextResponse.json({ error: 'No se pudo validar el carrito' }, { status: 500 });
+  }
+
+  const foundProducts = (products ?? []) as Product[];
+  if (foundProducts.length !== requestedQuantities.size) {
+    return NextResponse.json(
+      { error: 'Uno de los productos del carrito ya no está disponible' },
+      { status: 400 }
+    );
+  }
+
+  const paidProducts = foundProducts.filter((p) => p.price > 0);
+  if (paidProducts.length !== foundProducts.length) {
+    return NextResponse.json(
+      { error: 'Los productos gratuitos no pasan por el checkout de pago' },
+      { status: 400 }
+    );
+  }
+
+  const orderItems = foundProducts.map((product) => ({
+    product_id: product.id,
+    title: product.title,
+    price: product.price,
+    quantity: requestedQuantities.get(product.id)!,
+  }));
+  const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const { data: order, error: orderError } = await supabase
+    .from('orders')
+    .insert({ buyer_email: email, status: 'pending', total })
+    .select('id')
+    .single();
+
+  if (orderError || !order) {
+    console.error('Error creando la orden en Supabase', orderError);
+    return NextResponse.json({ error: 'No se pudo crear la orden' }, { status: 500 });
+  }
+
+  const { error: itemsError } = await supabase
+    .from('order_items')
+    .insert(orderItems.map((item) => ({ ...item, order_id: order.id })));
+
+  if (itemsError) {
+    console.error('Error creando los items de la orden en Supabase', itemsError);
+    return NextResponse.json({ error: 'No se pudo crear la orden' }, { status: 500 });
+  }
+
+  const siteUrl = getSiteUrl();
+  const confirmationUrl = `${siteUrl}/tienda/confirmacion`;
+
   try {
-    const orderId = randomUUID();
-    const siteUrl = getSiteUrl();
-    const confirmationUrl = `${siteUrl}/tienda/confirmacion`;
     const client = getMercadoPagoClient();
     const preference = new Preference(client);
     const result = await preference.create({
       body: {
-        items,
+        items: foundProducts.map((product) => ({
+          id: product.id,
+          title: product.title,
+          quantity: requestedQuantities.get(product.id)!,
+          currency_id: product.currency,
+          unit_price: product.price,
+          type: 'digital',
+          picture_url: product.cover_image_url ?? undefined,
+        })),
         payer: { email },
-        metadata: {
-          book_ids: items.map((item) => item.id),
-          buyer_email: email,
-          order_id: orderId,
-        },
-        external_reference: orderId,
+        metadata: { order_id: order.id },
+        external_reference: order.id,
         back_urls: {
           success: confirmationUrl,
           pending: confirmationUrl,

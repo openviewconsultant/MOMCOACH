@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
 import { getMercadoPagoClient } from '@/lib/mercadopago';
-import { getBookById } from '@/lib/books';
-import { sendBookLinksEmail } from '@/lib/email';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { sendPurchaseEmail } from '@/lib/email';
+import type { OrderItem } from '@/lib/types';
+
+const DOWNLOAD_LINK_TTL_SECONDS = 60 * 60 * 48; // 48 horas
 
 interface PaymentMetadata {
-  book_ids?: string[];
-  buyer_email?: string;
   order_id?: string;
 }
 
@@ -39,8 +40,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const client = getMercadoPagoClient();
-    const payment = new Payment(client);
+    const mpClient = getMercadoPagoClient();
+    const payment = new Payment(mpClient);
     const paymentInfo = await payment.get({ id: dataId });
 
     if (paymentInfo.status !== 'approved') {
@@ -48,34 +49,79 @@ export async function POST(request: Request) {
     }
 
     const metadata = (paymentInfo.metadata ?? {}) as PaymentMetadata;
-    const buyerEmail = paymentInfo.payer?.email || metadata.buyer_email;
-    const bookIds = metadata.book_ids ?? [];
-
-    if (!buyerEmail || bookIds.length === 0) {
-      console.error('Pago aprobado sin correo o libros asociados en los metadatos', {
-        dataId,
-        metadata,
-      });
+    const orderId = metadata.order_id ?? paymentInfo.external_reference;
+    if (!orderId) {
+      console.error('Pago aprobado sin order_id en los metadatos', { dataId });
       return NextResponse.json({ received: true });
     }
 
-    const purchasedBooks = bookIds
-      .map((id) => getBookById(id))
-      .filter((book): book is NonNullable<typeof book> => Boolean(book));
+    const supabase = createAdminClient();
+    const { data: order, error: orderFetchError } = await supabase
+      .from('orders')
+      .select('id, buyer_email, status, notified_at')
+      .eq('id', orderId)
+      .single();
 
-    if (purchasedBooks.length === 0) {
-      console.error('Pago aprobado pero ningún libro coincide con el catálogo actual', {
-        dataId,
-        bookIds,
-      });
+    if (orderFetchError || !order) {
+      console.error('No se encontró la orden asociada al pago', { orderId, orderFetchError });
       return NextResponse.json({ received: true });
     }
 
-    await sendBookLinksEmail({
-      to: buyerEmail,
-      books: purchasedBooks.map((book) => ({ title: book.title, driveLink: book.driveLink })),
-      orderId: metadata.order_id ?? paymentInfo.external_reference ?? dataId,
-    });
+    if (order.status !== 'approved') {
+      await supabase
+        .from('orders')
+        .update({ status: 'approved', mp_payment_id: dataId })
+        .eq('id', orderId);
+    }
+
+    if (order.notified_at) {
+      return NextResponse.json({ received: true });
+    }
+
+    const { data: items, error: itemsError } = await supabase
+      .from('order_items')
+      .select('*')
+      .eq('order_id', orderId);
+
+    if (itemsError || !items || items.length === 0) {
+      console.error('No se encontraron items para la orden', { orderId, itemsError });
+      return NextResponse.json({ received: true });
+    }
+
+    const productIds = (items as OrderItem[])
+      .map((item) => item.product_id)
+      .filter((id): id is string => Boolean(id));
+
+    const { data: products } = await supabase
+      .from('products')
+      .select('id, file_path')
+      .in('id', productIds);
+
+    const filePathByProductId = new Map(
+      (products ?? []).map((p: { id: string; file_path: string | null }) => [p.id, p.file_path])
+    );
+
+    const downloadItems: { title: string; downloadUrl: string }[] = [];
+    for (const item of items as OrderItem[]) {
+      const filePath = item.product_id ? filePathByProductId.get(item.product_id) : null;
+      if (!filePath) continue;
+      const { data: signed, error: signError } = await supabase.storage
+        .from('productos')
+        .createSignedUrl(filePath, DOWNLOAD_LINK_TTL_SECONDS);
+      if (signError || !signed) {
+        console.error('Error generando enlace firmado', { filePath, signError });
+        continue;
+      }
+      downloadItems.push({ title: item.title, downloadUrl: signed.signedUrl });
+    }
+
+    if (downloadItems.length === 0) {
+      console.error('Orden aprobada sin archivos descargables', { orderId });
+      return NextResponse.json({ received: true });
+    }
+
+    await sendPurchaseEmail({ to: order.buyer_email, items: downloadItems, orderId: order.id });
+    await supabase.from('orders').update({ notified_at: new Date().toISOString() }).eq('id', orderId);
 
     return NextResponse.json({ received: true });
   } catch (error) {

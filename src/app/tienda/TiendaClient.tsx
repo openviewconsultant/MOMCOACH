@@ -1,23 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import './tienda.css';
 import { CartProvider, useCart } from '@/lib/cart-context';
-import { books } from '@/lib/books';
 import CartDrawer from '@/components/tienda/CartDrawer';
 import { formatCOP } from '@/lib/format';
+import type { Product as SupabaseProduct } from '@/lib/types';
 
-type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Gratuitos' | 'Tarjeta de regalo' | 'Libros';
+type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Gratuitos' | 'Tarjeta de regalo';
 
-interface Product {
+interface StaticProduct {
   title: string;
   price: string;
   img: string;
   category: Exclude<Category, 'Todos'>;
 }
 
-const products: Product[] = [
+const staticProducts: StaticProduct[] = [
   { title: 'Aco muñeco de apego', price: 'USD $25', category: 'Sueño infantil', img: 'https://www.themomcoaching.com/wp-content/uploads/2024/08/the-mom-coach_fotos-por-kevin-molano-ph-_-Theos-Creative-Agency_113-600x600.jpg' },
   { title: 'Plan de Sueño Infantil: 4 meses a 6 años de edad', price: 'USD $260', category: 'Sueño infantil', img: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg' },
   { title: 'Llamada de consulta', price: 'USD $65', category: 'Sueño infantil', img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC00073-scaled-e1705350168224-600x600.jpg' },
@@ -39,7 +39,7 @@ const products: Product[] = [
   { title: 'Gift Card', price: 'USD $25–USD $200', category: 'Tarjeta de regalo', img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Tarjeta-de-regalo-TMC-PRODUCT-600x600.jpg' },
 ];
 
-const categories: Category[] = ['Todos', 'Libros', 'Sueño infantil', 'Alimentación', 'Gratuitos', 'Tarjeta de regalo'];
+const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Gratuitos', 'Tarjeta de regalo'];
 
 const WHATSAPP_NUMBER = '573102158656';
 
@@ -48,46 +48,59 @@ function whatsappHref(title: string, price: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 }
 
-function BookCard({ book }: { book: (typeof books)[number] }) {
+function SupabaseProductCard({ product }: { product: SupabaseProduct }) {
   const { addBook, items } = useCart();
-  const inCart = items.some((item) => item.id === book.id);
+  const inCart = items.some((item) => item.id === product.id);
+  const isFree = product.price === 0;
 
   return (
     <div className="tienda-card">
       <div className="tienda-card-image">
-        {book.img ? (
-          <img src={book.img} alt={book.title} loading="lazy" />
+        {product.cover_image_url ? (
+          <img src={product.cover_image_url} alt={product.title} loading="lazy" />
         ) : (
           <div className="libro-cover-placeholder">
-            <span>{book.title}</span>
+            <span>{product.title}</span>
           </div>
         )}
       </div>
-      <h3 className="tienda-card-title font-inter">{book.title}</h3>
-      <p className="tienda-card-price font-inter">{formatCOP(book.price)}</p>
-      <button
-        type="button"
-        className="tienda-card-btn font-inter"
-        onClick={() => addBook(book)}
-      >
-        {inCart ? 'Añadir otro' : 'Añadir al carrito'}
-      </button>
+      <h3 className="tienda-card-title font-inter">{product.title}</h3>
+      <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
+      {isFree ? (
+        <a
+          href={`/api/productos/${product.id}/descargar`}
+          className="tienda-card-btn font-inter"
+        >
+          Descargar gratis
+        </a>
+      ) : (
+        <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
+          {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+        </button>
+      )}
     </div>
   );
 }
 
-function TiendaContent() {
-  const [activeCategory, setActiveCategory] = useState<Category>('Todos');
+function TiendaContent({ products }: { products: SupabaseProduct[] }) {
+  const categories = useMemo(() => {
+    const dynamic = Array.from(new Set(products.map((p) => p.category))).filter(
+      (cat) => !baseCategories.includes(cat as Category)
+    );
+    return [...baseCategories, ...dynamic];
+  }, [products]);
 
-  const visibleProducts = activeCategory === 'Todos'
+  const [activeCategory, setActiveCategory] = useState<string>('Todos');
+
+  const visibleStaticProducts = activeCategory === 'Todos'
+    ? staticProducts
+    : staticProducts.filter((p) => p.category === activeCategory);
+
+  const visibleSupabaseProducts = activeCategory === 'Todos'
     ? products
-    : activeCategory === 'Libros'
-      ? []
-      : products.filter((p) => p.category === activeCategory);
+    : products.filter((p) => p.category === activeCategory);
 
-  const visibleBooks = activeCategory === 'Todos' || activeCategory === 'Libros' ? books : [];
-
-  const totalCount = products.length + books.length;
+  const totalCount = staticProducts.length + products.length;
 
   return (
     <div className="tienda-main">
@@ -112,10 +125,10 @@ function TiendaContent() {
         </div>
 
         <div className="tienda-grid">
-          {visibleBooks.map((book) => (
-            <BookCard key={book.id} book={book} />
+          {visibleSupabaseProducts.map((product) => (
+            <SupabaseProductCard key={product.id} product={product} />
           ))}
-          {visibleProducts.map((product, idx) => (
+          {visibleStaticProducts.map((product, idx) => (
             <div className="tienda-card" key={idx}>
               <div className="tienda-card-image">
                 <img src={product.img} alt={product.title} loading="lazy" />
@@ -140,10 +153,10 @@ function TiendaContent() {
   );
 }
 
-export default function TiendaClient() {
+export default function TiendaClient({ products }: { products: SupabaseProduct[] }) {
   return (
     <CartProvider>
-      <TiendaContent />
+      <TiendaContent products={products} />
     </CartProvider>
   );
 }
