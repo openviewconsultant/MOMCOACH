@@ -8,13 +8,12 @@ import './cart-drawer.css';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function CartDrawer() {
-  const { items, removeItem, updateQuantity, totalItems, totalPrice } = useCart();
-  const [open, setOpen] = useState(false);
+  const { items, removeItem, updateQuantity, totalPrice, isCartOpen, closeCart } = useCart();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (totalItems === 0 && !open) return null;
+  if (!isCartOpen) return null;
 
   async function handleCheckout() {
     setError(null);
@@ -44,25 +43,14 @@ export default function CartDrawer() {
   }
 
   return (
-    <>
-      <button
-        type="button"
-        className="cart-fab font-inter"
-        onClick={() => setOpen(true)}
-        aria-label="Ver carrito de libros"
-      >
-        🛒 {totalItems > 0 && <span className="cart-fab-badge">{totalItems}</span>}
-      </button>
-
-      {open && (
-        <div className="cart-drawer-overlay" onClick={() => setOpen(false)}>
-          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="cart-drawer-header">
-              <h2 className="font-inter">Tu carrito de libros</h2>
-              <button type="button" className="cart-drawer-close" onClick={() => setOpen(false)} aria-label="Cerrar">
-                ✕
-              </button>
-            </div>
+    <div className="cart-drawer-overlay" onClick={closeCart}>
+      <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="cart-drawer-header">
+          <h2 className="font-inter">Tu carrito de libros</h2>
+          <button type="button" className="cart-drawer-close" onClick={closeCart} aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
 
             {items.length === 0 ? (
               <p className="cart-drawer-empty font-inter">Aún no has añadido libros.</p>
@@ -117,7 +105,5 @@ export default function CartDrawer() {
             )}
           </div>
         </div>
-      )}
-    </>
   );
 }

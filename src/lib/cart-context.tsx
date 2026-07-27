@@ -18,6 +18,9 @@ interface CartContextValue {
   clear: () => void;
   totalItems: number;
   totalPrice: number;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -69,6 +72,10 @@ function setCartItems(updater: (prev: CartItem[]) => CartItem[]) {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
+
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
 
   const addBook = useCallback((product: Product) => {
     setCartItems((prev) => {
@@ -80,6 +87,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { id: product.id, title: product.title, price: product.price, quantity: 1 }];
     });
+    setIsCartOpen(true);
   }, []);
 
   const removeItem = useCallback((id: string) => {
@@ -101,7 +109,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addBook, removeItem, updateQuantity, clear, totalItems, totalPrice }}
+      value={{
+        items,
+        addBook,
+        removeItem,
+        updateQuantity,
+        clear,
+        totalItems,
+        totalPrice,
+        isCartOpen,
+        openCart,
+        closeCart,
+      }}
     >
       {children}
     </CartContext.Provider>

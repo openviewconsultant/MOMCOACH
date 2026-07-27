@@ -90,7 +90,7 @@ function SupabaseProductCard({
   );
 }
 
-function TiendaContent({ products }: { products: SupabaseProduct[] }) {
+export default function TiendaClient({ products }: { products: SupabaseProduct[] }) {
   const categories = useMemo(() => {
     const dynamic = Array.from(new Set(products.map((p) => p.category))).filter(
       (cat) => !baseCategories.includes(cat as Category)
@@ -178,16 +178,6 @@ function TiendaContent({ products }: { products: SupabaseProduct[] }) {
           onClose={() => setDownloadingProduct(null)}
         />
       )}
-
-      <CartDrawer />
     </div>
-  );
-}
-
-export default function TiendaClient({ products }: { products: SupabaseProduct[] }) {
-  return (
-    <CartProvider>
-      <TiendaContent products={products} />
-    </CartProvider>
   );
 }

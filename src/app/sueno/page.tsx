@@ -4,6 +4,8 @@ import Button from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
 
+import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
+
 export const metadata = {
   title: 'Asesorías de Sueño Infantil | The Mom Coach',
   description: 'Programas y planes de sueño infantil personalizados para bebés de 0 meses a 6 años.',
@@ -103,7 +105,7 @@ export default async function SuenoPage() {
 
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ padding: '0 5%' }}>
         
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
           ← Volver al inicio
@@ -123,14 +125,14 @@ export default async function SuenoPage() {
         </div>
 
         {/* Services Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 500px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginBottom: '80px' }}>
           {sleepServices.map((service) => (
             <div
               key={service.id}
               style={{
                 background: 'white',
                 borderRadius: '24px',
-                padding: '36px 32px',
+                padding: '40px 32px 36px 32px',
                 boxShadow: service.popular ? 'var(--shadow-lg)' : 'var(--shadow-md)',
                 border: service.popular ? '2px solid var(--color-turquoise)' : '1px solid rgba(0,0,0,0.06)',
                 position: 'relative',
@@ -145,7 +147,7 @@ export default async function SuenoPage() {
                     Más popular
                   </span>
                 )}
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em' }} className="font-inter">
+                <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
                   {service.tag}
                 </span>
                 <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
@@ -167,11 +169,13 @@ export default async function SuenoPage() {
                   </ul>
                 )}
               </div>
-              <Link href={`https://wa.me/573102158656?text=${encodeURIComponent(service.whatsappText)}`} target="_blank">
-                <Button variant={service.popular ? 'primary' : 'secondary'} style={{ width: '100%' }}>
-                  Reservar Asesoría
-                </Button>
-              </Link>
+              <ServiceBookingButton
+                title={service.title}
+                price={service.price}
+                whatsappText={service.whatsappText}
+                popular={service.popular}
+                buttonText="Reservar Asesoría"
+              />
             </div>
           ))}
         </div>
