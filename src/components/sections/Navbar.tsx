@@ -53,6 +53,13 @@ export default function Navbar() {
           </svg>
         </Link>
 
+        <Link href="/admin" className="nav-admin-btn hidden-mobile" aria-label="Administración">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </Link>
+
         {/* Hamburger button — only visible on mobile */}
         <button
           className="nav-hamburger"
@@ -98,6 +105,9 @@ export default function Navbar() {
         <div className="nav-mobile-cta">
           <Button variant="primary" className="nav-btn-modern nav-btn-full">Llamada de descubrimiento</Button>
           <p className="nav-mobile-tagline font-inter">Transformando la maternidad con amor y evidencia</p>
+          <Link href="/admin" className="nav-mobile-admin-link font-inter" onClick={() => setMenuOpen(false)}>
+            Administración
+          </Link>
         </div>
       </div>
     </div>

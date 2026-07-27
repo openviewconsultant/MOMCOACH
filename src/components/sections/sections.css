@@ -95,6 +95,34 @@
   transform: translateY(-2px);
 }
 
+.nav-admin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
+  border-radius: var(--radius-sm);
+  color: var(--color-blue-gray);
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.nav-admin-btn:hover {
+  opacity: 1;
+  color: var(--color-turquoise);
+}
+
+.nav-mobile-admin-link {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--color-blue-gray);
+  opacity: 0.6;
+}
+
 /* Base Section */
 .section {
   padding: 100px 5%;
