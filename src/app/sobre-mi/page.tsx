@@ -25,10 +25,10 @@ export default function SobreMiPage() {
               Conoce a tu coach
             </span>
             <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '24px', lineHeight: 1.15 }}>
-              Hola, soy la creadora de The Mom Coach
+              Hola, soy Denisse
             </h1>
             <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9, marginBottom: '24px' }}>
-              Soy enfermera, consultora de sueño infantil certificada y apasionada por la nutrición materno-infantil. Mi misión es acompañarte para que la maternidad no signifique estar agotada sin descanso ni respuestas.
+              Soy mamá, consultora en sueño pediátrico certificada y coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition. Fundadora de The Mom Coach: un espacio para ayudar a todas las familias a volver a dormir.
             </p>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <Link href="https://wa.me/573102158656?text=Hola%20quiero%20conocer%20mas%20sobre%20tus%20asesorias" target="_blank">
@@ -51,33 +51,18 @@ export default function SobreMiPage() {
         {/* Story Section */}
         <div style={{ background: 'white', borderRadius: '24px', padding: '48px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
           <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
-            Mi Historia y Filosofía
+            Mi Historia
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px' }}>
-            <div>
-              <h3 className="font-forum" style={{ fontSize: '1.4rem', color: 'var(--color-turquoise)', marginBottom: '12px' }}>
-                Respetuosa y Empática
-              </h3>
-              <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-                Entiendo el agotamiento extremo porque he acompañado a cientos de familias. Ningún método se aplica a la fuerza; cada plan se adapta a la dinámica de tu hogar y al temperamento de tu bebé.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-forum" style={{ fontSize: '1.4rem', color: 'var(--color-turquoise)', marginBottom: '12px' }}>
-                Basada en Evidencia
-              </h3>
-              <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-                Combinamos fisiología del sueño y nutrición pediátrica respaldada científicamente con técnicas gentiles que priorizan siempre el apego seguro.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-forum" style={{ fontSize: '1.4rem', color: 'var(--color-turquoise)', marginBottom: '12px' }}>
-                Resultados Duraderos
-              </h3>
-              <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-                Te entrego herramientas claras no solo para hoy, sino para manejar regresiones de sueño, cambios de etapa y transiciones de siestas con seguridad.
-              </p>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
+              Cuando quedé embarazada empecé a investigar sobre puericultura y a leer sobre diferentes temas todos relacionados con la maternidad y la crianza. Ahí encontré apasionante el tema del sueño y el descanso, sobre todo por su relación directa con la salud mental y con la calidad de vida que viene junto con descansar correctamente.
+            </p>
+            <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
+              Al tener a mi hija, noté como se normaliza el estar privado de sueño y como muchas mamás y familias sufren por falta de descanso. También noté que era común el no hablar del tema ni buscar ayuda por miedo a ser criticadas, por sentir culpa de sentirse mal y por vergüenza de querer aceptar que no todo en la maternidad es color de rosa. Así mismo, noté mucho silencio ante temas como la depresión y la ansiedad post parto.
+            </p>
+            <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
+              The Mom Coach nace para que encontremos soluciones y acompañamiento. Donde no criticamos estilos de crianza, sino que buscamos el método que mejor se ajuste a tu familia. Es el espacio donde las mamás pueden contar con apoyo sin ser juzgadas y donde encontrarán una mano amiga dispuesta a ayudar.
+            </p>
           </div>
         </div>
 
@@ -87,17 +72,17 @@ export default function SobreMiPage() {
             Acreditaciones
           </span>
           <h2 className="font-forum" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '32px' }}>
-            Certificaciones Internacionales
+            Certificaciones
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', maxWidth: '600px', margin: '0 auto' }}>
             {[
-              { title: 'Pediatric Sleep Consultant', org: 'Family Sleep Institute' },
-              { title: 'Alimentación Complementaria & BLW', org: 'Especialización Pediátrica' },
-              { title: 'Manejo de Picky Eaters', org: 'Nutrición Infantil Avanzada' },
-              { title: 'Lactancia y Destete Respetuoso', org: 'Formación Materno-Infantil' },
+              { title: 'Consultora de Sueño Infantil Certificada', org: 'Academia Consultoría de Sueño (ACS)', badge: '/badge-acs.png' },
+              { title: 'Coach en Hábitos de Alimentación', org: 'Institute for Integrative Nutrition (IIN)', badge: '/badge-iin.png' },
             ].map((c, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)', border: '1px solid rgba(113, 176, 180, 0.3)', borderRadius: '16px', padding: '24px' }}>
-                <div style={{ fontSize: '1.8rem', marginBottom: '12px' }}>📜</div>
+                <div style={{ position: 'relative', width: '64px', height: '64px', margin: '0 auto 12px' }}>
+                  <Image src={c.badge} alt={c.org} fill style={{ objectFit: 'contain' }} />
+                </div>
                 <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{c.title}</h4>
                 <p className="font-inter" style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.7 }}>{c.org}</p>
               </div>
