@@ -75,6 +75,13 @@
   box-shadow: 0 4px 12px rgba(76, 87, 124, 0.4);
 }
 
+.nav-mobile-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .nav-actions {
   display: flex;
   align-items: center;
@@ -713,7 +720,7 @@
     pointer-events: auto;
     transform: translateX(100%);
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   .nav-mobile-menu.open {
