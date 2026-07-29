@@ -2,7 +2,9 @@
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(15, 15, 20, 0.6);
+  background: rgba(15, 15, 20, 0.65);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,20 +14,19 @@
 
 .discovery-popup-panel {
   position: relative;
-  max-width: 420px;
+  max-width: 400px;
   width: 100%;
   background: #fff;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-lg, 24px);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(20, 18, 30, 0.35), 0 6px 20px rgba(20, 18, 30, 0.15);
+  animation: discovery-popup-pop-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .discovery-popup-media {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 2px;
-  overflow: hidden;
+  aspect-ratio: 4 / 5;
   cursor: pointer;
   isolation: isolate;
 }
@@ -43,7 +44,13 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(76, 87, 124, 0.55), rgba(76, 87, 124, 0.75));
+  background: linear-gradient(
+    180deg,
+    rgba(35, 33, 48, 0.05) 0%,
+    rgba(35, 33, 48, 0.1) 35%,
+    rgba(28, 26, 40, 0.72) 68%,
+    rgba(22, 21, 32, 0.92) 100%
+  );
   z-index: 1;
 }
 
@@ -54,82 +61,100 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  padding: 8% 8%;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 24px 26px 26px;
   text-align: left;
 }
 
 .discovery-popup-eyebrow {
   position: relative;
-  font-family: var(--font-fraunces), serif;
-  font-size: clamp(0.95rem, 4.5vw, 1.4rem);
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #fff;
-  margin-bottom: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 6px;
 }
 
 .discovery-popup-title {
   position: relative;
   font-family: var(--font-fraunces), serif;
-  font-weight: 800;
-  font-size: clamp(1.35rem, 6.5vw, 2.4rem);
-  line-height: 1.2;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 6vw, 2.1rem);
+  line-height: 1.15;
   color: #fff;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   word-break: break-word;
   max-width: 100%;
+  text-wrap: balance;
 }
 
 .discovery-popup-highlight {
   position: relative;
   display: inline-block;
   font-family: var(--font-fraunces), serif;
-  font-weight: 800;
+  font-weight: 700;
   font-style: italic;
-  font-size: clamp(1.1rem, 5.5vw, 2rem);
-  color: var(--color-coral);
+  font-size: clamp(1rem, 4.5vw, 1.3rem);
+  color: var(--color-peach, #efc6a1);
   white-space: nowrap;
 }
 
 .discovery-popup-cta {
   position: relative;
-  margin-top: 16px;
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-inter);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: #fff;
   background-color: var(--color-coral);
   border: none;
-  padding: 12px 22px;
-  border-radius: 999px;
+  padding: 13px 24px;
+  border-radius: var(--radius-full, 999px);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 10px 24px rgba(205, 128, 123, 0.45);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .discovery-popup-cta:hover {
-  background-color: #ba736f;
+  background-color: var(--color-terracotta, #bf604b);
   transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(205, 128, 123, 0.55);
 }
 
 .discovery-popup-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  color: var(--color-blue-gray);
+  width: 34px;
+  height: 34px;
+  background: rgba(22, 21, 32, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
   border-radius: 999px;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .discovery-popup-close:hover {
-  background: #fff;
+  background: rgba(22, 21, 32, 0.55);
   transform: scale(1.06);
 }
 
@@ -139,5 +164,16 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes discovery-popup-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
