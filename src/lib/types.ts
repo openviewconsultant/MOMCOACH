@@ -18,6 +18,21 @@ export interface Product {
   updated_at: string;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  cover_image_url: string | null;
+  read_minutes: number;
+  is_published: boolean;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Order {
   id: string;
   buyer_email: string;

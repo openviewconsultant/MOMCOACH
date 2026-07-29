@@ -110,3 +110,104 @@ export async function togglePublishAction(id: string, nextValue: boolean) {
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
 }
+
+export interface BlogPostFormState {
+  error: string | null;
+}
+
+function slugify(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+export async function saveBlogPostAction(
+  _prevState: BlogPostFormState,
+  formData: FormData
+): Promise<BlogPostFormState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: 'Sesión expirada. Vuelve a iniciar sesión.' };
+  }
+
+  const id = formData.get('id') as string | null;
+  const title = (formData.get('title') as string | null)?.trim();
+  const slugInput = (formData.get('slug') as string | null)?.trim();
+  const category = (formData.get('category') as string | null)?.trim() || 'Crianza';
+  const excerpt = (formData.get('excerpt') as string | null)?.trim() ?? '';
+  const content = (formData.get('content') as string | null)?.trim() ?? '';
+  const readMinutesRaw = formData.get('read_minutes') as string | null;
+  const coverImageUrl = (formData.get('cover_image_url') as string | null) || null;
+  const isPublished = formData.get('is_published') === 'on';
+
+  if (!title) {
+    return { error: 'El título es obligatorio' };
+  }
+
+  const slug = slugify(slugInput || title);
+  if (!slug) {
+    return { error: 'No se pudo generar un slug válido a partir del título' };
+  }
+
+  const readMinutes = Number(readMinutesRaw);
+
+  const payload = {
+    title,
+    slug,
+    category,
+    excerpt,
+    content,
+    read_minutes: Number.isFinite(readMinutes) && readMinutes > 0 ? Math.round(readMinutes) : 5,
+    cover_image_url: coverImageUrl,
+    is_published: isPublished,
+  };
+
+  const { error } = id
+    ? await supabase.from('blog_posts').update(payload).eq('id', id)
+    : await supabase.from('blog_posts').insert(payload);
+
+  if (error) {
+    console.error('Error guardando artículo', error);
+    if (error.code === '23505') {
+      return { error: 'Ya existe un artículo con ese slug. Cambia el título o el slug.' };
+    }
+    return { error: 'No se pudo guardar el artículo' };
+  }
+
+  revalidatePath('/admin/blog');
+  revalidatePath('/blog');
+  redirect('/admin/blog');
+}
+
+export async function deleteBlogPostAction(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+  if (error) {
+    console.error('Error eliminando artículo', error);
+    return;
+  }
+  revalidatePath('/admin/blog');
+  revalidatePath('/blog');
+}
+
+export async function togglePublishBlogAction(id: string, nextValue: boolean) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('blog_posts')
+    .update({ is_published: nextValue })
+    .eq('id', id);
+  if (error) {
+    console.error('Error cambiando publicación del artículo', error);
+    return;
+  }
+  revalidatePath('/admin/blog');
+  revalidatePath('/blog');
+}
