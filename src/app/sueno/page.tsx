@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
+import { filterFreebiesByTopic } from '@/lib/freebie-topics';
 
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import Reveal from '@/components/ui/Reveal';
@@ -94,7 +95,7 @@ export default async function SuenoPage() {
     .order('created_at', { ascending: false });
 
   const productsList = (rawProducts ?? []) as Product[];
-  const freebies = (rawFreebies ?? []) as Product[];
+  const freebies = filterFreebiesByTopic((rawFreebies ?? []) as Product[], 'sueno');
 
   const dbServices = productsList.filter((p) => p.product_type === 'service');
   const dbGuides = productsList.filter((p) => p.product_type !== 'service' && p.price > 0);
