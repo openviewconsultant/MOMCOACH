@@ -31,18 +31,27 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
               const inCart = items.some((item) => item.id === guide.id);
               return (
                 <Reveal key={guide.id} delay={idx * 60} as="div" className="shop-mini-card">
+                  <span className="shop-mini-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                      <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                      <path d="M9 13h6M9 16.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                    </svg>
+                  </span>
                   <h4 className="font-forum">{guide.title}</h4>
-                  <span className="shop-mini-price font-inter">USD ${guide.price}</span>
-                  <button
-                    type="button"
-                    className="shop-mini-btn font-inter"
-                    onClick={() => {
-                      addBook(guide);
-                      openCart();
-                    }}
-                  >
-                    {inCart ? 'Añadir otro' : 'Añadir al carrito'}
-                  </button>
+                  <div className="shop-mini-footer">
+                    <span className="shop-mini-price font-inter">USD ${guide.price}</span>
+                    <button
+                      type="button"
+                      className="shop-mini-btn font-inter"
+                      onClick={() => {
+                        addBook(guide);
+                        openCart();
+                      }}
+                    >
+                      {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+                    </button>
+                  </div>
                 </Reveal>
               );
             })}
@@ -58,14 +67,25 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
           </Reveal>
           <div className="shop-card-grid">
             {freebies.map((item, idx) => (
-              <Reveal key={item.id} delay={idx * 60} as="div" className="shop-mini-card">
+              <Reveal key={item.id} delay={idx * 60} as="div" className="shop-mini-card free">
                 <span className="shop-mini-badge font-inter">Gratis</span>
+                <span className="shop-mini-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                    <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                    <path d="M9 13h6M9 16.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                </span>
                 <h4 className="font-forum">{item.title}</h4>
                 <button
                   type="button"
                   className="shop-mini-btn free font-inter"
                   onClick={() => setDownloadTarget(item)}
                 >
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
                   Descargar gratis
                 </button>
               </Reveal>
