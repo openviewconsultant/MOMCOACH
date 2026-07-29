@@ -1,10 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
 
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
+import Reveal from '@/components/ui/Reveal';
+import SuenoShop from './SuenoShop';
+import '@/app/tienda/tienda.css';
+import './sueno.css';
 
 export const metadata = {
   title: 'Asesorías de Sueño Infantil | The Mom Coach',
@@ -61,12 +64,17 @@ const fallbackServices = [
   },
 ];
 
-const fallbackGuides = [
-  { id: 'fg-1', title: 'Guía: Cómo Solucionar las Siestas Cortas', price: 'USD $16', link: '/tienda' },
-  { id: 'fg-2', title: 'Guía: Cómo manejar las Regresiones de Sueño', price: 'USD $16', link: '/tienda' },
-  { id: 'fg-3', title: 'Guía: Transición de Siestas', price: 'USD $16', link: '/tienda' },
-  { id: 'fg-4', title: 'Guía: Sueño, Viajes y Eventos Especiales', price: 'USD $16', link: '/tienda' },
-  { id: 'fg-5', title: 'Guía: Todo sobre el chupo', price: 'USD $12', link: '/tienda' },
+const childOutcomes = [
+  'Pueda dormir toda la noche (de 10 a 12 horas).',
+  'Aprenda a conciliar el sueño de forma independiente.',
+  'Aprenda a despertarse a la hora que debería hacerlo en la mañana.',
+  'Genere asociaciones positivas con su habitación, cuna y con la hora de dormir.',
+];
+
+const parentOutcomes = [
+  'Dormir mejor, con buen descanso en calidad y cantidad.',
+  'Predecir los horarios, siestas y noches de tu bebé.',
+  'Poner a tu bebé en la cuna despierto y sin llanto.',
 ];
 
 export default async function SuenoPage() {
@@ -78,15 +86,18 @@ export default async function SuenoPage() {
     .eq('category', 'Sueño infantil')
     .order('created_at', { ascending: false });
 
+  const { data: rawFreebies } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true)
+    .eq('category', 'Gratuitos')
+    .order('created_at', { ascending: false });
+
   const productsList = (rawProducts ?? []) as Product[];
+  const freebies = (rawFreebies ?? []) as Product[];
 
-  const dbServices = productsList.filter(
-    (p) => p.product_type === 'service' || (p.features && p.features.length > 0)
-  );
-
-  const dbProducts = productsList.filter(
-    (p) => p.product_type !== 'service' && (!p.features || p.features.length === 0)
-  );
+  const dbServices = productsList.filter((p) => p.product_type === 'service');
+  const dbGuides = productsList.filter((p) => p.product_type !== 'service' && p.price > 0);
 
   const sleepServices = dbServices.length > 0 ? dbServices.map((p) => ({
     id: p.id,
@@ -100,13 +111,6 @@ export default async function SuenoPage() {
     popular: Boolean(p.is_popular),
   })) : fallbackServices;
 
-  const sleepGuides = dbProducts.length > 0 ? dbProducts.map((p) => ({
-    id: p.id,
-    title: p.title,
-    price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
-    link: '/tienda',
-  })) : fallbackGuides;
-
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
       <div style={{ padding: '0 5%' }}>
@@ -116,7 +120,7 @@ export default async function SuenoPage() {
         </Link>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
+        <Reveal as="div" style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Servicios de Sueño Infantil
           </span>
@@ -126,13 +130,29 @@ export default async function SuenoPage() {
           <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
             Te acompaño de forma empática y respetuosa para lograr que tu bebé y toda tu familia vuelvan a dormir noches completas.
           </p>
-        </div>
+        </Reveal>
+
+        {/* Intro banner */}
+        <Reveal as="div" className="sueno-intro">
+          <span className="sueno-intro-eyebrow font-inter">Mi enfoque</span>
+          <h2 className="font-forum sueno-intro-title">
+            Familias Descansadas.<br />
+            <em>Familias Felices.</em>
+          </h2>
+          <p className="font-inter sueno-intro-text">
+            Como mamá, sé lo importante que es seguir nuestro instinto. Por eso mis programas de sueño
+            tienen un enfoque completamente personalizado y acompañamiento diario. Conseguiremos que
+            todos en casa obtengan el descanso que necesitan — sin métodos que impliquen dejarlo llorar.
+          </p>
+        </Reveal>
 
         {/* Services Cards Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 560px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
-          {sleepServices.map((service) => (
-            <div
+          {sleepServices.map((service, sIdx) => (
+            <Reveal
               key={service.id}
+              as="div"
+              delay={sIdx * 100}
               style={{
                 background: 'white',
                 borderRadius: '24px',
@@ -181,34 +201,34 @@ export default async function SuenoPage() {
                 buttonText="Reservar Asesoría"
                 calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
               />
-            </div>
+            </Reveal>
           ))}
         </div>
 
-        {/* Guides Section */}
-        {sleepGuides.length > 0 && (
-          <div style={{ background: 'white', borderRadius: '24px', padding: '48px 36px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-              <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>
-                Guías Digitales de Sueño
-              </h2>
-              <p className="font-inter" style={{ fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.8 }}>
-                Formatos prácticos y descargables para aplicar a tu propio ritmo.
-              </p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-              {sleepGuides.map((guide) => (
-                <div key={guide.id} style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center', background: 'var(--color-cream)' }}>
-                  <h4 className="font-forum" style={{ fontSize: '1.1rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{guide.title}</h4>
-                  <p className="font-inter" style={{ fontWeight: 600, color: 'var(--color-turquoise)', marginBottom: '16px' }}>{guide.price}</p>
-                  <Link href={guide.link}>
-                    <Button variant="secondary" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ir a la tienda</Button>
-                  </Link>
-                </div>
+        {/* Benefits */}
+        <div className="sueno-benefits">
+          <Reveal as="div" className="sueno-benefit-card child">
+            <div className="sueno-benefit-icon">🌙</div>
+            <h3 className="font-forum">Con un plan de entrenamiento, tu hijo logrará:</h3>
+            <ul>
+              {childOutcomes.map((item) => (
+                <li key={item} className="font-inter">{item}</li>
               ))}
-            </div>
-          </div>
-        )}
+            </ul>
+          </Reveal>
+          <Reveal as="div" delay={120} className="sueno-benefit-card parent">
+            <div className="sueno-benefit-icon">💛</div>
+            <h3 className="font-forum">Con un plan de entrenamiento, tú lograrás:</h3>
+            <ul>
+              {parentOutcomes.map((item) => (
+                <li key={item} className="font-inter">{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+
+        {/* Guides + Free downloads (interactive) */}
+        <SuenoShop guides={dbGuides} freebies={freebies} />
 
       </div>
     </div>

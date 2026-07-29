@@ -1,0 +1,279 @@
+.sueno-intro {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-blue-gray) 0%, #3a4360 100%);
+  border-radius: var(--radius-lg);
+  padding: 56px 8% 60px;
+  margin-bottom: 72px;
+  text-align: center;
+  isolation: isolate;
+}
+
+.sueno-intro::before,
+.sueno-intro::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(2px);
+  opacity: 0.35;
+  animation: sueno-float 9s ease-in-out infinite;
+}
+
+.sueno-intro::before {
+  width: 220px;
+  height: 220px;
+  background: var(--color-turquoise);
+  top: -80px;
+  left: -60px;
+}
+
+.sueno-intro::after {
+  width: 260px;
+  height: 260px;
+  background: var(--color-coral);
+  bottom: -110px;
+  right: -70px;
+  animation-delay: 2.5s;
+}
+
+@keyframes sueno-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-16px) scale(1.05); }
+}
+
+.sueno-intro-eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-peach);
+  margin-bottom: 10px;
+}
+
+.sueno-intro-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #fff;
+  margin-bottom: 18px;
+  line-height: 1.25;
+}
+
+.sueno-intro-title em {
+  font-style: italic;
+  color: var(--color-peach);
+}
+
+.sueno-intro-text {
+  max-width: 640px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+/* Benefits */
+.sueno-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  margin-bottom: 80px;
+}
+
+.sueno-benefit-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sueno-benefit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sueno-benefit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 18px;
+}
+
+.sueno-benefit-card.child .sueno-benefit-icon {
+  background: rgba(113, 176, 180, 0.16);
+  color: var(--color-turquoise);
+}
+
+.sueno-benefit-card.parent .sueno-benefit-icon {
+  background: rgba(205, 128, 123, 0.16);
+  color: var(--color-coral);
+}
+
+.sueno-benefit-card h3 {
+  font-size: 1.35rem;
+  color: var(--color-blue-gray);
+  margin-bottom: 18px;
+}
+
+.sueno-benefit-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sueno-benefit-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--foreground);
+  opacity: 0.88;
+}
+
+.sueno-benefit-card li::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.sueno-benefit-card.child li::before {
+  background: var(--color-turquoise);
+}
+
+.sueno-benefit-card.parent li::before {
+  background: var(--color-coral);
+}
+
+/* Section headings */
+.sueno-section-head {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.sueno-section-head h2 {
+  font-size: 2.2rem;
+  color: var(--color-blue-gray);
+  margin-bottom: 8px;
+}
+
+.sueno-section-head p {
+  font-size: 0.95rem;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
+/* Guides / shop grid */
+.sueno-shop-section {
+  margin-bottom: 72px;
+}
+
+.sueno-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+}
+
+.sueno-mini-card {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.sueno-mini-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(113, 176, 180, 0.12) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.sueno-mini-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-turquoise);
+}
+
+.sueno-mini-card:hover::before {
+  transform: translateX(100%);
+}
+
+.sueno-mini-card h4 {
+  font-size: 1.05rem;
+  color: var(--color-blue-gray);
+  line-height: 1.35;
+  min-height: 2.7em;
+}
+
+.sueno-mini-price {
+  font-weight: 700;
+  color: var(--color-turquoise);
+  font-size: 1.05rem;
+}
+
+.sueno-mini-btn {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  background: var(--color-coral);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sueno-mini-btn:hover {
+  background: var(--color-terracotta);
+  transform: translateY(-2px);
+}
+
+.sueno-mini-btn.free {
+  background: var(--color-turquoise);
+}
+
+.sueno-mini-btn.free:hover {
+  background: #5b9498;
+}
+
+.sueno-mini-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--color-peach);
+  color: #5a3a20;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+}
