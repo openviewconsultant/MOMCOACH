@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Reveal from '@/components/ui/Reveal';
 import DownloadModal from '@/components/tienda/DownloadModal';
+import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
 import { useCart } from '@/lib/cart-context';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
@@ -51,6 +52,10 @@ function FreebieIcon({ title }: { title: string }) {
 export default function CategoryDigitalShop({ guides, freebies, guidesTitle, guidesSubtitle }: CategoryDigitalShopProps) {
   const { addBook, openCart, items } = useCart();
   const [downloadTarget, setDownloadTarget] = useState<Product | null>(null);
+  const [previewTarget, setPreviewTarget] = useState<{ item: Product; rect: DOMRect | null } | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const loopedFreebies = freebies.length > 3 ? [...freebies, ...freebies] : freebies;
+  const isCarousel = freebies.length > 3;
 
   return (
     <>
@@ -99,28 +104,54 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
             <h2 className="font-forum">Material Descargable Gratuito</h2>
             <p className="font-inter">Recursos para acompañarte hoy mismo, sin costo.</p>
           </Reveal>
-          <div className="shop-free-list">
-            {freebies.map((item, idx) => (
-              <Reveal key={item.id} delay={idx * 40} as="div" className="shop-free-row">
-                <span className="shop-free-icon" aria-hidden="true">
-                  <FreebieIcon title={item.title} />
-                </span>
-                <h4 className="font-forum">{item.title}</h4>
+          <div className={`shop-free-viewport ${isCarousel ? 'is-carousel' : ''}`}>
+            <div
+              ref={trackRef}
+              className={`shop-free-track ${previewTarget || downloadTarget ? 'paused' : ''}`}
+              style={isCarousel ? { animationDuration: `${freebies.length * 4.5}s` } : undefined}
+            >
+              {loopedFreebies.map((item, idx) => (
                 <button
+                  key={`${item.id}-${idx}`}
                   type="button"
-                  className="shop-free-btn font-inter"
-                  onClick={() => setDownloadTarget(item)}
+                  className="shop-free-row"
+                  onClick={(e) => setPreviewTarget({ item, rect: e.currentTarget.getBoundingClientRect() })}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                  <span className="shop-free-btn-label">Descargar</span>
+                  <span className="shop-free-icon" aria-hidden="true">
+                    <FreebieIcon title={item.title} />
+                  </span>
+                  <h4 className="font-forum">{item.title}</h4>
+                  <span
+                    className="shop-free-btn font-inter"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDownloadTarget(item);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    <span className="shop-free-btn-label">Descargar</span>
+                  </span>
                 </button>
-              </Reveal>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
+      )}
+
+      {previewTarget && (
+        <PdfPreviewModal
+          productId={previewTarget.item.id}
+          productTitle={previewTarget.item.title}
+          originRect={previewTarget.rect}
+          onClose={() => setPreviewTarget(null)}
+          onDownload={() => {
+            setDownloadTarget(previewTarget.item);
+            setPreviewTarget(null);
+          }}
+        />
       )}
 
       {downloadTarget && (
