@@ -5,7 +5,7 @@ import type { Product } from '@/lib/types';
 
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import Reveal from '@/components/ui/Reveal';
-import SuenoShop from './SuenoShop';
+import CategoryDigitalShop from '@/components/tienda/CategoryDigitalShop';
 import '@/app/tienda/tienda.css';
 import './sueno.css';
 
@@ -228,7 +228,12 @@ export default async function SuenoPage() {
         </div>
 
         {/* Guides + Free downloads (interactive) */}
-        <SuenoShop guides={dbGuides} freebies={freebies} />
+        <CategoryDigitalShop
+          guides={dbGuides}
+          freebies={freebies}
+          guidesTitle="Guías Digitales de Sueño"
+          guidesSubtitle="Formatos prácticos y descargables para aplicar a tu propio ritmo."
+        />
 
       </div>
     </div>

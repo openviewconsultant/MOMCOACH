@@ -5,29 +5,37 @@ import Reveal from '@/components/ui/Reveal';
 import DownloadModal from '@/components/tienda/DownloadModal';
 import { useCart } from '@/lib/cart-context';
 import type { Product } from '@/lib/types';
+import './category-digital-shop.css';
 
-export default function SuenoShop({ guides, freebies }: { guides: Product[]; freebies: Product[] }) {
+interface CategoryDigitalShopProps {
+  guides: Product[];
+  freebies: Product[];
+  guidesTitle: string;
+  guidesSubtitle: string;
+}
+
+export default function CategoryDigitalShop({ guides, freebies, guidesTitle, guidesSubtitle }: CategoryDigitalShopProps) {
   const { addBook, openCart, items } = useCart();
   const [downloadTarget, setDownloadTarget] = useState<Product | null>(null);
 
   return (
     <>
       {guides.length > 0 && (
-        <div className="sueno-shop-section">
-          <Reveal as="div" className="sueno-section-head">
-            <h2 className="font-forum">Guías Digitales de Sueño</h2>
-            <p className="font-inter">Formatos prácticos y descargables para aplicar a tu propio ritmo.</p>
+        <div className="shop-section">
+          <Reveal as="div" className="shop-section-head">
+            <h2 className="font-forum">{guidesTitle}</h2>
+            <p className="font-inter">{guidesSubtitle}</p>
           </Reveal>
-          <div className="sueno-card-grid">
+          <div className="shop-card-grid">
             {guides.map((guide, idx) => {
               const inCart = items.some((item) => item.id === guide.id);
               return (
-                <Reveal key={guide.id} delay={idx * 60} as="div" className="sueno-mini-card">
+                <Reveal key={guide.id} delay={idx * 60} as="div" className="shop-mini-card">
                   <h4 className="font-forum">{guide.title}</h4>
-                  <span className="sueno-mini-price font-inter">USD ${guide.price}</span>
+                  <span className="shop-mini-price font-inter">USD ${guide.price}</span>
                   <button
                     type="button"
-                    className="sueno-mini-btn font-inter"
+                    className="shop-mini-btn font-inter"
                     onClick={() => {
                       addBook(guide);
                       openCart();
@@ -43,19 +51,19 @@ export default function SuenoShop({ guides, freebies }: { guides: Product[]; fre
       )}
 
       {freebies.length > 0 && (
-        <div className="sueno-shop-section">
-          <Reveal as="div" className="sueno-section-head">
+        <div className="shop-section">
+          <Reveal as="div" className="shop-section-head">
             <h2 className="font-forum">Material Descargable Gratuito</h2>
             <p className="font-inter">Recursos para acompañarte hoy mismo, sin costo.</p>
           </Reveal>
-          <div className="sueno-card-grid">
+          <div className="shop-card-grid">
             {freebies.map((item, idx) => (
-              <Reveal key={item.id} delay={idx * 60} as="div" className="sueno-mini-card">
-                <span className="sueno-mini-badge font-inter">Gratis</span>
+              <Reveal key={item.id} delay={idx * 60} as="div" className="shop-mini-card">
+                <span className="shop-mini-badge font-inter">Gratis</span>
                 <h4 className="font-forum">{item.title}</h4>
                 <button
                   type="button"
-                  className="sueno-mini-btn free font-inter"
+                  className="shop-mini-btn free font-inter"
                   onClick={() => setDownloadTarget(item)}
                 >
                   Descargar gratis

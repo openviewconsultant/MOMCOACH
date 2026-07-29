@@ -1,10 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
 
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
+import Reveal from '@/components/ui/Reveal';
+import CategoryDigitalShop from '@/components/tienda/CategoryDigitalShop';
+import '@/app/tienda/tienda.css';
+import './alimentacion.css';
 
 export const metadata = {
   title: 'Alimentación Infantil & BLW | The Mom Coach',
@@ -30,6 +33,21 @@ const fallbackServices = [
   },
   {
     id: 'f-2',
+    title: 'Llamada de Consulta de Alimentación',
+    price: 'USD $65',
+    tag: 'Sesión express de orientación',
+    desc: 'Ideal si necesitas resolver dudas puntuales sobre inicio de la alimentación, selectividad alimentaria o ajustar un plan que ya tenías.',
+    features: [
+      'Videollamada de 45 minutos 1 a 1',
+      'Análisis de la rutina alimentaria actual',
+      'Recomendaciones escritas al finalizar',
+    ],
+    whatsappText: 'Hola! Quiero agendar una Llamada de consulta de alimentación',
+    calLink: 'open-view-consultant-7ng550/alimentacion',
+    popular: false,
+  },
+  {
+    id: 'f-3',
     title: 'Asesoría para Picky Eaters (Comedores Selectivos)',
     price: 'USD $120',
     tag: 'Acompañamiento Personalizado',
@@ -46,14 +64,6 @@ const fallbackServices = [
   },
 ];
 
-const fallbackProducts = [
-  { id: 'fp-1', title: 'Guía: Destete progresivo, guiado por la madre', price: 'USD $32', link: '/tienda' },
-  { id: 'fp-2', title: 'Guía: Todo sobre los Picky Eaters', price: 'USD $32', link: '/tienda' },
-  { id: 'fp-3', title: 'Recetario Booster Calórico', price: 'USD $16', link: '/tienda' },
-  { id: 'fp-4', title: 'Recetario: Postres Saludables', price: 'USD $10', link: '/tienda' },
-  { id: 'fp-5', title: 'Recetario Completo - The Mom Coach', price: 'USD $18', link: '/tienda' },
-];
-
 export default async function AlimentacionPage() {
   const supabase = await createClient();
   const { data: rawProducts } = await supabase
@@ -63,15 +73,18 @@ export default async function AlimentacionPage() {
     .eq('category', 'Alimentación')
     .order('created_at', { ascending: false });
 
+  const { data: rawFreebies } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true)
+    .eq('category', 'Gratuitos')
+    .order('created_at', { ascending: false });
+
   const productsList = (rawProducts ?? []) as Product[];
+  const freebies = (rawFreebies ?? []) as Product[];
 
-  const dbServices = productsList.filter(
-    (p) => p.product_type === 'service' || (p.features && p.features.length > 0)
-  );
-
-  const dbProducts = productsList.filter(
-    (p) => p.product_type !== 'service' && (!p.features || p.features.length === 0)
-  );
+  const dbServices = productsList.filter((p) => p.product_type === 'service');
+  const dbGuides = productsList.filter((p) => p.product_type !== 'service' && p.price > 0);
 
   const foodServices = dbServices.length > 0 ? dbServices.map((p) => ({
     id: p.id,
@@ -85,23 +98,16 @@ export default async function AlimentacionPage() {
     popular: Boolean(p.is_popular),
   })) : fallbackServices;
 
-  const foodProducts = dbProducts.length > 0 ? dbProducts.map((p) => ({
-    id: p.id,
-    title: p.title,
-    price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
-    link: '/tienda',
-  })) : fallbackProducts;
-
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
       <div style={{ padding: '0 5%' }}>
-        
+
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
           ← Volver al inicio
         </Link>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
+        <Reveal as="div" style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Nutrición y Alimentación Infantil
           </span>
@@ -111,13 +117,34 @@ export default async function AlimentacionPage() {
           <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
             Desde el primer bocado a los 6 meses hasta convertir la mesa en un espacio de disfrute y nutrición para tus hijos.
           </p>
-        </div>
+        </Reveal>
+
+        {/* Intro banner */}
+        <Reveal as="div" className="aliment-intro">
+          <span className="aliment-intro-eyebrow font-inter">Te ayudo con la alimentación de tu bebé</span>
+          <h2 className="font-forum aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
+          <p className="font-inter aliment-intro-text">
+            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
+            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
+            distintos factores alrededor de la hora de comer y de los alimentos.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Te enseño cómo fomentar en tus hijos una relación saludable con la comida. Conoce mis asesorías
+            en alimentación de 0 a 5 años — la que elijas dependerá de la edad de tu hijo.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
+            largo de toda la vida.
+          </p>
+        </Reveal>
 
         {/* Services Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 560px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
-          {foodServices.map((service) => (
-            <div
+          {foodServices.map((service, sIdx) => (
+            <Reveal
               key={service.id}
+              as="div"
+              delay={sIdx * 100}
               style={{
                 background: 'white',
                 borderRadius: '24px',
@@ -166,34 +193,17 @@ export default async function AlimentacionPage() {
                 buttonText="Solicitar Asesoría"
                 calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
               />
-            </div>
+            </Reveal>
           ))}
         </div>
 
-        {/* Recipe books & Guides */}
-        {foodProducts.length > 0 && (
-          <div style={{ background: 'white', borderRadius: '24px', padding: '48px 36px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-              <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>
-                Recetarios y Guías de Alimentación
-              </h2>
-              <p className="font-inter" style={{ fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.8 }}>
-                Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día.
-              </p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-              {foodProducts.map((p) => (
-                <div key={p.id} style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '20px', textAlign: 'center', background: 'var(--color-cream)' }}>
-                  <h4 className="font-forum" style={{ fontSize: '1.1rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{p.title}</h4>
-                  <p className="font-inter" style={{ fontWeight: 600, color: 'var(--color-turquoise)', marginBottom: '16px' }}>{p.price}</p>
-                  <Link href={p.link}>
-                    <Button variant="secondary" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>Ver en la Tienda</Button>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Recipe books, guides + Free downloads (interactive) */}
+        <CategoryDigitalShop
+          guides={dbGuides}
+          freebies={freebies}
+          guidesTitle="Recetarios y Guías de Alimentación"
+          guidesSubtitle="Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día."
+        />
 
       </div>
     </div>

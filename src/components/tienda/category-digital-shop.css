@@ -1,0 +1,113 @@
+.shop-section {
+  margin-bottom: 72px;
+}
+
+.shop-section-head {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.shop-section-head h2 {
+  font-size: 2.2rem;
+  color: var(--color-blue-gray);
+  margin-bottom: 8px;
+}
+
+.shop-section-head p {
+  font-size: 0.95rem;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
+.shop-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+}
+
+.shop-mini-card {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.shop-mini-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(113, 176, 180, 0.12) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.shop-mini-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-turquoise);
+}
+
+.shop-mini-card:hover::before {
+  transform: translateX(100%);
+}
+
+.shop-mini-card h4 {
+  font-size: 1.05rem;
+  color: var(--color-blue-gray);
+  line-height: 1.35;
+  min-height: 2.7em;
+}
+
+.shop-mini-price {
+  font-weight: 700;
+  color: var(--color-turquoise);
+  font-size: 1.05rem;
+}
+
+.shop-mini-btn {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  background: var(--color-coral);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.shop-mini-btn:hover {
+  background: var(--color-terracotta);
+  transform: translateY(-2px);
+}
+
+.shop-mini-btn.free {
+  background: var(--color-turquoise);
+}
+
+.shop-mini-btn.free:hover {
+  background: #5b9498;
+}
+
+.shop-mini-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--color-peach);
+  color: #5a3a20;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+}
