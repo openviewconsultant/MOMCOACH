@@ -72,11 +72,16 @@ export default function PdfPreviewModal({ productId, productTitle, originRect, o
             </div>
           )}
           <iframe
-            src={`/api/productos/${productId}/descargar`}
+            src={`/api/productos/${productId}/preview#toolbar=0&navpanes=0&statusbar=0&view=FitH`}
             title={productTitle}
             onLoad={() => setIframeLoaded(true)}
             className={iframeLoaded ? 'visible' : ''}
           />
+          {iframeLoaded && (
+            <div className="pdf-preview-fade">
+              <span className="font-inter">Vista previa · primeras páginas</span>
+            </div>
+          )}
         </div>
         <div className="pdf-preview-footer">
           <button type="button" className="pdf-preview-btn font-inter" onClick={onDownload}>

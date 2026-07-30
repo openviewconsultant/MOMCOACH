@@ -103,6 +103,24 @@
   opacity: 1;
 }
 
+.pdf-preview-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 26px 16px 12px;
+  text-align: center;
+  background: linear-gradient(180deg, transparent, rgba(244, 241, 232, 0.95) 55%);
+  pointer-events: none;
+}
+
+.pdf-preview-fade span {
+  font-size: 0.75rem;
+  color: var(--color-blue-gray);
+  opacity: 0.75;
+  letter-spacing: 0.02em;
+}
+
 .pdf-preview-loading {
   position: absolute;
   inset: 0;

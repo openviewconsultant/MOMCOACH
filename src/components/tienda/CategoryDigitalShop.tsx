@@ -117,22 +117,26 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                   className="shop-free-row"
                   onClick={(e) => setPreviewTarget({ item, rect: e.currentTarget.getBoundingClientRect() })}
                 >
-                  <span className="shop-free-icon" aria-hidden="true">
-                    <FreebieIcon title={item.title} />
+                  <span className="shop-free-cover" aria-hidden="true">
+                    <span className="shop-free-icon">
+                      <FreebieIcon title={item.title} />
+                    </span>
                   </span>
-                  <h4 className="font-forum">{item.title}</h4>
-                  <span
-                    className="shop-free-btn font-inter"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDownloadTarget(item);
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                    <span className="shop-free-btn-label">Descargar</span>
+                  <span className="shop-free-body">
+                    <h4 className="font-forum">{item.title}</h4>
+                    <span
+                      className="shop-free-btn font-inter"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDownloadTarget(item);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      </svg>
+                      <span className="shop-free-btn-label">Descargar</span>
+                    </span>
                   </span>
                 </button>
               ))}
