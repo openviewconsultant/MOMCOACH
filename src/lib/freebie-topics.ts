@@ -35,3 +35,10 @@ export function filterFreebiesByTopic(freebies: Product[], topic: 'sueno' | 'ali
   const other = topic === 'sueno' ? ALIMENTACION_TITLES : SUENO_TITLES;
   return freebies.filter((item) => isTopic(item.title, set) || !isTopic(item.title, other));
 }
+
+/** Classifies a freebie's title into a topic; 'general' covers items shown under both. */
+export function getFreebieTopic(title: string): 'sueno' | 'alimentacion' | 'general' {
+  if (isTopic(title, SUENO_TITLES)) return 'sueno';
+  if (isTopic(title, ALIMENTACION_TITLES)) return 'alimentacion';
+  return 'general';
+}
