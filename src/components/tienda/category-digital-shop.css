@@ -259,6 +259,7 @@
 .shop-free-cover-img {
   position: absolute;
   inset: 0;
+  z-index: 2;
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
