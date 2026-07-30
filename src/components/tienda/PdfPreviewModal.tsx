@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import PdfPagesRenderer from '@/components/tienda/PdfPagesRenderer';
 import './pdf-preview-modal.css';
 
 interface PdfPreviewModalProps {
@@ -14,7 +15,7 @@ interface PdfPreviewModalProps {
 export default function PdfPreviewModal({ productId, productTitle, originRect, onClose, onDownload }: PdfPreviewModalProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [entered, setEntered] = useState(false);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [previewReady, setPreviewReady] = useState(false);
   const [closing, setClosing] = useState(false);
 
   useLayoutEffect(() => {
@@ -65,23 +66,18 @@ export default function PdfPreviewModal({ productId, productTitle, originRect, o
           <span className="pdf-preview-badge font-inter">Gratis</span>
         </div>
         <div className="pdf-preview-viewport">
-          {!iframeLoaded && (
+          {!previewReady && (
             <div className="pdf-preview-loading">
               <span className="pdf-preview-spinner" />
               <p className="font-inter">Cargando vista previa…</p>
             </div>
           )}
-          <iframe
-            src={`/api/productos/${productId}/preview#toolbar=0&navpanes=0&statusbar=0&view=FitH`}
-            title={productTitle}
-            onLoad={() => setIframeLoaded(true)}
-            className={iframeLoaded ? 'visible' : ''}
-          />
-          {iframeLoaded && (
-            <div className="pdf-preview-fade">
-              <span className="font-inter">Vista previa · primeras páginas</span>
-            </div>
-          )}
+          <div className={`pdf-preview-scroll ${previewReady ? 'visible' : ''}`}>
+            <PdfPagesRenderer
+              fileUrl={`/api/productos/${productId}/preview`}
+              onReady={() => setPreviewReady(true)}
+            />
+          </div>
         </div>
         <div className="pdf-preview-footer">
           <button type="button" className="pdf-preview-btn font-inter" onClick={onDownload}>

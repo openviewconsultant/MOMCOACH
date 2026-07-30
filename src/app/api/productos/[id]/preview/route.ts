@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-const PREVIEW_PAGE_LIMIT = 2;
+// Sharp pages are rendered normally on the client; anything beyond that up to
+// this limit is still sent so it can be rendered blurred as a teaser.
+const PREVIEW_PAGE_LIMIT = 8;
 
 export async function GET(
   _request: Request,
