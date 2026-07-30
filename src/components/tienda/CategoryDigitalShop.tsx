@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import Reveal from '@/components/ui/Reveal';
 import DownloadModal from '@/components/tienda/DownloadModal';
 import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
+import EbookCoverThumbnail from '@/components/tienda/EbookCoverThumbnail';
 import { useCart } from '@/lib/cart-context';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
@@ -108,7 +109,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
             <div
               ref={trackRef}
               className={`shop-free-track ${previewTarget || downloadTarget ? 'paused' : ''}`}
-              style={isCarousel ? { animationDuration: `${freebies.length * 4.5}s` } : undefined}
+              style={isCarousel ? { animationDuration: `${freebies.length * 6}s` } : undefined}
             >
               {loopedFreebies.map((item, idx) => (
                 <button
@@ -121,6 +122,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                     <span className="shop-free-icon">
                       <FreebieIcon title={item.title} />
                     </span>
+                    <EbookCoverThumbnail productId={item.id} />
                   </span>
                   <span className="shop-free-body">
                     <h4 className="font-forum">{item.title}</h4>
