@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-const SHARP_PAGES = 2;
+const SHARP_PAGES = 3;
 
 interface PdfPagesRendererProps {
   fileUrl: string;
