@@ -148,7 +148,7 @@ export default async function SuenoPage() {
         </Reveal>
 
         {/* Services Cards Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 560px))', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
           {sleepServices.map((service, sIdx) => (
             <Reveal
               key={service.id}
@@ -164,6 +164,8 @@ export default async function SuenoPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                flex: '1 1 320px',
+                maxWidth: '560px',
               }}
             >
               <div>

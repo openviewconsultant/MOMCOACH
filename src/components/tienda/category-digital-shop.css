@@ -211,7 +211,7 @@
 
 .shop-free-row {
   flex: 0 0 320px;
-  height: 400px;
+  height: 560px;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -260,8 +260,8 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background-size: cover;
-  background-position: top center;
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
   animation: shop-free-cover-in 0.4s ease forwards;
 }
