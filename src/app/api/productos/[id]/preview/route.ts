@@ -40,7 +40,7 @@ export async function GET(
 
   const previewBytes = await previewDoc.save();
 
-  return new NextResponse(previewBytes, {
+  return new NextResponse(Buffer.from(previewBytes), {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': 'inline; filename="vista-previa.pdf"',
