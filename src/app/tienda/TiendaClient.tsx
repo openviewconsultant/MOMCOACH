@@ -84,6 +84,8 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
 
   const visibleSupabaseProducts = activeCategory === 'Todos'
     ? products
+    : activeCategory === 'Gratuitos'
+    ? products.filter((p) => p.category === 'Gratuitos' || p.price === 0)
     : products.filter((p) => p.category === activeCategory);
 
   const [downloadingProduct, setDownloadingProduct] = useState<SupabaseProduct | null>(null);

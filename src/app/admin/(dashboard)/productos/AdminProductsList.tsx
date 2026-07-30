@@ -6,7 +6,6 @@ import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
 import { formatCOP } from '@/lib/format';
 import { generateAndSaveCover } from '@/lib/render-pdf-cover';
-import { getFreebieTopic } from '@/lib/freebie-topics';
 
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
@@ -68,18 +67,12 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
         if (!matchesTitle && !matchesSub && !matchesCategory) return false;
       }
 
-      // Category filter — "Gratuitos" also includes products with price === 0.
-      // "Alimentación" / "Sueño infantil" also pull in same-topic free items so
-      // the filter matches what visitors see, not just the commercial category.
+      // Category filter — "Gratuitos" also includes any product priced at 0,
+      // since most free items now live under their real topic category.
       if (categoryFilter !== 'all') {
         if (categoryFilter === 'Gratuitos') {
           const isGratuito = product.category === 'Gratuitos' || product.price === 0;
           if (!isGratuito) return false;
-        } else if (categoryFilter === 'Alimentación' || categoryFilter === 'Sueño infantil') {
-          const matchesCategory = product.category === categoryFilter;
-          const topic = categoryFilter === 'Alimentación' ? 'alimentacion' : 'sueno';
-          const matchesFreeTopic = product.category === 'Gratuitos' && getFreebieTopic(product.title) === topic;
-          if (!matchesCategory && !matchesFreeTopic) return false;
         } else if (product.category !== categoryFilter) {
           return false;
         }
