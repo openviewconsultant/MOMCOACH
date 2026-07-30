@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
 import { createAdminClient } from '@/lib/supabase/admin';
 
+export const maxDuration = 60;
+
 export async function GET(
   _request: Request,
   ctx: { params: Promise<{ id: string }> }
@@ -28,14 +30,20 @@ export async function GET(
     return NextResponse.json({ error: 'No se pudo cargar la portada' }, { status: 500 });
   }
 
-  const sourceBytes = await file.arrayBuffer();
-  const sourceDoc = await PDFDocument.load(sourceBytes);
+  let coverBytes: Uint8Array;
+  try {
+    const sourceBytes = await file.arrayBuffer();
+    const sourceDoc = await PDFDocument.load(sourceBytes, { ignoreEncryption: true, updateMetadata: false });
 
-  const coverDoc = await PDFDocument.create();
-  const [firstPage] = await coverDoc.copyPages(sourceDoc, [0]);
-  coverDoc.addPage(firstPage);
+    const coverDoc = await PDFDocument.create();
+    const [firstPage] = await coverDoc.copyPages(sourceDoc, [0]);
+    coverDoc.addPage(firstPage);
 
-  const coverBytes = await coverDoc.save();
+    coverBytes = await coverDoc.save();
+  } catch (err) {
+    console.error('Error procesando PDF para portada', product.file_path, err);
+    return NextResponse.json({ error: 'No se pudo procesar el PDF' }, { status: 500 });
+  }
 
   return new NextResponse(Buffer.from(coverBytes), {
     headers: {

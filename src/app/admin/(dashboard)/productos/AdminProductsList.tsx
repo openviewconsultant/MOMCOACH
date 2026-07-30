@@ -27,6 +27,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
   const [statusFilter, setStatusFilter] = useState('all');
   const [generatingCovers, setGeneratingCovers] = useState(false);
   const [coverProgress, setCoverProgress] = useState({ done: 0, total: 0 });
+  const [failedCovers, setFailedCovers] = useState<string[]>([]);
 
   const productsMissingCovers = useMemo(
     () => products.filter((p) => p.file_path && !p.cover_image_url),
@@ -35,11 +36,15 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
 
   async function handleGenerateCovers() {
     setGeneratingCovers(true);
+    setFailedCovers([]);
     setCoverProgress({ done: 0, total: productsMissingCovers.length });
+    const failed: string[] = [];
     for (const product of productsMissingCovers) {
-      await generateAndSaveCover(product.id);
+      const url = await generateAndSaveCover(product.id);
+      if (!url) failed.push(product.title);
       setCoverProgress((prev) => ({ ...prev, done: prev.done + 1 }));
     }
+    setFailedCovers(failed);
     setGeneratingCovers(false);
     router.refresh();
   }
@@ -108,36 +113,46 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
             padding: '16px 24px',
             boxShadow: 'var(--shadow-sm)',
             marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '16px',
-            flexWrap: 'wrap',
           }}
         >
-          <span style={{ fontSize: '0.92rem', color: 'var(--foreground)' }}>
-            {generatingCovers
-              ? `Generando portadas… ${coverProgress.done}/${coverProgress.total}`
-              : `${productsMissingCovers.length} producto(s) sin portada generada desde su PDF.`}
-          </span>
-          <button
-            type="button"
-            onClick={handleGenerateCovers}
-            disabled={generatingCovers}
+          <div
             style={{
-              background: 'var(--color-turquoise)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '10px 20px',
-              fontSize: '0.88rem',
-              fontWeight: 600,
-              cursor: generatingCovers ? 'default' : 'pointer',
-              opacity: generatingCovers ? 0.7 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px',
+              flexWrap: 'wrap',
             }}
           >
-            {generatingCovers ? 'Generando…' : 'Generar portadas faltantes'}
-          </button>
+            <span style={{ fontSize: '0.92rem', color: 'var(--foreground)' }}>
+              {generatingCovers
+                ? `Generando portadas… ${coverProgress.done}/${coverProgress.total}`
+                : `${productsMissingCovers.length} producto(s) sin portada generada desde su PDF.`}
+            </span>
+            <button
+              type="button"
+              onClick={handleGenerateCovers}
+              disabled={generatingCovers}
+              style={{
+                background: 'var(--color-turquoise)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '10px 20px',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                cursor: generatingCovers ? 'default' : 'pointer',
+                opacity: generatingCovers ? 0.7 : 1,
+              }}
+            >
+              {generatingCovers ? 'Generando…' : 'Generar portadas faltantes'}
+            </button>
+          </div>
+          {!generatingCovers && failedCovers.length > 0 && (
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-terracotta)', marginTop: '10px' }}>
+              No se pudieron generar {failedCovers.length}: {failedCovers.join(', ')}. Puede que el PDF sea muy pesado — vuelve a intentar.
+            </p>
+          )}
         </div>
       )}
 

@@ -6,6 +6,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 // this limit is still sent so it can be rendered blurred as a teaser.
 const PREVIEW_PAGE_LIMIT = 8;
 
+export const maxDuration = 60;
+
 export async function GET(
   _request: Request,
   ctx: { params: Promise<{ id: string }> }
@@ -32,15 +34,21 @@ export async function GET(
     return NextResponse.json({ error: 'No se pudo cargar la vista previa' }, { status: 500 });
   }
 
-  const sourceBytes = await file.arrayBuffer();
-  const sourceDoc = await PDFDocument.load(sourceBytes);
-  const pageCount = Math.min(PREVIEW_PAGE_LIMIT, sourceDoc.getPageCount());
+  let previewBytes: Uint8Array;
+  try {
+    const sourceBytes = await file.arrayBuffer();
+    const sourceDoc = await PDFDocument.load(sourceBytes, { ignoreEncryption: true, updateMetadata: false });
+    const pageCount = Math.min(PREVIEW_PAGE_LIMIT, sourceDoc.getPageCount());
 
-  const previewDoc = await PDFDocument.create();
-  const copiedPages = await previewDoc.copyPages(sourceDoc, Array.from({ length: pageCount }, (_, i) => i));
-  copiedPages.forEach((page) => previewDoc.addPage(page));
+    const previewDoc = await PDFDocument.create();
+    const copiedPages = await previewDoc.copyPages(sourceDoc, Array.from({ length: pageCount }, (_, i) => i));
+    copiedPages.forEach((page) => previewDoc.addPage(page));
 
-  const previewBytes = await previewDoc.save();
+    previewBytes = await previewDoc.save();
+  } catch (err) {
+    console.error('Error procesando PDF para vista previa', product.file_path, err);
+    return NextResponse.json({ error: 'No se pudo procesar el PDF' }, { status: 500 });
+  }
 
   return new NextResponse(Buffer.from(previewBytes), {
     headers: {
