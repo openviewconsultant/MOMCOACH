@@ -122,7 +122,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                     <span className="shop-free-icon">
                       <FreebieIcon title={item.title} />
                     </span>
-                    <EbookCoverThumbnail productId={item.id} />
+                    <EbookCoverThumbnail productId={item.id} coverImageUrl={item.cover_image_url} />
                   </span>
                   <span className="shop-free-body">
                     <h4 className="font-forum">{item.title}</h4>

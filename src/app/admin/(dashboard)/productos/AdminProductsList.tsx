@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
 import { formatCOP } from '@/lib/format';
+import { generateAndSaveCover } from '@/lib/render-pdf-cover';
 
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
@@ -18,10 +20,29 @@ interface AdminProductsListProps {
 }
 
 export default function AdminProductsList({ products }: AdminProductsListProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [generatingCovers, setGeneratingCovers] = useState(false);
+  const [coverProgress, setCoverProgress] = useState({ done: 0, total: 0 });
+
+  const productsMissingCovers = useMemo(
+    () => products.filter((p) => p.file_path && !p.cover_image_url),
+    [products]
+  );
+
+  async function handleGenerateCovers() {
+    setGeneratingCovers(true);
+    setCoverProgress({ done: 0, total: productsMissingCovers.length });
+    for (const product of productsMissingCovers) {
+      await generateAndSaveCover(product.id);
+      setCoverProgress((prev) => ({ ...prev, done: prev.done + 1 }));
+    }
+    setGeneratingCovers(false);
+    router.refresh();
+  }
 
   // Always show predefined categories + any additional ones from the DB
   const categories = useMemo(() => {
@@ -79,6 +100,47 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
 
   return (
     <div>
+      {productsMissingCovers.length > 0 && (
+        <div
+          style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '16px 24px',
+            boxShadow: 'var(--shadow-sm)',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{ fontSize: '0.92rem', color: 'var(--foreground)' }}>
+            {generatingCovers
+              ? `Generando portadas… ${coverProgress.done}/${coverProgress.total}`
+              : `${productsMissingCovers.length} producto(s) sin portada generada desde su PDF.`}
+          </span>
+          <button
+            type="button"
+            onClick={handleGenerateCovers}
+            disabled={generatingCovers}
+            style={{
+              background: 'var(--color-turquoise)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '10px 20px',
+              fontSize: '0.88rem',
+              fontWeight: 600,
+              cursor: generatingCovers ? 'default' : 'pointer',
+              opacity: generatingCovers ? 0.7 : 1,
+            }}
+          >
+            {generatingCovers ? 'Generando…' : 'Generar portadas faltantes'}
+          </button>
+        </div>
+      )}
+
       {/* Filter Toolbar */}
       <div
         style={{
