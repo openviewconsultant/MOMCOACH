@@ -48,9 +48,47 @@ export default function ContactoPage() {
           </p>
         </div>
 
+        {/* Sobre mí / Mi historia */}
+        <div
+          style={{
+            background: 'white',
+            borderRadius: '24px',
+            padding: '48px 40px',
+            boxShadow: 'var(--shadow-md)',
+            marginBottom: '48px',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(180px, 220px) 1fr',
+            gap: '40px',
+            alignItems: 'start',
+          }}
+        >
+          <img
+            src="https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp"
+            alt="Denisse, fundadora de The Mom Coach"
+            style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: '50%', objectFit: 'cover', boxShadow: 'var(--shadow-sm)' }}
+          />
+          <div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
+              Sobre mí
+            </span>
+            <h2 className="font-forum" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', margin: '8px 0 20px' }}>
+              Mi historia
+            </h2>
+            <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.85, marginBottom: '16px' }}>
+              Cuando quedé embarazada empecé a investigar sobre puericultura y a leer sobre diferentes temas todos relacionados con la maternidad y la crianza. Ahí encontré apasionante el tema del sueño y el descanso, sobre todo por su relación directa con la salud mental y con la calidad de vida que viene junto con descansar correctamente.
+            </p>
+            <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.85, marginBottom: '16px' }}>
+              Al tener a mi hija, noté como se normaliza el estar privada de sueño y como muchas mamás y familias sufren por falta de descanso. También noté que era común el no hablar del tema ni buscar ayuda por miedo a ser criticadas, por sentir culpa de sentirse mal y por vergüenza de querer aceptar que no todo en la maternidad es color de rosa. Así mismo, noté mucho silencio ante temas como la depresión y la ansiedad post parto.
+            </p>
+            <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.85 }}>
+              The Mom Coach nace para que encontremos soluciones y acompañamiento. Donde no criticamos estilos de crianza, sino que buscamos el método que mejor se ajuste a tu familia. Es el espacio donde las mamás pueden contar con apoyo sin ser juzgadas y donde encontrarán una mano amiga dispuesta a ayudar.
+            </p>
+          </div>
+        </div>
+
         {/* Grid: Form & Info */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', marginBottom: '80px' }}>
-          
+
           {/* Direct Channels */}
           <div style={{ background: 'white', borderRadius: '24px', padding: '40px', boxShadow: 'var(--shadow-md)' }}>
             <h2 className="font-forum" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
@@ -72,12 +110,22 @@ export default function ContactoPage() {
               </Link>
             </div>
 
-            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '24px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '1.5rem' }}>📧</span>
                 <div>
                   <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Correo electrónico</h4>
-                  <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>contacto@themomcoaching.com</p>
+                  <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>denisse@themomcoaching.com</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '1.5rem' }}>📱</span>
+                <div>
+                  <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Teléfono</h4>
+                  <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>+57 310 215 8656</p>
                 </div>
               </div>
             </div>
