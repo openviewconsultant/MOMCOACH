@@ -215,7 +215,7 @@ export default async function SuenoPage() {
                   price={service.price}
                   whatsappText={service.whatsappText}
                   popular={service.popular}
-                  buttonText="Reservar Asesoría"
+                  buttonText="Solicitar Asesoría"
                   calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
                 />
               </div>

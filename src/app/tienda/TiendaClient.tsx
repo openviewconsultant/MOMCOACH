@@ -45,7 +45,7 @@ function SupabaseProductCard({
             title={product.title}
             price={formatCOP(product.price)}
             whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
-            buttonText="Reservar Asesoría"
+            buttonText="Solicitar Asesoría"
             className="tienda-card-btn font-inter"
             calLink={
               product.cal_link ||
