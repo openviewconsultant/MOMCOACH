@@ -38,7 +38,24 @@ export async function POST(request: Request) {
     requestedQuantities.set(id, quantity);
   }
 
-  const supabase = createAdminClient();
+  // La configuración del servidor (claves de Supabase/Mercado Pago, URL del
+  // sitio) se valida aquí, antes de tocar la base de datos, para que un env
+  // var faltante en producción devuelva un JSON de error legible en vez de
+  // tumbar la función sin respuesta (lo que el cliente ve como "Unexpected
+  // end of JSON input") o dejar una orden huérfana a medio crear.
+  let supabase: ReturnType<typeof createAdminClient>;
+  let siteUrl: string;
+  try {
+    supabase = createAdminClient();
+    siteUrl = getSiteUrl();
+  } catch (error) {
+    console.error('Configuración del servidor incompleta (Supabase/sitio)', error);
+    return NextResponse.json(
+      { error: 'El checkout no está disponible en este momento. Intenta más tarde.' },
+      { status: 500 }
+    );
+  }
+
   const { data: products, error: fetchError } = await supabase
     .from('products')
     .select('*')
@@ -94,7 +111,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No se pudo crear la orden' }, { status: 500 });
   }
 
-  const siteUrl = getSiteUrl();
   const confirmationUrl = `${siteUrl}/tienda/confirmacion`;
 
   try {

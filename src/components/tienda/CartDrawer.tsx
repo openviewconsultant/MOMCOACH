@@ -31,9 +31,14 @@ export default function CartDrawer() {
           items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
         }),
       });
-      const data = await res.json();
+      let data: { initPoint?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // El servidor no devolvió JSON (p. ej. una caída inesperada de la función).
+      }
       if (!res.ok || !data.initPoint) {
-        throw new Error(data.error || 'No se pudo iniciar el pago');
+        throw new Error(data.error || 'No se pudo iniciar el pago. Intenta nuevamente en unos minutos.');
       }
       window.location.href = data.initPoint;
     } catch (err) {
