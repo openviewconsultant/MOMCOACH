@@ -41,9 +41,9 @@ export default function SobreMiPage() {
           </div>
           <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
             <img
-              src="https://www.themomcoaching.com/wp-content/uploads/2023/12/cropped-THE-MOM-COACH-LOGO-PPL.png"
-              alt="The Mom Coach"
-              style={{ width: '100%', height: 'auto', display: 'block', backgroundColor: 'white', padding: '40px' }}
+              src="https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp"
+              alt="Denisse, fundadora de The Mom Coach"
+              style={{ width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', display: 'block' }}
             />
           </div>
         </div>
