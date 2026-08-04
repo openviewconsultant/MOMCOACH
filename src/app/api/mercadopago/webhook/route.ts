@@ -17,22 +17,25 @@ export async function POST(request: Request) {
   const dataId = url.searchParams.get('data.id') ?? url.searchParams.get('id');
 
   const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
-  if (webhookSecret) {
-    try {
-      WebhookSignatureValidator.validate({
-        xSignature: request.headers.get('x-signature'),
-        xRequestId: request.headers.get('x-request-id'),
-        dataId,
-        secret: webhookSecret,
-        toleranceSeconds: 300,
-      });
-    } catch (error) {
-      if (error instanceof InvalidWebhookSignatureError) {
-        console.error('Firma de webhook de Mercado Pago inválida', error.reason);
-        return NextResponse.json({ error: 'Firma inválida' }, { status: 401 });
-      }
-      throw error;
+  if (!webhookSecret) {
+    console.error('MERCADOPAGO_WEBHOOK_SECRET no está configurado; se rechaza el webhook por seguridad');
+    return NextResponse.json({ error: 'Webhook no configurado' }, { status: 500 });
+  }
+
+  try {
+    WebhookSignatureValidator.validate({
+      xSignature: request.headers.get('x-signature'),
+      xRequestId: request.headers.get('x-request-id'),
+      dataId,
+      secret: webhookSecret,
+      toleranceSeconds: 300,
+    });
+  } catch (error) {
+    if (error instanceof InvalidWebhookSignatureError) {
+      console.error('Firma de webhook de Mercado Pago inválida', error.reason);
+      return NextResponse.json({ error: 'Firma inválida' }, { status: 401 });
     }
+    throw error;
   }
 
   if (type !== 'payment' || !dataId) {
@@ -78,6 +81,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
+    // Reclama atómicamente el envío del correo: si dos webhooks (reintentos de
+    // Mercado Pago) llegan en paralelo, solo uno logra pasar de notified_at
+    // NULL -> now(), evitando enviar el correo de descarga duplicado.
+    const { data: claimedOrder, error: claimError } = await supabase
+      .from('orders')
+      .update({ notified_at: new Date().toISOString() })
+      .eq('id', orderId)
+      .is('notified_at', null)
+      .select('id')
+      .single();
+
+    if (claimError || !claimedOrder) {
+      return NextResponse.json({ received: true });
+    }
+
     const { data: items, error: itemsError } = await supabase
       .from('order_items')
       .select('*')
@@ -120,8 +138,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
-    await sendPurchaseEmail({ to: order.buyer_email, items: downloadItems, orderId: order.id });
-    await supabase.from('orders').update({ notified_at: new Date().toISOString() }).eq('id', orderId);
+    try {
+      await sendPurchaseEmail({ to: order.buyer_email, items: downloadItems, orderId: order.id });
+    } catch (emailError) {
+      // Libera el reclamo para que un reintento del webhook de Mercado Pago
+      // pueda volver a intentar el envío del correo.
+      await supabase.from('orders').update({ notified_at: null }).eq('id', orderId);
+      throw emailError;
+    }
 
     return NextResponse.json({ received: true });
   } catch (error) {
