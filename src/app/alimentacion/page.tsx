@@ -30,6 +30,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero información del Curso de Alimentación Complementaria',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: true,
+    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
   },
   {
     id: 'f-2',
@@ -45,6 +46,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero agendar una Llamada de consulta de alimentación',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
+    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/infant-baby-eating-finger-food-2023-11-27-04-54-34-utc-scaled-e1705513415708-600x600.jpg',
   },
   {
     id: 'f-3',
@@ -61,6 +63,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero reservar la Asesoría para Picky Eaters',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
+    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
   },
 ];
 
@@ -89,6 +92,7 @@ export default async function AlimentacionPage() {
     whatsappText: p.whatsapp_text || `Hola! Quiero información sobre ${p.title}`,
     calLink: p.cal_link || 'open-view-consultant-7ng550/alimentacion',
     popular: Boolean(p.is_popular),
+    image: p.cover_image_url,
   })) : fallbackServices;
 
   return (
@@ -131,7 +135,15 @@ export default async function AlimentacionPage() {
           </p>
         </Reveal>
 
-        {/* Services Cards */}
+        {/* Services Cards (de pago) */}
+        <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-coral)' }} className="font-inter">
+            Asesorías de pago
+          </span>
+          <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
+            Acompañamiento 1 a 1
+          </h2>
+        </Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '32px', marginBottom: '80px' }}>
           {foodServices.map((service, sIdx) => (
             <Reveal
@@ -141,7 +153,6 @@ export default async function AlimentacionPage() {
               style={{
                 background: 'white',
                 borderRadius: '24px',
-                padding: '40px 32px 36px 32px',
                 boxShadow: service.popular ? 'var(--shadow-lg)' : 'var(--shadow-md)',
                 border: service.popular ? '2px solid var(--color-turquoise)' : '1px solid rgba(0,0,0,0.06)',
                 position: 'relative',
@@ -152,52 +163,64 @@ export default async function AlimentacionPage() {
                 maxWidth: '560px',
               }}
             >
-              <div>
-                {service.popular && (
-                  <span style={{ position: 'absolute', top: '-14px', right: '24px', background: 'var(--color-turquoise)', color: 'white', fontSize: '0.75rem', fontWeight: 600, padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase' }} className="font-inter">
-                    Recomendado
-                  </span>
-                )}
-                <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
-                  {service.tag}
+              {service.popular && (
+                <span style={{ position: 'absolute', top: '-14px', right: '24px', background: 'var(--color-turquoise)', color: 'white', fontSize: '0.75rem', fontWeight: 600, padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase', zIndex: 2 }} className="font-inter">
+                  Recomendado
                 </span>
-                <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
-                  {service.title}
-                </h3>
-                <p className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
-                  {service.price}
-                </p>
-                <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
-                  {service.desc}
-                </p>
-                {service.features.length > 0 && (
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
-                    {service.features.map((feat, fIdx) => (
-                      <li key={fIdx} className="font-inter" style={{ fontSize: '0.88rem', color: 'var(--foreground)', opacity: 0.9, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ color: 'var(--color-turquoise)', fontWeight: 'bold' }}>✓</span> {feat}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+              )}
+              {service.image && (
+                <div style={{ width: '100%', aspectRatio: '16 / 10', borderRadius: '24px 24px 0 0', overflow: 'hidden' }}>
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+              )}
+              <div style={{ padding: '32px 32px 36px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+                <div>
+                  <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
+                    {service.tag}
+                  </span>
+                  <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
+                    {service.title}
+                  </h3>
+                  <p className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
+                    {service.price}
+                  </p>
+                  <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
+                    {service.desc}
+                  </p>
+                  {service.features.length > 0 && (
+                    <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
+                      {service.features.map((feat, fIdx) => (
+                        <li key={fIdx} className="font-inter" style={{ fontSize: '0.88rem', color: 'var(--foreground)', opacity: 0.9, marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ color: 'var(--color-turquoise)', fontWeight: 'bold' }}>✓</span> {feat}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <ServiceBookingButton
+                  title={service.title}
+                  price={service.price}
+                  whatsappText={service.whatsappText}
+                  popular={service.popular}
+                  buttonText="Solicitar Asesoría"
+                  calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
+                />
               </div>
-              <ServiceBookingButton
-                title={service.title}
-                price={service.price}
-                whatsappText={service.whatsappText}
-                popular={service.popular}
-                buttonText="Solicitar Asesoría"
-                calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
-              />
             </Reveal>
           ))}
         </div>
 
-        {/* Recipe books, guides + Free downloads (interactive) */}
+        {/* Recipe books, guides (de pago) + Free downloads (gratis) */}
         <CategoryDigitalShop
           guides={dbGuides}
           freebies={freebies}
           guidesTitle="Recetarios y Guías de Alimentación"
-          guidesSubtitle="Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día."
+          guidesSubtitle="Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día. Contenido descargable de pago."
         />
 
       </div>

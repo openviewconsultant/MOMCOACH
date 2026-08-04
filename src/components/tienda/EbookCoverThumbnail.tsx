@@ -36,5 +36,7 @@ export default function EbookCoverThumbnail({ productId, coverImageUrl }: EbookC
   const finalUrl = coverImageUrl || generatedUrl;
   if (!finalUrl) return null;
 
-  return <span className="shop-free-cover-img" style={{ backgroundImage: `url(${finalUrl})` }} />;
+  const fitClass = coverImageUrl ? 'is-photo' : 'is-generated';
+
+  return <span className={`shop-free-cover-img ${fitClass}`} style={{ backgroundImage: `url(${finalUrl})` }} />;
 }

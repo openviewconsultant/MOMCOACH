@@ -71,13 +71,19 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
               const inCart = items.some((item) => item.id === guide.id);
               return (
                 <Reveal key={guide.id} delay={idx * 60} as="div" className="shop-mini-card">
-                  <span className="shop-mini-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-                      <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-                      <path d="M9 13h6M9 16.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                    </svg>
-                  </span>
+                  {guide.cover_image_url ? (
+                    <span className="shop-mini-image">
+                      <img src={guide.cover_image_url} alt={guide.title} loading="lazy" />
+                    </span>
+                  ) : (
+                    <span className="shop-mini-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                        <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                        <path d="M9 13h6M9 16.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                  )}
                   <h4 className="font-forum">{guide.title}</h4>
                   <div className="shop-mini-footer">
                     <span className="shop-mini-price font-inter">USD ${guide.price}</span>
@@ -119,9 +125,11 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                   onClick={(e) => setPreviewTarget({ item, rect: e.currentTarget.getBoundingClientRect() })}
                 >
                   <span className="shop-free-cover" aria-hidden="true">
-                    <span className="shop-free-icon">
-                      <FreebieIcon title={item.title} />
-                    </span>
+                    {!item.cover_image_url && (
+                      <span className="shop-free-icon">
+                        <FreebieIcon title={item.title} />
+                      </span>
+                    )}
                     <EbookCoverThumbnail productId={item.id} coverImageUrl={item.cover_image_url} />
                   </span>
                   <span className="shop-free-body">
