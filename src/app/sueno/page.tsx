@@ -203,7 +203,13 @@ export default async function SuenoPage() {
                     {service.tag}
                   </span>
                   <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
-                    {service.title}
+                    {service.id.startsWith('fs-') ? (
+                      service.title
+                    ) : (
+                      <Link href={`/tienda/${service.id}`} style={{ color: 'inherit' }}>
+                        {service.title}
+                      </Link>
+                    )}
                   </h3>
                   <p className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}

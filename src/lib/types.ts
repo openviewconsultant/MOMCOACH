@@ -14,6 +14,7 @@ export interface Product {
   cal_link?: string | null;
   payment_provider?: 'mercadopago' | 'hotmart' | 'calendar';
   hotmart_url?: string | null;
+  video_url?: string | null;
   cover_image_url: string | null;
   file_path: string | null;
   is_published: boolean;
