@@ -93,6 +93,7 @@ export async function saveProductAction(
     return { error: 'No se pudo guardar el producto' };
   }
 
+  revalidatePath('/');
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
   revalidatePath('/alimentacion');
@@ -107,6 +108,7 @@ export async function deleteProductAction(id: string) {
     console.error('Error eliminando producto', error);
     return;
   }
+  revalidatePath('/');
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
 }
@@ -121,6 +123,7 @@ export async function togglePublishAction(id: string, nextValue: boolean) {
     console.error('Error cambiando publicación del producto', error);
     return;
   }
+  revalidatePath('/');
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
 }
