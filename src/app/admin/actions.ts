@@ -45,7 +45,8 @@ export async function saveProductAction(
   const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
   const calLink = (formData.get('cal_link') as string | null)?.trim() || null;
   const paymentProviderRaw = (formData.get('payment_provider') as string | null) || 'mercadopago';
-  const paymentProvider = paymentProviderRaw === 'hotmart' ? 'hotmart' : 'mercadopago';
+  const paymentProvider =
+    paymentProviderRaw === 'hotmart' || paymentProviderRaw === 'calendar' ? paymentProviderRaw : 'mercadopago';
   const hotmartUrl = (formData.get('hotmart_url') as string | null)?.trim() || null;
 
   if (!title) {
@@ -59,6 +60,10 @@ export async function saveProductAction(
 
   if (price > 0 && paymentProvider === 'hotmart' && !hotmartUrl) {
     return { error: 'Ingresa el link de checkout de Hotmart' };
+  }
+
+  if (price > 0 && paymentProvider === 'calendar' && !calLink) {
+    return { error: 'Ingresa el link de calendario' };
   }
 
   const payload = {

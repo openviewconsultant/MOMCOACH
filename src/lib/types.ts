@@ -11,7 +11,7 @@ export interface Product {
   is_popular?: boolean;
   whatsapp_text?: string | null;
   cal_link?: string | null;
-  payment_provider?: 'mercadopago' | 'hotmart';
+  payment_provider?: 'mercadopago' | 'hotmart' | 'calendar';
   hotmart_url?: string | null;
   cover_image_url: string | null;
   file_path: string | null;

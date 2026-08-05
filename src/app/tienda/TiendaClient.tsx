@@ -71,6 +71,15 @@ function SupabaseProductCard({
           >
             Comprar
           </a>
+        ) : product.payment_provider === 'calendar' && product.cal_link ? (
+          <ServiceBookingButton
+            title={product.title}
+            price={formatCOP(product.price)}
+            whatsappText={product.whatsapp_text || `Hola! Quiero agendar ${product.title}`}
+            buttonText="Agendar cita"
+            className="tienda-card-btn font-inter"
+            calLink={product.cal_link}
+          />
         ) : (
           <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
             {inCart ? 'Añadir otro' : 'Añadir al carrito'}
