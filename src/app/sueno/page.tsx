@@ -227,16 +227,14 @@ export default async function SuenoPage() {
                     </ul>
                   )}
                 </div>
-                {service.paymentProvider === 'hotmart' && service.hotmartUrl ? (
-                  <a
-                    href={service.hotmartUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                {service.paymentProvider === 'hotmart' && service.hotmartUrl && !service.id.startsWith('fs-') ? (
+                  <Link
+                    href={`/tienda/${service.id}`}
                     className={`btn btn-${service.popular ? 'primary' : 'secondary'} btn-md`}
                     style={{ width: '100%', textAlign: 'center' }}
                   >
                     Comprar
-                  </a>
+                  </Link>
                 ) : (
                   <ServiceBookingButton
                     title={service.title}
