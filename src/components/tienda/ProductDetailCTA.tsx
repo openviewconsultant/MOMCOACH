@@ -35,7 +35,7 @@ export default function ProductDetailCTA({ product }: { product: Product }) {
         className="tienda-card-btn font-inter"
         style={{ display: 'inline-block', textAlign: 'center' }}
       >
-        Comprar
+        {product.product_type === 'service' ? 'Adquiere el programa' : 'Comprar'}
       </a>
     );
   }
