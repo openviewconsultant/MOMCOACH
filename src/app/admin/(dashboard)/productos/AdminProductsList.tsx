@@ -13,7 +13,7 @@ const PREDEFINED_CATEGORIES = [
   'Regalo',
 ];
 
-const SUBCATEGORIES = ['Curso', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
+const SUBCATEGORIES = ['Curso', 'Guía', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
 
 interface AdminProductsListProps {
   products: Product[];

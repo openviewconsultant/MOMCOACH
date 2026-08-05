@@ -1,8 +1,8 @@
 -- Introduce a two-level taxonomy: "category" becomes the parent topic
 -- (Sueño infantil / Alimentación / Regalo) and a new "subcategory" column
--- becomes an independent, cross-cutting label (Curso / Tarjeta de regalo /
--- Libro / Gratuitos). The two dimensions are combinable — e.g. a product can
--- be category="Sueño infantil" + subcategory="Curso".
+-- becomes an independent, cross-cutting label (Curso / Guía / Tarjeta de
+-- regalo / Libro / Gratuitos). The two dimensions are combinable — e.g. a
+-- product can be category="Sueño infantil" + subcategory="Curso".
 ALTER TABLE public.products
 ADD COLUMN IF NOT EXISTS subcategory TEXT;
 
@@ -11,7 +11,7 @@ DROP CONSTRAINT IF EXISTS products_subcategory_check;
 
 ALTER TABLE public.products
 ADD CONSTRAINT products_subcategory_check
-  CHECK (subcategory IS NULL OR subcategory IN ('Curso', 'Tarjeta de regalo', 'Libro', 'Gratuitos'));
+  CHECK (subcategory IS NULL OR subcategory IN ('Curso', 'Guía', 'Tarjeta de regalo', 'Libro', 'Gratuitos'));
 
 -- Backfill subcategory from the old flat category values.
 UPDATE public.products SET subcategory = 'Curso' WHERE category = 'Cursos' AND subcategory IS NULL;

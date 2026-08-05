@@ -231,6 +231,7 @@ export default function ProductForm({ product }: { product?: Product }) {
               <select name="subcategory" defaultValue={product?.subcategory ?? ''}>
                 <option value="">Ninguna</option>
                 <option value="Curso">Curso</option>
+                <option value="Guía">Guía</option>
                 <option value="Tarjeta de regalo">Tarjeta de regalo</option>
                 <option value="Libro">Libro</option>
                 <option value="Gratuitos">Gratuitos</option>

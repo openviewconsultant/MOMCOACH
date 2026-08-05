@@ -11,10 +11,10 @@ import { formatCOP } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
-type Subcategory = 'Todas' | 'Curso' | 'Tarjeta de regalo' | 'Libro' | 'Gratuitos';
+type Subcategory = 'Todas' | 'Curso' | 'Guía' | 'Tarjeta de regalo' | 'Libro' | 'Gratuitos';
 
 const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Regalo'];
-const subcategories: Subcategory[] = ['Todas', 'Curso', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
+const subcategories: Subcategory[] = ['Todas', 'Curso', 'Guía', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
 
 function SupabaseProductCard({
   product,
