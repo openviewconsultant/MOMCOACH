@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import type { BlogPost } from '@/lib/types';
 import Reveal from '@/components/ui/Reveal';
+import { buildMetadata, SITE_URL, SITE_NAME } from '@/lib/seo';
 import '../blog.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -11,17 +12,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = await createClient();
   const { data: post } = await supabase
     .from('blog_posts')
-    .select('title, excerpt')
+    .select('title, excerpt, cover_image_url')
     .eq('slug', slug)
     .eq('is_published', true)
     .single();
 
-  if (!post) return { title: 'Artículo | The Mom Coach' };
+  if (!post) {
+    return buildMetadata({
+      title: 'Artículo no encontrado | The Mom Coach',
+      description: 'Este artículo ya no está disponible. Explora el resto del blog de The Mom Coach.',
+      path: `/blog/${slug}`,
+    });
+  }
 
-  return {
+  return buildMetadata({
     title: `${post.title} | The Mom Coach`,
     description: post.excerpt,
-  };
+    path: `/blog/${slug}`,
+    image: post.cover_image_url || undefined,
+  });
 }
 
 function formatDate(dateStr: string) {
@@ -45,8 +54,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const typedPost = post as BlogPost;
   const paragraphs = typedPost.content.split(/\n\n+/).filter(Boolean);
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: typedPost.title,
+    description: typedPost.excerpt,
+    image: typedPost.cover_image_url || undefined,
+    datePublished: typedPost.published_at,
+    dateModified: typedPost.updated_at || typedPost.published_at,
+    author: { '@type': 'Person', name: 'Denisse' },
+    publisher: { '@type': 'Organization', name: SITE_NAME },
+    mainEntityOfPage: `${SITE_URL}/blog/${typedPost.slug}`,
+  };
+
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <div style={{ padding: '0 5%' }}>
 
         <Link href="/blog" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>

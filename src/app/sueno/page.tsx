@@ -6,13 +6,16 @@ import type { Product } from '@/lib/types';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import Reveal from '@/components/ui/Reveal';
 import CategoryDigitalShop from '@/components/tienda/CategoryDigitalShop';
+import { buildMetadata } from '@/lib/seo';
 import '@/app/tienda/tienda.css';
 import './sueno.css';
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: 'Asesorías de Sueño Infantil | The Mom Coach',
   description: 'Programas y planes de sueño infantil personalizados para bebés de 0 meses a 6 años.',
-};
+  path: '/sueno',
+  image: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
+});
 
 const fallbackServices = [
   {

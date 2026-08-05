@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { BlogPost } from '@/lib/types';
 import Reveal from '@/components/ui/Reveal';
+import { buildMetadata } from '@/lib/seo';
 import './blog.css';
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: 'Blog | The Mom Coach',
   description: 'Artículos, consejos e información basada en evidencia sobre sueño infantil, alimentación y crianza.',
-};
+  path: '/blog',
+});
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });

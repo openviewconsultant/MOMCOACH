@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Política de Privacidad | The Mom Coach",
   description: "Política de tratamiento de datos personales de The Mom Coach.",
-};
+  path: "/politica-de-privacidad",
+});
 
 export default function PoliticaDePrivacidad() {
   return (

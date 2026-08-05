@@ -6,13 +6,16 @@ import type { Product } from '@/lib/types';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import Reveal from '@/components/ui/Reveal';
 import CategoryDigitalShop from '@/components/tienda/CategoryDigitalShop';
+import { buildMetadata } from '@/lib/seo';
 import '@/app/tienda/tienda.css';
 import './alimentacion.css';
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: 'Alimentación Infantil & BLW | The Mom Coach',
   description: 'Asesorías de alimentación complementaria, manejo de picky eaters y recetarios saludables.',
-};
+  path: '/alimentacion',
+  image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
+});
 
 const fallbackServices = [
   {

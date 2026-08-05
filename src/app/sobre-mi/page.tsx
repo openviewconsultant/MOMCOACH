@@ -2,11 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: 'Sobre mí | The Mom Coach',
   description: 'Conoce la historia, certificaciones y filosofía detrás de The Mom Coach.',
-};
+  path: '/sobre-mi',
+  image: 'https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp',
+});
 
 export default function SobreMiPage() {
   return (

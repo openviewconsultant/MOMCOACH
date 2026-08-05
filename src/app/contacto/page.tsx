@@ -1,11 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: 'Contacto | The Mom Coach',
   description: 'Escríbenos para agendar tu asesoría de sueño o consultar información de nuestros programas.',
-};
+  path: '/contacto',
+  image: 'https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp',
+});
 
 const faqs = [
   {
@@ -26,11 +29,28 @@ const faqs = [
   },
 ];
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+
 export default function ContactoPage() {
   return (
     <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div style={{ padding: '0 5%' }}>
-        
+
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
           ← Volver al inicio
         </Link>

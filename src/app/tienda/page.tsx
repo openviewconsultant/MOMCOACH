@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
 import TiendaClient from "./TiendaClient";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Tienda | The Mom Coach",
   description: "Guías, recetarios, programas y asesorías de The Mom Coach para acompañarte en cada etapa de la crianza.",
-};
+  path: "/tienda",
+});
 
 export default async function TiendaPage() {
   const supabase = await createClient();
