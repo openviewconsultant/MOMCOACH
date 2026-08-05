@@ -82,14 +82,17 @@ export default async function AlimentacionPage() {
     .from('products')
     .select('*')
     .eq('is_published', true)
-    .eq('category', 'Alimentación')
+    .or('category.eq.Alimentación,price.eq.0')
     .order('created_at', { ascending: false });
 
   const productsList = (rawProducts ?? []) as Product[];
+  // Free downloads are shown regardless of topic (matches the legacy
+  // site's behavior of promoting every lead magnet on every content page).
   const freebies = productsList.filter((p) => p.price === 0);
 
-  const dbServices = productsList.filter((p) => p.product_type === 'service');
-  const dbGuides = productsList.filter((p) => p.product_type !== 'service' && p.price > 0);
+  const foodProductsList = productsList.filter((p) => p.category === 'Alimentación');
+  const dbServices = foodProductsList.filter((p) => p.product_type === 'service');
+  const dbGuides = foodProductsList.filter((p) => p.product_type !== 'service' && p.price > 0);
 
   const foodServices = dbServices.length > 0 ? dbServices.map((p) => ({
     id: p.id,
