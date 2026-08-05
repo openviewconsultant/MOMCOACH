@@ -92,14 +92,17 @@ export default async function SuenoPage() {
     .from('products')
     .select('*')
     .eq('is_published', true)
-    .eq('category', 'Sueño infantil')
+    .or('category.eq.Sueño infantil,price.eq.0')
     .order('created_at', { ascending: false });
 
   const productsList = (rawProducts ?? []) as Product[];
+  // Free downloads are shown regardless of topic (matches the legacy
+  // site's behavior of promoting every lead magnet on every content page).
   const freebies = productsList.filter((p) => p.price === 0);
 
-  const dbServices = productsList.filter((p) => p.product_type === 'service');
-  const dbGuides = productsList.filter((p) => p.product_type !== 'service' && p.price > 0);
+  const sleepProductsList = productsList.filter((p) => p.category === 'Sueño infantil');
+  const dbServices = sleepProductsList.filter((p) => p.product_type === 'service');
+  const dbGuides = sleepProductsList.filter((p) => p.product_type !== 'service' && p.price > 0);
 
   const sleepServices = dbServices.length > 0 ? dbServices.map((p) => ({
     id: p.id,
