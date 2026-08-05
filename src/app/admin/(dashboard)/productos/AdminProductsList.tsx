@@ -10,6 +10,7 @@ import { generateAndSaveCover } from '@/lib/render-pdf-cover';
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
   'Sueño infantil',
+  'Cursos',
   'Gratuitos',
   'Tarjeta de regalo',
   'Libros',

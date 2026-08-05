@@ -5,8 +5,18 @@ import Services from "@/components/sections/Services";
 import Stats from "@/components/sections/Stats";
 import Testimonials from "@/components/sections/Testimonials";
 import Shop from "@/components/sections/Shop";
+import { createClient } from "@/lib/supabase/server";
+import type { Product } from "@/lib/types";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: featuredProducts } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true)
+    .eq('is_popular', true)
+    .order('created_at', { ascending: false });
+
   return (
     <>
       <Hero />
@@ -14,7 +24,7 @@ export default function Home() {
       <About />
       <Services />
       <Testimonials />
-      <Shop />
+      <Shop products={(featuredProducts ?? []) as Product[]} />
     </>
   );
 }
