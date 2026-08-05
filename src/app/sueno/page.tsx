@@ -31,6 +31,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC08734-scaled-e1705350733440-600x600.jpg',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
   {
     id: 'fs-2',
@@ -48,6 +50,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/30min',
     popular: true,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
   {
     id: 'fs-3',
@@ -64,6 +68,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC00073-scaled-e1705350168224-600x600.jpg',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
 ];
 
@@ -106,6 +112,8 @@ export default async function SuenoPage() {
     calLink: p.cal_link || 'open-view-consultant-7ng550/30min',
     popular: Boolean(p.is_popular),
     image: p.cover_image_url,
+    paymentProvider: p.payment_provider,
+    hotmartUrl: p.hotmart_url,
   })) : fallbackServices;
 
   return (
@@ -210,14 +218,26 @@ export default async function SuenoPage() {
                     </ul>
                   )}
                 </div>
-                <ServiceBookingButton
-                  title={service.title}
-                  price={service.price}
-                  whatsappText={service.whatsappText}
-                  popular={service.popular}
-                  buttonText="Solicitar Asesoría"
-                  calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
-                />
+                {service.paymentProvider === 'hotmart' && service.hotmartUrl ? (
+                  <a
+                    href={service.hotmartUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`btn btn-${service.popular ? 'primary' : 'secondary'} btn-md`}
+                    style={{ width: '100%', textAlign: 'center' }}
+                  >
+                    Comprar
+                  </a>
+                ) : (
+                  <ServiceBookingButton
+                    title={service.title}
+                    price={service.price}
+                    whatsappText={service.whatsappText}
+                    popular={service.popular}
+                    buttonText="Solicitar Asesoría"
+                    calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
+                  />
+                )}
               </div>
             </Reveal>
           ))}
