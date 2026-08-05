@@ -49,6 +49,7 @@ export async function saveProductAction(
   const paymentProvider =
     paymentProviderRaw === 'hotmart' || paymentProviderRaw === 'calendar' ? paymentProviderRaw : 'mercadopago';
   const hotmartUrl = (formData.get('hotmart_url') as string | null)?.trim() || null;
+  const videoUrl = (formData.get('video_url') as string | null)?.trim() || null;
 
   if (!title) {
     return { error: 'El título es obligatorio' };
@@ -81,6 +82,7 @@ export async function saveProductAction(
     cal_link: calLink,
     payment_provider: price > 0 ? paymentProvider : 'mercadopago',
     hotmart_url: price > 0 && paymentProvider === 'hotmart' ? hotmartUrl : null,
+    video_url: videoUrl,
     is_published: isPublished,
     cover_image_url: coverImageUrl,
     file_path: filePath,
@@ -98,6 +100,7 @@ export async function saveProductAction(
   revalidatePath('/');
   revalidatePath('/admin/productos');
   revalidatePath('/tienda');
+  if (id) revalidatePath(`/tienda/${id}`);
   revalidatePath('/alimentacion');
   revalidatePath('/sueno');
   redirect('/admin/productos');

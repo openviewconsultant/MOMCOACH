@@ -261,6 +261,16 @@ export default function ProductForm({ product }: { product?: Product }) {
             {filePath && <span className="admin-upload-status">Archivo cargado ✓</span>}
           </div>
         </label>
+
+        <label>
+          URL de video (YouTube o Vimeo, opcional — se muestra en la página del producto)
+          <input
+            type="url"
+            name="video_url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            defaultValue={product?.video_url ?? ''}
+          />
+        </label>
       </section>
 
       <section className="admin-form-section admin-form-section-tight">
