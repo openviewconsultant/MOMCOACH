@@ -424,6 +424,211 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+/* ---------- Form v2 (sectioned, richer inputs) ---------- */
+
+.admin-form-v2 {
+  max-width: 720px;
+  padding: 8px;
+  background: transparent;
+  box-shadow: none;
+  gap: 20px;
+}
+
+.admin-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #e8e0d5;
+  border-radius: 16px;
+  padding: 24px 26px;
+}
+
+.admin-form-section-tight {
+  gap: 12px;
+}
+
+.admin-form-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-turquoise);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 -4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.admin-form-v2 label {
+  gap: 7px;
+}
+
+.admin-form-v2 input:not([type="radio"]):not([type="checkbox"]),
+.admin-form-v2 textarea,
+.admin-form-v2 select {
+  background: #faf8f5;
+  border: 1px solid #d5cfc8;
+  border-radius: 10px;
+  padding: 11px 14px;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-form-v2 input:not([type="radio"]):not([type="checkbox"]):focus,
+.admin-form-v2 textarea:focus,
+.admin-form-v2 select:focus {
+  background: #fff;
+  border-color: var(--color-turquoise);
+  box-shadow: 0 0 0 3px rgba(113, 176, 180, 0.14);
+}
+
+.admin-form-v2 .admin-form-row {
+  align-items: start;
+}
+
+.admin-inline-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #555;
+}
+
+.admin-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-pill {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 7px !important;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #d5cfc8;
+  background: #faf8f5;
+  color: #666;
+  font-size: 0.82rem;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-pill input {
+  accent-color: var(--color-turquoise);
+  margin: 0;
+}
+
+.admin-pill:hover {
+  border-color: var(--color-turquoise);
+}
+
+.admin-pill.is-active {
+  background: var(--color-turquoise);
+  border-color: var(--color-turquoise);
+  color: #fff;
+}
+
+.admin-price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-price-input {
+  max-width: 220px;
+}
+
+.admin-payment-provider-box {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px dashed #d5cfc8;
+  border-radius: 12px;
+  background: #fbfaf6;
+}
+
+.admin-payment-provider-box .admin-field-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #999;
+  line-height: 1.4;
+}
+
+.admin-category-field select {
+  height: fit-content;
+}
+
+.admin-switch-row {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 12px !important;
+  font-size: 0.88rem !important;
+  color: var(--foreground) !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+}
+
+.admin-switch-row .admin-toggle {
+  position: relative;
+  display: inline-flex;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.admin-switch-row .admin-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.admin-switch-row .admin-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #d5cfc8;
+  transition: background 0.2s ease;
+}
+
+.admin-switch-row .admin-toggle-track::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s ease;
+}
+
+.admin-switch-row .admin-toggle input:checked + .admin-toggle-track {
+  background: var(--color-turquoise);
+}
+
+.admin-switch-row .admin-toggle input:checked + .admin-toggle-track::before {
+  transform: translateX(18px);
+}
+
+.admin-form-v2 .admin-error {
+  margin: 0;
+}
+
+.admin-form-v2 .admin-submit-btn {
+  align-self: stretch;
+  text-align: center;
+  padding: 14px 22px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .admin-form-v2 .admin-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-submit-btn:hover:not(:disabled) {
   background-color: #ba736f;
   transform: translateY(-1px);

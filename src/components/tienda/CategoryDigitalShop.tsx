@@ -6,6 +6,7 @@ import DownloadModal from '@/components/tienda/DownloadModal';
 import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
 import EbookCoverThumbnail from '@/components/tienda/EbookCoverThumbnail';
 import { useCart } from '@/lib/cart-context';
+import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
 
@@ -96,6 +97,15 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                       >
                         Comprar
                       </a>
+                    ) : guide.payment_provider === 'calendar' && guide.cal_link ? (
+                      <ServiceBookingButton
+                        title={guide.title}
+                        price={`USD $${guide.price}`}
+                        whatsappText={guide.whatsapp_text || `Hola! Quiero agendar ${guide.title}`}
+                        buttonText="Agendar cita"
+                        className="shop-mini-btn font-inter"
+                        calLink={guide.cal_link}
+                      />
                     ) : (
                       <button
                         type="button"
