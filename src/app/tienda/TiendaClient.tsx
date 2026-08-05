@@ -40,21 +40,7 @@ function SupabaseProductCard({
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
         <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
-        {isService ? (
-          <ServiceBookingButton
-            title={product.title}
-            price={formatCOP(product.price)}
-            whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
-            buttonText="Solicitar Asesoría"
-            className="tienda-card-btn font-inter"
-            calLink={
-              product.cal_link ||
-              (product.category === 'Alimentación'
-                ? 'open-view-consultant-7ng550/alimentacion'
-                : 'open-view-consultant-7ng550/30min')
-            }
-          />
-        ) : isFree ? (
+        {isFree ? (
           <button
             type="button"
             onClick={() => onDownloadClick(product)}
@@ -71,14 +57,19 @@ function SupabaseProductCard({
           >
             Comprar
           </a>
-        ) : product.payment_provider === 'calendar' && product.cal_link ? (
+        ) : isService || product.payment_provider === 'calendar' ? (
           <ServiceBookingButton
             title={product.title}
             price={formatCOP(product.price)}
-            whatsappText={product.whatsapp_text || `Hola! Quiero agendar ${product.title}`}
-            buttonText="Agendar cita"
+            whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
+            buttonText={isService ? 'Solicitar Asesoría' : 'Agendar cita'}
             className="tienda-card-btn font-inter"
-            calLink={product.cal_link}
+            calLink={
+              product.cal_link ||
+              (product.category === 'Alimentación'
+                ? 'open-view-consultant-7ng550/alimentacion'
+                : 'open-view-consultant-7ng550/30min')
+            }
           />
         ) : (
           <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>

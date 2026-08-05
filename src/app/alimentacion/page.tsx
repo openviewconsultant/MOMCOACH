@@ -34,6 +34,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: true,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
   {
     id: 'f-2',
@@ -50,6 +52,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/infant-baby-eating-finger-food-2023-11-27-04-54-34-utc-scaled-e1705513415708-600x600.jpg',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
   {
     id: 'f-3',
@@ -67,6 +71,8 @@ const fallbackServices = [
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
+    paymentProvider: 'mercadopago' as const,
+    hotmartUrl: null as string | null,
   },
 ];
 
@@ -96,6 +102,8 @@ export default async function AlimentacionPage() {
     calLink: p.cal_link || 'open-view-consultant-7ng550/alimentacion',
     popular: Boolean(p.is_popular),
     image: p.cover_image_url,
+    paymentProvider: p.payment_provider,
+    hotmartUrl: p.hotmart_url,
   })) : fallbackServices;
 
   return (
@@ -205,14 +213,26 @@ export default async function AlimentacionPage() {
                     </ul>
                   )}
                 </div>
-                <ServiceBookingButton
-                  title={service.title}
-                  price={service.price}
-                  whatsappText={service.whatsappText}
-                  popular={service.popular}
-                  buttonText="Solicitar Asesoría"
-                  calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
-                />
+                {service.paymentProvider === 'hotmart' && service.hotmartUrl ? (
+                  <a
+                    href={service.hotmartUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`btn btn-${service.popular ? 'primary' : 'secondary'} btn-md`}
+                    style={{ width: '100%', textAlign: 'center' }}
+                  >
+                    Comprar
+                  </a>
+                ) : (
+                  <ServiceBookingButton
+                    title={service.title}
+                    price={service.price}
+                    whatsappText={service.whatsappText}
+                    popular={service.popular}
+                    buttonText="Solicitar Asesoría"
+                    calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
+                  />
+                )}
               </div>
             </Reveal>
           ))}
