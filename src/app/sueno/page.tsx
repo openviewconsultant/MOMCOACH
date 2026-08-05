@@ -92,7 +92,7 @@ export default async function SuenoPage() {
     .from('products')
     .select('*')
     .eq('is_published', true)
-    .in('category', ['Sueño infantil', 'Gratuitos'])
+    .eq('category', 'Sueño infantil')
     .order('created_at', { ascending: false });
 
   const productsList = (rawProducts ?? []) as Product[];

@@ -10,11 +10,10 @@ import { generateAndSaveCover } from '@/lib/render-pdf-cover';
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
   'Sueño infantil',
-  'Cursos',
-  'Gratuitos',
-  'Tarjeta de regalo',
-  'Libros',
+  'Regalo',
 ];
+
+const SUBCATEGORIES = ['Curso', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
 
 interface AdminProductsListProps {
   products: Product[];
@@ -24,6 +23,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [subcategoryFilter, setSubcategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [generatingCovers, setGeneratingCovers] = useState(false);
@@ -68,13 +68,18 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
         if (!matchesTitle && !matchesSub && !matchesCategory) return false;
       }
 
-      // Category filter — "Gratuitos" also includes any product priced at 0,
-      // since most free items now live under their real topic category.
-      if (categoryFilter !== 'all') {
-        if (categoryFilter === 'Gratuitos') {
-          const isGratuito = product.category === 'Gratuitos' || product.price === 0;
+      // Category filter (parent topic)
+      if (categoryFilter !== 'all' && product.category !== categoryFilter) {
+        return false;
+      }
+
+      // Subcategory filter — "Gratuitos" also includes any product priced
+      // at 0, since not every free item has been manually tagged.
+      if (subcategoryFilter !== 'all') {
+        if (subcategoryFilter === 'Gratuitos') {
+          const isGratuito = product.subcategory === 'Gratuitos' || product.price === 0;
           if (!isGratuito) return false;
-        } else if (product.category !== categoryFilter) {
+        } else if (product.subcategory !== subcategoryFilter) {
           return false;
         }
       }
@@ -94,13 +99,19 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
 
       return true;
     });
-  }, [products, searchTerm, categoryFilter, typeFilter, statusFilter]);
+  }, [products, searchTerm, categoryFilter, subcategoryFilter, typeFilter, statusFilter]);
 
-  const hasActiveFilters = searchTerm !== '' || categoryFilter !== 'all' || typeFilter !== 'all' || statusFilter !== 'all';
+  const hasActiveFilters =
+    searchTerm !== '' ||
+    categoryFilter !== 'all' ||
+    subcategoryFilter !== 'all' ||
+    typeFilter !== 'all' ||
+    statusFilter !== 'all';
 
   function resetFilters() {
     setSearchTerm('');
     setCategoryFilter('all');
+    setSubcategoryFilter('all');
     setTypeFilter('all');
     setStatusFilter('all');
   }
@@ -223,6 +234,28 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
+              </option>
+            ))}
+          </select>
+
+          {/* Subcategory Filter */}
+          <select
+            value={subcategoryFilter}
+            onChange={(e) => setSubcategoryFilter(e.target.value)}
+            style={{
+              padding: '9px 14px',
+              borderRadius: '10px',
+              border: '1px solid rgba(0,0,0,0.12)',
+              fontSize: '0.88rem',
+              background: 'white',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            <option value="all">Todas las subcategorías</option>
+            {SUBCATEGORIES.map((sub) => (
+              <option key={sub} value={sub}>
+                {sub}
               </option>
             ))}
           </select>
@@ -352,7 +385,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
               <div className="admin-product-card-body">
                 <div className="admin-product-card-title">{product.title}</div>
                 <div className="admin-product-card-meta">
-                  <span>{product.category}</span>
+                  <span>{product.category}{product.subcategory ? ` · ${product.subcategory}` : ''}</span>
                   {product.price === 0 ? (
                     <span className="admin-badge free">Gratis</span>
                   ) : (

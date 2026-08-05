@@ -10,9 +10,11 @@ import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatCOP } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
-type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Cursos' | 'Gratuitos' | 'Tarjeta de regalo';
+type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
+type Subcategory = 'Todas' | 'Curso' | 'Tarjeta de regalo' | 'Libro' | 'Gratuitos';
 
-const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Cursos', 'Gratuitos', 'Tarjeta de regalo'];
+const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Regalo'];
+const subcategories: Subcategory[] = ['Todas', 'Curso', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
 
 function SupabaseProductCard({
   product,
@@ -90,12 +92,15 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
   }, [products]);
 
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
+  const [activeSubcategory, setActiveSubcategory] = useState<Subcategory>('Todas');
 
-  const visibleSupabaseProducts = activeCategory === 'Todos'
-    ? products
-    : activeCategory === 'Gratuitos'
-    ? products.filter((p) => p.category === 'Gratuitos' || p.price === 0)
-    : products.filter((p) => p.category === activeCategory);
+  const visibleSupabaseProducts = products
+    .filter((p) => activeCategory === 'Todos' || p.category === activeCategory)
+    .filter((p) => {
+      if (activeSubcategory === 'Todas') return true;
+      if (activeSubcategory === 'Gratuitos') return p.subcategory === 'Gratuitos' || p.price === 0;
+      return p.subcategory === activeSubcategory;
+    });
 
   const [downloadingProduct, setDownloadingProduct] = useState<SupabaseProduct | null>(null);
 
@@ -124,6 +129,17 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
               onClick={() => setActiveCategory(cat)}
             >
               {cat}
+            </button>
+          ))}
+        </div>
+        <div className="tienda-categories" style={{ marginTop: '10px' }}>
+          {subcategories.map((sub) => (
+            <button
+              key={sub}
+              className={`tienda-category-btn font-inter ${activeSubcategory === sub ? 'active' : ''}`}
+              onClick={() => setActiveSubcategory(sub)}
+            >
+              {sub}
             </button>
           ))}
         </div>

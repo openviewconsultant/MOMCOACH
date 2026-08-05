@@ -216,17 +216,27 @@ export default function ProductForm({ product }: { product?: Product }) {
             )}
           </div>
 
-          <label className="admin-category-field">
-            Categoría
-            <select name="category" defaultValue={product?.category ?? 'Alimentación'} required>
-              <option value="Alimentación">Alimentación</option>
-              <option value="Sueño infantil">Sueño infantil</option>
-              <option value="Cursos">Cursos</option>
-              <option value="Gratuitos">Gratuitos</option>
-              <option value="Tarjeta de regalo">Tarjeta de regalo</option>
-              <option value="Libros">Libros</option>
-            </select>
-          </label>
+          <div className="admin-category-field" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <label>
+              Categoría
+              <select name="category" defaultValue={product?.category ?? 'Alimentación'} required>
+                <option value="Alimentación">Alimentación</option>
+                <option value="Sueño infantil">Sueño infantil</option>
+                <option value="Regalo">Regalo</option>
+              </select>
+            </label>
+
+            <label>
+              Subcategoría (opcional)
+              <select name="subcategory" defaultValue={product?.subcategory ?? ''}>
+                <option value="">Ninguna</option>
+                <option value="Curso">Curso</option>
+                <option value="Tarjeta de regalo">Tarjeta de regalo</option>
+                <option value="Libro">Libro</option>
+                <option value="Gratuitos">Gratuitos</option>
+              </select>
+            </label>
+          </div>
         </div>
       </section>
 

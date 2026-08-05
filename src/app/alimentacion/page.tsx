@@ -79,7 +79,7 @@ export default async function AlimentacionPage() {
     .from('products')
     .select('*')
     .eq('is_published', true)
-    .in('category', ['Alimentación', 'Gratuitos'])
+    .eq('category', 'Alimentación')
     .order('created_at', { ascending: false });
 
   const productsList = (rawProducts ?? []) as Product[];
