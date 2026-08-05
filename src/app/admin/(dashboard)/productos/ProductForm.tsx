@@ -221,6 +221,7 @@ export default function ProductForm({ product }: { product?: Product }) {
             <select name="category" defaultValue={product?.category ?? 'Alimentación'} required>
               <option value="Alimentación">Alimentación</option>
               <option value="Sueño infantil">Sueño infantil</option>
+              <option value="Cursos">Cursos</option>
               <option value="Gratuitos">Gratuitos</option>
               <option value="Tarjeta de regalo">Tarjeta de regalo</option>
               <option value="Libros">Libros</option>

@@ -10,9 +10,9 @@ import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatCOP } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
-type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Gratuitos' | 'Tarjeta de regalo';
+type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Cursos' | 'Gratuitos' | 'Tarjeta de regalo';
 
-const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Gratuitos', 'Tarjeta de regalo'];
+const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Cursos', 'Gratuitos', 'Tarjeta de regalo'];
 
 function SupabaseProductCard({
   product,

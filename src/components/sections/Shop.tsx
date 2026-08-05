@@ -2,9 +2,14 @@
 
 import React, { useEffect, useRef } from 'react';
 import Button from '../ui/Button';
+import type { Product as SupabaseProduct } from '@/lib/types';
 import './sections.css';
 
-const products = [
+interface ShopProps {
+  products?: SupabaseProduct[];
+}
+
+const fallbackProducts = [
   {
     title: 'Guía: Cómo Solucionar las Siestas Cortas',
     price: 'USD $16',
@@ -47,10 +52,18 @@ const products = [
   },
 ];
 
-// Duplicated once so the auto-scroll can loop seamlessly.
-const loopProducts = [...products, ...products];
+export default function Shop({ products: featuredProducts }: ShopProps) {
+  const products = featuredProducts && featuredProducts.length > 0
+    ? featuredProducts.map((p) => ({
+        title: p.title,
+        price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+        img: p.cover_image_url || '',
+      }))
+    : fallbackProducts;
 
-export default function Shop() {
+  // Duplicated once so the auto-scroll can loop seamlessly.
+  const loopProducts = [...products, ...products];
+
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
 
@@ -112,7 +125,13 @@ export default function Shop() {
             {loopProducts.map((product, idx) => (
               <a href="/tienda" className="shop-card" key={idx}>
                 <div className="shop-card-image">
-                  <img src={product.img} alt={product.title} loading="lazy" />
+                  {product.img ? (
+                    <img src={product.img} alt={product.title} loading="lazy" />
+                  ) : (
+                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
+                      {product.title}
+                    </span>
+                  )}
                 </div>
                 <h3 className="shop-card-title font-inter">{product.title}</h3>
                 <p className="shop-card-price font-inter">{product.price}</p>
