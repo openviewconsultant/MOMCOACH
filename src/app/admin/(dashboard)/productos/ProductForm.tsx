@@ -16,6 +16,7 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
   const [productType, setProductType] = useState<'digital' | 'service'>(product?.product_type ?? 'digital');
+  const [paymentProvider, setPaymentProvider] = useState<'mercadopago' | 'hotmart'>(product?.payment_provider ?? 'mercadopago');
 
   async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -137,6 +138,46 @@ export default function ProductForm({ product }: { product?: Product }) {
               Precio (USD)
               <input type="number" name="price" min={0} step={0.01} defaultValue={product?.price && product.price > 0 ? product.price : ''} required />
             </label>
+          )}
+
+          {!isFree && (
+            <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span>Pasarela de pago</span>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'normal' }}>
+                  <input
+                    type="radio"
+                    name="payment_provider"
+                    value="mercadopago"
+                    checked={paymentProvider === 'mercadopago'}
+                    onChange={() => setPaymentProvider('mercadopago')}
+                  />
+                  Mercado Pago (checkout del sitio)
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'normal' }}>
+                  <input
+                    type="radio"
+                    name="payment_provider"
+                    value="hotmart"
+                    checked={paymentProvider === 'hotmart'}
+                    onChange={() => setPaymentProvider('hotmart')}
+                  />
+                  Hotmart (link externo)
+                </label>
+              </div>
+              {paymentProvider === 'hotmart' && (
+                <label style={{ marginTop: '4px' }}>
+                  Link de checkout de Hotmart
+                  <input
+                    type="url"
+                    name="hotmart_url"
+                    placeholder="https://pay.hotmart.com/..."
+                    defaultValue={product?.hotmart_url ?? ''}
+                    required
+                  />
+                </label>
+              )}
+            </div>
           )}
         </div>
 

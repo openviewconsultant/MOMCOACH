@@ -44,6 +44,9 @@ export async function saveProductAction(
   const isPopular = formData.get('is_popular') === 'on';
   const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
   const calLink = (formData.get('cal_link') as string | null)?.trim() || null;
+  const paymentProviderRaw = (formData.get('payment_provider') as string | null) || 'mercadopago';
+  const paymentProvider = paymentProviderRaw === 'hotmart' ? 'hotmart' : 'mercadopago';
+  const hotmartUrl = (formData.get('hotmart_url') as string | null)?.trim() || null;
 
   if (!title) {
     return { error: 'El título es obligatorio' };
@@ -52,6 +55,10 @@ export async function saveProductAction(
   const price = Number(priceRaw);
   if (!Number.isFinite(price) || price < 0 || !Number.isInteger(price)) {
     return { error: 'El precio debe ser un número entero mayor o igual a 0' };
+  }
+
+  if (price > 0 && paymentProvider === 'hotmart' && !hotmartUrl) {
+    return { error: 'Ingresa el link de checkout de Hotmart' };
   }
 
   const payload = {
@@ -65,6 +72,8 @@ export async function saveProductAction(
     is_popular: isPopular,
     whatsapp_text: whatsappText,
     cal_link: calLink,
+    payment_provider: price > 0 ? paymentProvider : 'mercadopago',
+    hotmart_url: price > 0 && paymentProvider === 'hotmart' ? hotmartUrl : null,
     is_published: isPublished,
     cover_image_url: coverImageUrl,
     file_path: filePath,

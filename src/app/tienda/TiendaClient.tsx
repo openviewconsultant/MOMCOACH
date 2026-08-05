@@ -62,6 +62,15 @@ function SupabaseProductCard({
           >
             Descargar gratis
           </button>
+        ) : product.payment_provider === 'hotmart' && product.hotmart_url ? (
+          <a
+            href={product.hotmart_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tienda-card-btn font-inter"
+          >
+            Comprar
+          </a>
         ) : (
           <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>
             {inCart ? 'Añadir otro' : 'Añadir al carrito'}

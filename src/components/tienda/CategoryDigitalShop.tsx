@@ -87,16 +87,27 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                   <h4 className="font-forum">{guide.title}</h4>
                   <div className="shop-mini-footer">
                     <span className="shop-mini-price font-inter">USD ${guide.price}</span>
-                    <button
-                      type="button"
-                      className="shop-mini-btn font-inter"
-                      onClick={() => {
-                        addBook(guide);
-                        openCart();
-                      }}
-                    >
-                      {inCart ? 'Añadir otro' : 'Añadir al carrito'}
-                    </button>
+                    {guide.payment_provider === 'hotmart' && guide.hotmart_url ? (
+                      <a
+                        href={guide.hotmart_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shop-mini-btn font-inter"
+                      >
+                        Comprar
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="shop-mini-btn font-inter"
+                        onClick={() => {
+                          addBook(guide);
+                          openCart();
+                        }}
+                      >
+                        {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+                      </button>
+                    )}
                   </div>
                 </Reveal>
               );
