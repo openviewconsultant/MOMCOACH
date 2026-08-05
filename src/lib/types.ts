@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   currency: string;
   category: string;
+  subcategory?: string | null;
   product_type?: 'digital' | 'service';
   subtitle?: string | null;
   features?: string[] | null;

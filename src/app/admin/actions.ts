@@ -30,7 +30,8 @@ export async function saveProductAction(
   const title = (formData.get('title') as string | null)?.trim();
   const description = (formData.get('description') as string | null)?.trim() ?? '';
   const priceRaw = formData.get('price') as string | null;
-  const category = (formData.get('category') as string | null)?.trim() || 'Libros';
+  const category = (formData.get('category') as string | null)?.trim() || 'Alimentación';
+  const subcategory = (formData.get('subcategory') as string | null)?.trim() || null;
   const isPublished = formData.get('is_published') === 'on';
   const coverImageUrl = (formData.get('cover_image_url') as string | null) || null;
   const filePath = (formData.get('file_path') as string | null) || null;
@@ -71,6 +72,7 @@ export async function saveProductAction(
     description,
     price,
     category,
+    subcategory,
     product_type: productType,
     subtitle,
     features,
