@@ -79,6 +79,29 @@
   border: 0;
 }
 
+.producto-video-mute-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.producto-video-mute-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transform: scale(1.06);
+}
+
 .producto-cover-wrap {
   border-radius: 24px;
   overflow: hidden;
