@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import EbookCoverThumbnail from '@/components/tienda/EbookCoverThumbnail';
 import type { Product } from '@/lib/types';
 
@@ -44,8 +44,16 @@ interface FreebiesCarouselProps {
   onDownloadClick: (item: Product) => void;
 }
 
+// Cards sit on the rim of a large virtual circle (same trick labs.google's
+// carousel uses) so the row reads as a shallow concave arc: the centered
+// card sits highest, and cards further from center rotate and dip down.
+const CIRCLE_RADIUS = 1400;
+const MAX_ANGLE_DEG = 16;
+
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const rafRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   function cardWidth() {
@@ -63,29 +71,63 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
     track.scrollBy({ left: direction === 'next' ? cardWidth() : -cardWidth(), behavior: 'smooth' });
   }
 
-  useEffect(() => {
+  const applyCircleCurve = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
+    const trackRect = track.getBoundingClientRect();
+    const centerX = trackRect.left + trackRect.width / 2;
+    const maxAngleRad = (MAX_ANGLE_DEG * Math.PI) / 180;
 
-    function handleScroll() {
+    cardRefs.current.forEach((card) => {
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const cardCenterX = rect.left + rect.width / 2;
+      const offsetX = cardCenterX - centerX;
+      const angle = Math.max(-maxAngleRad, Math.min(maxAngleRad, offsetX / CIRCLE_RADIUS));
+      const angleDeg = (angle * 180) / Math.PI;
+      const dip = CIRCLE_RADIUS * (1 - Math.cos(angle));
+      const scale = 1 - Math.min(Math.abs(offsetX) / 4000, 0.06);
+      card.style.transform = `translateY(${dip}px) rotate(${angleDeg}deg) scale(${scale})`;
+    });
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      applyCircleCurve();
       const track = trackRef.current;
       if (!track) return;
       const width = cardWidth();
       if (!width) return;
       const index = Math.round(track.scrollLeft / width);
       setActiveIndex(Math.max(0, Math.min(index, items.length - 1)));
-    }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applyCircleCurve, items.length]);
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    applyCircleCurve();
     track.addEventListener('scroll', handleScroll, { passive: true });
-    return () => track.removeEventListener('scroll', handleScroll);
-  }, [items.length]);
+    window.addEventListener('resize', applyCircleCurve);
+    return () => {
+      track.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', applyCircleCurve);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [applyCircleCurve, handleScroll]);
 
   return (
     <div className="freebies-carousel">
       <div className="freebies-track" ref={trackRef}>
-        {items.map((item) => (
+        {items.map((item, idx) => (
           <button
             key={item.id}
+            ref={(el) => {
+              cardRefs.current[idx] = el;
+            }}
             type="button"
             className="freebies-card"
             onClick={(e) => onCardClick(item, e.currentTarget.getBoundingClientRect())}
