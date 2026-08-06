@@ -252,11 +252,13 @@
 
 .freebies-track {
   display: flex;
+  align-items: flex-start;
   gap: 20px;
   overflow-x: auto;
+  overflow-y: visible;
   scroll-snap-type: x mandatory;
   scroll-padding-left: 5%;
-  padding: 6px 5% 20px 5%;
+  padding: 6px 5% 64px 5%;
   margin: 0 -5%;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -282,11 +284,12 @@
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-origin: center bottom;
+  transition: box-shadow 0.25s ease;
+  will-change: transform;
 }
 
 .freebies-card:hover {
-  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
 
