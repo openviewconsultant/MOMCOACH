@@ -2,9 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { getVideoEmbedUrl } from '@/lib/video';
 import { formatCOP } from '@/lib/format';
 import ProductDetailCTA from '@/components/tienda/ProductDetailCTA';
+import VideoPlayer from '@/components/tienda/VideoPlayer';
 import type { Product } from '@/lib/types';
 import '../tienda.css';
 import './producto.css';
@@ -24,7 +24,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   }
 
   const p = product as Product;
-  const embedUrl = p.video_url ? getVideoEmbedUrl(p.video_url, { autoplay: true }) : null;
   const features = Array.isArray(p.features) ? p.features : [];
   const isFree = p.price === 0;
 
@@ -44,15 +43,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
       <div className="producto-layout">
         <div className="producto-media">
-          {embedUrl ? (
-            <div className="producto-video-wrap">
-              <iframe
-                src={embedUrl}
-                title={p.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+          {p.video_url ? (
+            <VideoPlayer videoUrl={p.video_url} title={p.title} />
           ) : p.cover_image_url ? (
             <div className="producto-cover-wrap">
               <img src={p.cover_image_url} alt={p.title} className="producto-cover" />
