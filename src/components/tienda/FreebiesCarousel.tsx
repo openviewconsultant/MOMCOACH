@@ -47,8 +47,8 @@ interface FreebiesCarouselProps {
 // Cards sit on the rim of a large virtual circle (same trick labs.google's
 // carousel uses) so the row reads as a shallow concave arc: the centered
 // card sits highest, and cards further from center rotate and dip down.
-const CIRCLE_RADIUS = 1400;
-const MAX_ANGLE_DEG = 16;
+const CIRCLE_RADIUS = 750;
+const MAX_ANGLE_DEG = 28;
 
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -86,7 +86,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
       const angle = Math.max(-maxAngleRad, Math.min(maxAngleRad, offsetX / CIRCLE_RADIUS));
       const angleDeg = (angle * 180) / Math.PI;
       const dip = CIRCLE_RADIUS * (1 - Math.cos(angle));
-      const scale = 1 - Math.min(Math.abs(offsetX) / 4000, 0.06);
+      const scale = 1 - Math.min(Math.abs(offsetX) / 2200, 0.1);
       card.style.transform = `translateY(${dip}px) rotate(${angleDeg}deg) scale(${scale})`;
     });
   }, []);
