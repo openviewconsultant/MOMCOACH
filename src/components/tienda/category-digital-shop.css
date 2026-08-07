@@ -282,11 +282,20 @@
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform: scale(0.94);
+  opacity: 0.75;
+  transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
 .freebies-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(0.96);
+  box-shadow: var(--shadow-lg);
+  opacity: 1;
+}
+
+.freebies-card.is-active {
+  transform: scale(1);
+  opacity: 1;
   box-shadow: var(--shadow-lg);
 }
 
