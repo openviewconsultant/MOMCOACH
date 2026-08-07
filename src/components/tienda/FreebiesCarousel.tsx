@@ -127,6 +127,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
 
   return (
     <div className="freebies-carousel">
+      <div className="freebies-viewport">
       <div className="freebies-track" ref={trackRef}>
         {items.map((item, idx) => (
           <button
@@ -164,6 +165,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
             </span>
           </button>
         ))}
+      </div>
       </div>
 
       {items.length > 1 && (

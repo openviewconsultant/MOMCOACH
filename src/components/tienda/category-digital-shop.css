@@ -250,6 +250,15 @@
   gap: 24px;
 }
 
+/* Clips the row to exactly one card's width, so only the centered card is
+   ever visible at rest — neighboring cards stay fully offscreen. */
+.freebies-viewport {
+  width: min(300px, 78vw);
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 10px 0 28px;
+}
+
 .freebies-track {
   display: flex;
   align-items: flex-start;
@@ -257,7 +266,7 @@
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  padding: 6px 0 110px;
+  padding: 6px 0 40px;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
