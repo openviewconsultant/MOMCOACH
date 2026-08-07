@@ -44,9 +44,14 @@ interface FreebiesCarouselProps {
   onDownloadClick: (item: Product) => void;
 }
 
+const AUTOPLAY_INTERVAL_MS = 3200;
+const RESUME_AFTER_INTERACTION_MS = 5000;
+
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function cardWidth() {
     const track = trackRef.current;
@@ -60,7 +65,18 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
   function scrollByCards(direction: 'prev' | 'next') {
     const track = trackRef.current;
     if (!track) return;
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+    if (direction === 'next' && atEnd) {
+      track.scrollTo({ left: 0, behavior: 'smooth' });
+      return;
+    }
     track.scrollBy({ left: direction === 'next' ? cardWidth() : -cardWidth(), behavior: 'smooth' });
+  }
+
+  function pauseAutoplayTemporarily() {
+    setPaused(true);
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => setPaused(false), RESUME_AFTER_INTERACTION_MS);
   }
 
   useEffect(() => {
@@ -80,15 +96,35 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
     return () => track.removeEventListener('scroll', handleScroll);
   }, [items.length]);
 
+  useEffect(() => {
+    if (paused || items.length < 2) return;
+    const id = setInterval(() => scrollByCards('next'), AUTOPLAY_INTERVAL_MS);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused, items.length]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
+
   return (
-    <div className="freebies-carousel">
+    <div
+      className="freebies-carousel"
+      onMouseEnter={pauseAutoplayTemporarily}
+      onTouchStart={pauseAutoplayTemporarily}
+    >
       <div className="freebies-track" ref={trackRef}>
-        {items.map((item) => (
+        {items.map((item, idx) => (
           <button
             key={item.id}
             type="button"
-            className="freebies-card"
-            onClick={(e) => onCardClick(item, e.currentTarget.getBoundingClientRect())}
+            className={`freebies-card ${idx === activeIndex ? 'is-active' : ''}`}
+            onClick={(e) => {
+              pauseAutoplayTemporarily();
+              onCardClick(item, e.currentTarget.getBoundingClientRect());
+            }}
           >
             <span className="freebies-card-cover" aria-hidden="true">
               {!item.cover_image_url && (
@@ -120,7 +156,15 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
 
       {items.length > 1 && (
         <div className="freebies-controls">
-          <button type="button" className="freebies-arrow" onClick={() => scrollByCards('prev')} aria-label="Anterior">
+          <button
+            type="button"
+            className="freebies-arrow"
+            onClick={() => {
+              pauseAutoplayTemporarily();
+              scrollByCards('prev');
+            }}
+            aria-label="Anterior"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
@@ -133,7 +177,15 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
             />
           </div>
 
-          <button type="button" className="freebies-arrow" onClick={() => scrollByCards('next')} aria-label="Siguiente">
+          <button
+            type="button"
+            className="freebies-arrow"
+            onClick={() => {
+              pauseAutoplayTemporarily();
+              scrollByCards('next');
+            }}
+            aria-label="Siguiente"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>
