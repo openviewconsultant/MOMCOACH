@@ -7,6 +7,8 @@ import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
 import FreebiesCarousel from '@/components/tienda/FreebiesCarousel';
 import { useCart } from '@/lib/cart-context';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
+import { getCalApi } from '@calcom/embed-react';
+import { formatCOP } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
 
@@ -22,6 +24,34 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
   const [downloadTarget, setDownloadTarget] = useState<Product | null>(null);
   const [previewTarget, setPreviewTarget] = useState<{ item: Product; rect: DOMRect | null } | null>(null);
 
+  async function openBookingModal(item: Product) {
+    const calLink = item.cal_link || 'open-view-consultant-7ng550/30min';
+    const namespace = calLink.split('/')[1] || 'booking';
+    const cal = await getCalApi({ namespace });
+    cal('modal', { calLink, config: { layout: 'month_view' } });
+  }
+
+  function previewCta(item: Product): { label: string; onClick: () => void } {
+    const inCart = items.some((cartItem) => cartItem.id === item.id);
+
+    if (item.price === 0) {
+      return { label: 'Descargar gratis', onClick: () => setDownloadTarget(item) };
+    }
+    if (item.payment_provider === 'hotmart' && item.hotmart_url) {
+      return { label: 'Comprar', onClick: () => window.open(item.hotmart_url!, '_blank', 'noopener,noreferrer') };
+    }
+    if (item.payment_provider === 'calendar' && item.cal_link) {
+      return { label: 'Agendar cita', onClick: () => openBookingModal(item) };
+    }
+    return {
+      label: inCart ? 'Añadir otro' : 'Añadir al carrito',
+      onClick: () => {
+        addBook(item);
+        openCart();
+      },
+    };
+  }
+
   return (
     <>
       {guides.length > 0 && (
@@ -34,7 +64,16 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
             {guides.map((guide, idx) => {
               const inCart = items.some((item) => item.id === guide.id);
               return (
-                <Reveal key={guide.id} delay={idx * 60} as="div" className="shop-mini-card">
+                <Reveal
+                  key={guide.id}
+                  delay={idx * 60}
+                  as="div"
+                  className={`shop-mini-card ${guide.file_path ? 'is-previewable' : ''}`}
+                  onClick={(e) => {
+                    if (!guide.file_path) return;
+                    setPreviewTarget({ item: guide, rect: e.currentTarget.getBoundingClientRect() });
+                  }}
+                >
                   {guide.cover_image_url ? (
                     <span className="shop-mini-image">
                       <img src={guide.cover_image_url} alt={guide.title} loading="lazy" />
@@ -49,7 +88,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                     </span>
                   )}
                   <h4 className="font-forum">{guide.title}</h4>
-                  <div className="shop-mini-footer">
+                  <div className="shop-mini-footer" onClick={(e) => e.stopPropagation()}>
                     <span className="shop-mini-price font-inter">USD ${guide.price}</span>
                     {guide.payment_provider === 'hotmart' && guide.hotmart_url ? (
                       <a
@@ -107,10 +146,12 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <PdfPreviewModal
           productId={previewTarget.item.id}
           productTitle={previewTarget.item.title}
+          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatCOP(previewTarget.item.price)}
           originRect={previewTarget.rect}
           onClose={() => setPreviewTarget(null)}
-          onDownload={() => {
-            setDownloadTarget(previewTarget.item);
+          ctaLabel={previewCta(previewTarget.item).label}
+          onCta={() => {
+            previewCta(previewTarget.item).onClick();
             setPreviewTarget(null);
           }}
         />

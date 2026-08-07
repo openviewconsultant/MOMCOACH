@@ -21,7 +21,7 @@ export async function GET(
     .eq('id', id)
     .single();
 
-  if (error || !product || !product.is_published || product.price > 0 || !product.file_path) {
+  if (error || !product || !product.is_published || !product.file_path) {
     return NextResponse.json({ error: 'Producto no disponible' }, { status: 404 });
   }
 

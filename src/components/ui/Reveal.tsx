@@ -8,9 +8,10 @@ interface RevealProps {
   className?: string;
   style?: React.CSSProperties;
   as?: keyof React.JSX.IntrinsicElements;
+  onClick?: React.MouseEventHandler;
 }
 
-export default function Reveal({ children, delay = 0, className = '', style, as = 'div' }: RevealProps) {
+export default function Reveal({ children, delay = 0, className = '', style, as = 'div', onClick }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -39,6 +40,7 @@ export default function Reveal({ children, delay = 0, className = '', style, as 
       ref={ref}
       className={`reveal-on-scroll ${visible ? 'is-visible' : ''} ${className}`}
       style={{ transitionDelay: `${delay}ms`, ...style }}
+      onClick={onClick}
     >
       {children}
     </Tag>

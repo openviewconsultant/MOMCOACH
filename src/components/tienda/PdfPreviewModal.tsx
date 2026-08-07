@@ -7,12 +7,22 @@ import './pdf-preview-modal.css';
 interface PdfPreviewModalProps {
   productId: string;
   productTitle: string;
+  badgeLabel: string;
+  ctaLabel: string;
   originRect: DOMRect | null;
   onClose: () => void;
-  onDownload: () => void;
+  onCta: () => void;
 }
 
-export default function PdfPreviewModal({ productId, productTitle, originRect, onClose, onDownload }: PdfPreviewModalProps) {
+export default function PdfPreviewModal({
+  productId,
+  productTitle,
+  badgeLabel,
+  ctaLabel,
+  originRect,
+  onClose,
+  onCta,
+}: PdfPreviewModalProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [entered, setEntered] = useState(false);
   const [previewReady, setPreviewReady] = useState(false);
@@ -63,7 +73,7 @@ export default function PdfPreviewModal({ productId, productTitle, originRect, o
         <button className="pdf-preview-close" onClick={handleClose} aria-label="Cerrar">✕</button>
         <div className="pdf-preview-header">
           <h3 className="font-forum">{productTitle}</h3>
-          <span className="pdf-preview-badge font-inter">Gratis</span>
+          <span className="pdf-preview-badge font-inter">{badgeLabel}</span>
         </div>
         <div className="pdf-preview-viewport">
           {!previewReady && (
@@ -80,12 +90,12 @@ export default function PdfPreviewModal({ productId, productTitle, originRect, o
           </div>
         </div>
         <div className="pdf-preview-footer">
-          <button type="button" className="pdf-preview-btn font-inter" onClick={onDownload}>
+          <button type="button" className="pdf-preview-btn font-inter" onClick={onCta}>
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M5 18h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            Descargar gratis
+            {ctaLabel}
           </button>
         </div>
       </div>
