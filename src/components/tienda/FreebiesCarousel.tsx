@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EbookCoverThumbnail from '@/components/tienda/EbookCoverThumbnail';
 import type { Product } from '@/lib/types';
 
@@ -44,21 +44,11 @@ interface FreebiesCarouselProps {
   onDownloadClick: (item: Product) => void;
 }
 
-// Cards sit on the rim of a large virtual circle (same trick labs.google's
-// carousel uses) so the row reads as a shallow concave arc: the centered
-// card sits highest and flattest, and its two neighbors on each side tilt
-// and dip down — always exactly one card centered per snap/step.
-const CIRCLE_RADIUS = 750;
-const MAX_ANGLE_DEG = 22;
-const CARDS_PER_STEP = 3;
-
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const rafRef = useRef<number | null>(null);
-  const [centeredIndex, setCenteredIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  function cardStep() {
+  function cardWidth() {
     const track = trackRef.current;
     if (!track) return 0;
     const card = track.querySelector<HTMLElement>('.freebies-card');
@@ -70,71 +60,32 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
   function scrollByCards(direction: 'prev' | 'next') {
     const track = trackRef.current;
     if (!track) return;
-    const delta = cardStep() * CARDS_PER_STEP;
-    track.scrollBy({ left: direction === 'next' ? delta : -delta, behavior: 'smooth' });
+    track.scrollBy({ left: direction === 'next' ? cardWidth() : -cardWidth(), behavior: 'smooth' });
   }
-
-  const applyCircleCurve = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const trackRect = track.getBoundingClientRect();
-    const centerX = trackRect.left + trackRect.width / 2;
-    const maxAngleRad = (MAX_ANGLE_DEG * Math.PI) / 180;
-
-    let closestIdx = 0;
-    let closestDistance = Infinity;
-
-    cardRefs.current.forEach((card, idx) => {
-      if (!card) return;
-      const rect = card.getBoundingClientRect();
-      const cardCenterX = rect.left + rect.width / 2;
-      const offsetX = cardCenterX - centerX;
-      const distance = Math.abs(offsetX);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestIdx = idx;
-      }
-
-      const angle = Math.max(-maxAngleRad, Math.min(maxAngleRad, offsetX / CIRCLE_RADIUS));
-      const angleDeg = (angle * 180) / Math.PI;
-      const dip = CIRCLE_RADIUS * (1 - Math.cos(angle));
-      const scale = 1 - Math.min(distance / 1100, 0.14);
-      card.style.transform = `translateY(${dip}px) rotate(${angleDeg}deg) scale(${scale})`;
-      card.style.zIndex = String(1000 - Math.round(distance));
-    });
-
-    setCenteredIndex(closestIdx);
-  }, []);
-
-  const handleScroll = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(applyCircleCurve);
-  }, [applyCircleCurve]);
 
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    applyCircleCurve();
+    function handleScroll() {
+      const track = trackRef.current;
+      if (!track) return;
+      const width = cardWidth();
+      if (!width) return;
+      const index = Math.round(track.scrollLeft / width);
+      setActiveIndex(Math.max(0, Math.min(index, items.length - 1)));
+    }
+
     track.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', applyCircleCurve);
-    return () => {
-      track.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', applyCircleCurve);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [applyCircleCurve, handleScroll]);
+    return () => track.removeEventListener('scroll', handleScroll);
+  }, [items.length]);
 
   return (
     <div className="freebies-carousel">
-      <div className="freebies-viewport">
       <div className="freebies-track" ref={trackRef}>
-        {items.map((item, idx) => (
+        {items.map((item) => (
           <button
             key={item.id}
-            ref={(el) => {
-              cardRefs.current[idx] = el;
-            }}
             type="button"
             className="freebies-card"
             onClick={(e) => onCardClick(item, e.currentTarget.getBoundingClientRect())}
@@ -166,7 +117,6 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
           </button>
         ))}
       </div>
-      </div>
 
       {items.length > 1 && (
         <div className="freebies-controls">
@@ -179,7 +129,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
           <div className="freebies-progress" aria-hidden="true">
             <div
               className="freebies-progress-fill"
-              style={{ width: `${((centeredIndex + 1) / items.length) * 100}%` }}
+              style={{ width: `${((activeIndex + 1) / items.length) * 100}%` }}
             />
           </div>
 
