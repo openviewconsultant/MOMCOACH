@@ -86,8 +86,12 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
       const angle = Math.max(-maxAngleRad, Math.min(maxAngleRad, offsetX / CIRCLE_RADIUS));
       const angleDeg = (angle * 180) / Math.PI;
       const dip = CIRCLE_RADIUS * (1 - Math.cos(angle));
-      const scale = 1 - Math.min(Math.abs(offsetX) / 2200, 0.1);
+      const distance = Math.abs(offsetX);
+      const scale = 1 - Math.min(distance / 900, 0.32);
+      const opacity = Math.max(0.12, 1 - distance / 480);
       card.style.transform = `translateY(${dip}px) rotate(${angleDeg}deg) scale(${scale})`;
+      card.style.opacity = String(opacity);
+      card.style.zIndex = String(1000 - Math.round(distance));
     });
   }, []);
 
