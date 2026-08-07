@@ -46,17 +46,19 @@ interface FreebiesCarouselProps {
 
 // Cards sit on the rim of a large virtual circle (same trick labs.google's
 // carousel uses) so the row reads as a shallow concave arc: the centered
-// card sits highest, and cards further from center rotate and dip down.
+// card sits highest and flattest, and its two neighbors on each side tilt
+// and dip down — always exactly one card centered per snap/step.
 const CIRCLE_RADIUS = 750;
-const MAX_ANGLE_DEG = 28;
+const MAX_ANGLE_DEG = 22;
+const CARDS_PER_STEP = 3;
 
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rafRef = useRef<number | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [centeredIndex, setCenteredIndex] = useState(0);
 
-  function cardWidth() {
+  function cardStep() {
     const track = trackRef.current;
     if (!track) return 0;
     const card = track.querySelector<HTMLElement>('.freebies-card');
@@ -68,7 +70,8 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
   function scrollByCards(direction: 'prev' | 'next') {
     const track = trackRef.current;
     if (!track) return;
-    track.scrollBy({ left: direction === 'next' ? cardWidth() : -cardWidth(), behavior: 'smooth' });
+    const delta = cardStep() * CARDS_PER_STEP;
+    track.scrollBy({ left: direction === 'next' ? delta : -delta, behavior: 'smooth' });
   }
 
   const applyCircleCurve = useCallback(() => {
@@ -78,36 +81,35 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
     const centerX = trackRect.left + trackRect.width / 2;
     const maxAngleRad = (MAX_ANGLE_DEG * Math.PI) / 180;
 
-    cardRefs.current.forEach((card) => {
+    let closestIdx = 0;
+    let closestDistance = Infinity;
+
+    cardRefs.current.forEach((card, idx) => {
       if (!card) return;
       const rect = card.getBoundingClientRect();
       const cardCenterX = rect.left + rect.width / 2;
       const offsetX = cardCenterX - centerX;
+      const distance = Math.abs(offsetX);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIdx = idx;
+      }
+
       const angle = Math.max(-maxAngleRad, Math.min(maxAngleRad, offsetX / CIRCLE_RADIUS));
       const angleDeg = (angle * 180) / Math.PI;
       const dip = CIRCLE_RADIUS * (1 - Math.cos(angle));
-      const distance = Math.abs(offsetX);
-      const scale = 1 - Math.min(distance / 900, 0.32);
-      const opacity = Math.max(0.12, 1 - distance / 480);
+      const scale = 1 - Math.min(distance / 1100, 0.14);
       card.style.transform = `translateY(${dip}px) rotate(${angleDeg}deg) scale(${scale})`;
-      card.style.opacity = String(opacity);
       card.style.zIndex = String(1000 - Math.round(distance));
     });
+
+    setCenteredIndex(closestIdx);
   }, []);
 
   const handleScroll = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      applyCircleCurve();
-      const track = trackRef.current;
-      if (!track) return;
-      const width = cardWidth();
-      if (!width) return;
-      const index = Math.round(track.scrollLeft / width);
-      setActiveIndex(Math.max(0, Math.min(index, items.length - 1)));
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applyCircleCurve, items.length]);
+    rafRef.current = requestAnimationFrame(applyCircleCurve);
+  }, [applyCircleCurve]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -175,7 +177,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
           <div className="freebies-progress" aria-hidden="true">
             <div
               className="freebies-progress-fill"
-              style={{ width: `${((activeIndex + 1) / items.length) * 100}%` }}
+              style={{ width: `${((centeredIndex + 1) / items.length) * 100}%` }}
             />
           </div>
 

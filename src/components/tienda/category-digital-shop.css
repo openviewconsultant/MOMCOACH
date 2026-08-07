@@ -257,9 +257,7 @@
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: 5%;
-  padding: 6px 5% 110px 5%;
-  margin: 0 -5%;
+  padding: 6px 0 110px;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -269,7 +267,7 @@
 }
 
 .freebies-card {
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   flex: 0 0 auto;
   width: min(300px, 78vw);
   height: 480px;
@@ -285,12 +283,22 @@
   font: inherit;
   text-align: left;
   transform-origin: center bottom;
-  transition: box-shadow 0.25s ease, opacity 0.2s ease;
-  will-change: transform, opacity;
+  transition: box-shadow 0.25s ease;
+  will-change: transform;
 }
 
 .freebies-card:hover {
   box-shadow: var(--shadow-lg);
+}
+
+/* Let the first/last card scroll all the way to the track's center, so a
+   card is always centered — even at the very start or end of the list. */
+.freebies-card:first-child {
+  margin-left: calc(50% - min(300px, 78vw) / 2);
+}
+
+.freebies-card:last-child {
+  margin-right: calc(50% - min(300px, 78vw) / 2);
 }
 
 .freebies-card-cover {
