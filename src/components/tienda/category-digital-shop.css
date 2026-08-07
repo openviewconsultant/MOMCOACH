@@ -285,8 +285,8 @@
   font: inherit;
   text-align: left;
   transform-origin: center bottom;
-  transition: box-shadow 0.25s ease;
-  will-change: transform;
+  transition: box-shadow 0.25s ease, opacity 0.2s ease;
+  will-change: transform, opacity;
 }
 
 .freebies-card:hover {
