@@ -756,6 +756,16 @@
   color: #2C7A7B;
 }
 
+.admin-badge.pending {
+  background: #FBF0D9;
+  color: #A6740B;
+}
+
+.admin-badge.rejected {
+  background: #F6DEDA;
+  color: #A6402F;
+}
+
 /* ---------- Row / card actions ---------- */
 
 .admin-row-actions {
@@ -861,6 +871,61 @@
   background: white;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Pedidos: toolbar & detail ---------- */
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.admin-toolbar-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 9px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.85rem;
+  outline: none;
+  background: white;
+}
+
+.admin-toolbar-search:focus {
+  border-color: var(--color-turquoise);
+}
+
+.admin-toolbar-pill {
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: white;
+  font-size: 0.8rem;
+  color: var(--color-blue-gray);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-toolbar-pill.active {
+  background: var(--color-blue-gray);
+  border-color: var(--color-blue-gray);
+  color: white;
+}
+
+.admin-table-subtext {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--foreground);
+  opacity: 0.55;
+  white-space: normal;
+  margin-top: 2px;
+  max-width: 220px;
+}
+
+.admin-table td.admin-cell-wrap {
+  white-space: normal;
 }
 
 /* ---------- Responsive ---------- */

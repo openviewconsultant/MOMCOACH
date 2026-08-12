@@ -41,6 +41,7 @@ export interface Order {
   id: string;
   buyer_email: string;
   status: 'pending' | 'approved' | 'rejected';
+  status_detail: string | null;
   mp_payment_id: string | null;
   total: number;
   notified_at: string | null;

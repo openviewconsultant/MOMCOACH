@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
-import type { Order } from '@/lib/types';
+import type { Order, OrderItem } from '@/lib/types';
 import { formatCOP } from '@/lib/format';
+import PedidosTable, { type OrderRow } from './PedidosTable';
 
 export default async function AdminPedidosPage() {
   const supabase = await createClient();
@@ -10,8 +11,29 @@ export default async function AdminPedidosPage() {
     .order('created_at', { ascending: false })
     .limit(100);
 
-  const items = (orders ?? []) as Order[];
-  const approved = items.filter((o) => o.status === 'approved');
+  const orderList = (orders ?? []) as Order[];
+  const orderIds = orderList.map((o) => o.id);
+
+  const { data: itemsData } =
+    orderIds.length > 0
+      ? await supabase.from('order_items').select('order_id, title').in('order_id', orderIds)
+      : { data: [] as Pick<OrderItem, 'order_id' | 'title'>[] };
+
+  const titlesByOrder = new Map<string, string[]>();
+  for (const item of (itemsData ?? []) as Pick<OrderItem, 'order_id' | 'title'>[]) {
+    const list = titlesByOrder.get(item.order_id) ?? [];
+    list.push(item.title);
+    titlesByOrder.set(item.order_id, list);
+  }
+
+  const rows: OrderRow[] = orderList.map((order) => ({
+    ...order,
+    productTitles: (titlesByOrder.get(order.id) ?? []).join(', '),
+  }));
+
+  const approved = orderList.filter((o) => o.status === 'approved');
+  const pending = orderList.filter((o) => o.status === 'pending');
+  const rejected = orderList.filter((o) => o.status === 'rejected');
   const revenue = approved.reduce((sum, o) => sum + o.total, 0);
 
   return (
@@ -26,11 +48,19 @@ export default async function AdminPedidosPage() {
       <div className="admin-stats">
         <div className="admin-stat-card">
           <div className="admin-stat-label">Pedidos totales</div>
-          <div className="admin-stat-value">{items.length}</div>
+          <div className="admin-stat-value">{orderList.length}</div>
         </div>
         <div className="admin-stat-card">
           <div className="admin-stat-label">Aprobados</div>
           <div className="admin-stat-value">{approved.length}</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Pendientes</div>
+          <div className="admin-stat-value">{pending.length}</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Rechazados</div>
+          <div className="admin-stat-value">{rejected.length}</div>
         </div>
         <div className="admin-stat-card">
           <div className="admin-stat-label">Ingresos (aprobados)</div>
@@ -38,39 +68,10 @@ export default async function AdminPedidosPage() {
         </div>
       </div>
 
-      {items.length === 0 ? (
+      {orderList.length === 0 ? (
         <p className="admin-empty">Aún no hay pedidos.</p>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Comprador</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Correo enviado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((order) => (
-                <tr key={order.id}>
-                  <td>{new Date(order.created_at).toLocaleString('es-CO')}</td>
-                  <td>{order.buyer_email}</td>
-                  <td>{formatCOP(order.total)}</td>
-                  <td>
-                    <span
-                      className={`admin-badge ${order.status === 'approved' ? 'published' : 'draft'}`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td>{order.notified_at ? 'Sí' : 'No'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <PedidosTable orders={rows} />
       )}
     </div>
   );

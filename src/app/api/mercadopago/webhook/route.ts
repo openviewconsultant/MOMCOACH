@@ -44,14 +44,10 @@ export async function POST(request: Request) {
     const payment = new Payment(mpClient);
     const paymentInfo = await payment.get({ id: dataId });
 
-    if (paymentInfo.status !== 'approved') {
-      return NextResponse.json({ received: true });
-    }
-
     const metadata = (paymentInfo.metadata ?? {}) as PaymentMetadata;
     const orderId = metadata.order_id ?? paymentInfo.external_reference;
     if (!orderId) {
-      console.error('Pago aprobado sin order_id en los metadatos', { dataId });
+      console.error('Notificación de pago sin order_id en los metadatos', { dataId });
       return NextResponse.json({ received: true });
     }
 
@@ -67,11 +63,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
-    if (order.status !== 'approved') {
-      await supabase
-        .from('orders')
-        .update({ status: 'approved', mp_payment_id: dataId })
-        .eq('id', orderId);
+    // Mapea el estado de Mercado Pago al estado que maneja la orden. Los
+    // estados terminales negativos (rechazado, cancelado, reembolsado,
+    // contracargo) se guardan como "rejected"; todo lo demás (pendiente,
+    // en proceso, autorizado, en mediación) se deja como "pending". El
+    // detalle real de Mercado Pago siempre se guarda en status_detail para
+    // poder mostrarlo en el panel de administración.
+    const REJECTED_MP_STATUSES = new Set(['rejected', 'cancelled', 'refunded', 'charged_back']);
+    const mappedStatus: 'approved' | 'rejected' | 'pending' =
+      paymentInfo.status === 'approved'
+        ? 'approved'
+        : REJECTED_MP_STATUSES.has(paymentInfo.status ?? '')
+          ? 'rejected'
+          : 'pending';
+    const statusDetail = [paymentInfo.status, paymentInfo.status_detail].filter(Boolean).join(' — ') || null;
+
+    await supabase
+      .from('orders')
+      .update({ status: mappedStatus, status_detail: statusDetail, mp_payment_id: dataId })
+      .eq('id', orderId);
+
+    if (mappedStatus !== 'approved') {
+      return NextResponse.json({ received: true });
     }
 
     if (order.notified_at) {
