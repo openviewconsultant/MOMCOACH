@@ -136,10 +136,37 @@ function resolveBlockedRanges(ranges: BlockedRange[], timeZone: string): { start
     .filter((r): r is { start: number; end: number } => r !== null);
 }
 
+// Franjas que ya tienen una reserva "activa" en Supabase (pagada, o con un
+// pago en curso en los últimos MINUTOS_RESERVA_TEMPORAL minutos), para que
+// no se le siga ofreciendo a otras personas el mismo horario mientras el
+// primer comprador todavía no termina de pagar (el evento real en Google
+// Calendar solo se crea cuando el webhook de Mercado Pago confirma el pago).
+const PENDING_HOLD_MINUTES = 30;
+
+async function getActiveBookingRanges(calendarId: string): Promise<{ start: number; end: number }[]> {
+  try {
+    const supabase = createAdminClient();
+    const holdCutoff = new Date(Date.now() - PENDING_HOLD_MINUTES * 60 * 1000).toISOString();
+    const { data } = await supabase
+      .from('bookings')
+      .select('start_time, end_time, status, created_at')
+      .eq('calendar_id', calendarId)
+      .in('status', ['pending', 'confirmed']);
+
+    return (data ?? [])
+      .filter((b) => b.status === 'confirmed' || b.created_at >= holdCutoff)
+      .map((b) => ({ start: new Date(b.start_time).getTime(), end: new Date(b.end_time).getTime() }));
+  } catch (error) {
+    console.error('No se pudieron leer las reservas activas desde Supabase', error);
+    return [];
+  }
+}
+
 /**
  * Genera las franjas disponibles del calendario indicado para los próximos
  * "advanceDays" días, dentro de su horario de atención, excluyendo lo que ya
- * está ocupado en su Google Calendar real y los días bloqueados manualmente.
+ * está ocupado en su Google Calendar real, lo que ya tiene una reserva
+ * activa en Supabase, y los días bloqueados manualmente.
  */
 export async function getAvailableSlots(calendarId: string): Promise<Slot[]> {
   const cal = await getCalendarById(calendarId);
@@ -149,8 +176,14 @@ export async function getAvailableSlots(calendarId: string): Promise<Slot[]> {
   const rangeStart = new Date(now.getTime());
   const rangeEnd = new Date(now.getTime() + cal.advanceDays * 24 * 60 * 60 * 1000);
 
-  const busy = await getBusyIntervals(rangeStart, rangeEnd, cal.googleCalendarId);
-  const busyRanges = busy.map((b) => ({ start: new Date(b.start).getTime(), end: new Date(b.end).getTime() }));
+  const [busy, activeBookingRanges] = await Promise.all([
+    getBusyIntervals(rangeStart, rangeEnd, cal.googleCalendarId),
+    getActiveBookingRanges(cal.id),
+  ]);
+  const busyRanges = [
+    ...busy.map((b) => ({ start: new Date(b.start).getTime(), end: new Date(b.end).getTime() })),
+    ...activeBookingRanges,
+  ];
   const blockedSet = new Set(cal.blockedDates);
   const blockedRanges = resolveBlockedRanges(cal.blockedRanges, cal.timeZone);
 
@@ -217,6 +250,12 @@ export async function isSlotStillAvailable(calendarId: string, startIso: string,
     (b) => start.getTime() < b.end && end.getTime() > b.start
   );
   if (overlapsBlockedRange) return false;
+
+  const activeBookingRanges = await getActiveBookingRanges(cal.id);
+  const overlapsActiveBooking = activeBookingRanges.some(
+    (b) => start.getTime() < b.end && end.getTime() > b.start
+  );
+  if (overlapsActiveBooking) return false;
 
   const busy = await getBusyIntervals(start, end, cal.googleCalendarId);
   return !busy.some((b) => start.getTime() < new Date(b.end).getTime() && end.getTime() > new Date(b.start).getTime());

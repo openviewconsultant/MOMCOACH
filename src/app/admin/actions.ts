@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function signOutAction() {
   const supabase = await createClient();
@@ -227,4 +228,28 @@ export async function togglePublishBlogAction(id: string, nextValue: boolean) {
   }
   revalidatePath('/admin/blog');
   revalidatePath('/blog');
+}
+
+// La tabla `bookings` solo tiene una política RLS de lectura para
+// autenticados (ver bookings_migration.sql); para borrar se usa el cliente
+// con service role, igual que el resto del código que escribe citas.
+export async function deleteBookingsAction(ids: string[]) {
+  if (ids.length === 0) return;
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('bookings').delete().in('id', ids);
+  if (error) {
+    console.error('Error eliminando citas', error);
+    return;
+  }
+  revalidatePath('/admin/calendario');
+}
+
+export async function deleteAllBookingsAction() {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('bookings').delete().not('id', 'is', null);
+  if (error) {
+    console.error('Error eliminando todas las citas', error);
+    return;
+  }
+  revalidatePath('/admin/calendario');
 }

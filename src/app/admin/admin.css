@@ -301,6 +301,40 @@
   margin-top: 4px;
 }
 
+/* Sticky, compact header for the Productos page: title + stats + filter
+   toolbar stay pinned while the product grid scrolls underneath. */
+.admin-products-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: var(--color-cream);
+  margin-left: -48px;
+  margin-right: -48px;
+  padding-left: 48px;
+  padding-right: 48px;
+  padding-top: 24px;
+  padding-bottom: 16px;
+  margin-top: -24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.admin-products-sticky-top .admin-page-header {
+  margin-bottom: 16px;
+}
+
+.admin-products-sticky-top .admin-stats {
+  margin-bottom: 16px;
+}
+
+.admin-products-sticky-top .admin-stat-card {
+  padding: 10px 16px;
+}
+
+.admin-products-sticky-top .admin-stat-value {
+  font-size: 1.25rem;
+}
+
 /* ---------- Stat cards ---------- */
 
 .admin-stats {

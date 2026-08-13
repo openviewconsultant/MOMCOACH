@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       .from('bookings')
       .insert({
         product_id: productId,
+        calendar_id: calendarId,
         buyer_name: name,
         buyer_email: email,
         start_time: start,

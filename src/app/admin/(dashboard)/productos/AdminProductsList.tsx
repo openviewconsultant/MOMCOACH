@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
@@ -34,6 +35,9 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
     () => products.filter((p) => p.file_path && !p.cover_image_url),
     [products]
   );
+
+  const publishedCount = useMemo(() => products.filter((p) => p.is_published).length, [products]);
+  const freeCount = useMemo(() => products.filter((p) => p.price === 0).length, [products]);
 
   async function handleGenerateCovers() {
     setGeneratingCovers(true);
@@ -118,6 +122,188 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
 
   return (
     <div>
+      <div className="admin-products-sticky-top">
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-title font-forum">Productos</h1>
+            <p className="admin-subtitle">Publica y gestiona los libros, guías y servicios de la tienda.</p>
+          </div>
+          <Link href="/admin/productos/nuevo" className="admin-new-btn">
+            + Nuevo producto
+          </Link>
+        </div>
+
+        <div className="admin-stats">
+          <div className="admin-stat-card">
+            <div className="admin-stat-label">Total de productos</div>
+            <div className="admin-stat-value">{products.length}</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="admin-stat-label">Publicados</div>
+            <div className="admin-stat-value">{publishedCount}</div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="admin-stat-label">Gratuitos</div>
+            <div className="admin-stat-value">{freeCount}</div>
+          </div>
+        </div>
+
+        {/* Filter Toolbar */}
+        <div
+          style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '14px 20px',
+            boxShadow: 'var(--shadow-sm)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '16px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flex: 1, minWidth: '280px' }}>
+            {/* Search Input */}
+            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+              <span
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  opacity: 0.5,
+                  fontSize: '0.9rem',
+                }}
+              >
+                🔍
+              </span>
+              <input
+                type="text"
+                placeholder="Buscar por título..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px 9px 36px',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(0,0,0,0.12)',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            {/* Category Filter */}
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              style={{
+                padding: '9px 14px',
+                borderRadius: '10px',
+                border: '1px solid rgba(0,0,0,0.12)',
+                fontSize: '0.88rem',
+                background: 'white',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              <option value="all">Todas las categorías</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            {/* Subcategory Filter */}
+            <select
+              value={subcategoryFilter}
+              onChange={(e) => setSubcategoryFilter(e.target.value)}
+              style={{
+                padding: '9px 14px',
+                borderRadius: '10px',
+                border: '1px solid rgba(0,0,0,0.12)',
+                fontSize: '0.88rem',
+                background: 'white',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              <option value="all">Todas las subcategorías</option>
+              {SUBCATEGORIES.map((sub) => (
+                <option key={sub} value={sub}>
+                  {sub}
+                </option>
+              ))}
+            </select>
+
+            {/* Product Type / Modality Filter */}
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              style={{
+                padding: '9px 14px',
+                borderRadius: '10px',
+                border: '1px solid rgba(0,0,0,0.12)',
+                fontSize: '0.88rem',
+                background: 'white',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              <option value="all">Todas las modalidades</option>
+              <option value="digital">Productos Digitales (Guías, Recetarios)</option>
+              <option value="service">Servicios / Asesorías</option>
+            </select>
+
+            {/* Status Filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{
+                padding: '9px 14px',
+                borderRadius: '10px',
+                border: '1px solid rgba(0,0,0,0.12)',
+                fontSize: '0.88rem',
+                background: 'white',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              <option value="all">Todos los estados</option>
+              <option value="published">Publicados</option>
+              <option value="draft">Borradores / Ocultos</option>
+            </select>
+          </div>
+
+          {/* Counter and Reset */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.75 }}>
+              Mostrando <strong>{filteredProducts.length}</strong> de <strong>{products.length}</strong>
+            </span>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                style={{
+                  background: 'rgba(0,0,0,0.06)',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  color: 'var(--color-blue-gray)',
+                  fontWeight: 500,
+                }}
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
       {productsMissingCovers.length > 0 && (
         <div
           style={{
@@ -168,162 +354,6 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
           )}
         </div>
       )}
-
-      {/* Filter Toolbar */}
-      <div
-        style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '20px 24px',
-          boxShadow: 'var(--shadow-sm)',
-          marginBottom: '28px',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '16px',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flex: 1, minWidth: '280px' }}>
-          {/* Search Input */}
-          <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-            <span
-              style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                opacity: 0.5,
-                fontSize: '0.9rem',
-              }}
-            >
-              🔍
-            </span>
-            <input
-              type="text"
-              placeholder="Buscar por título..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '9px 12px 9px 36px',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.12)',
-                fontSize: '0.9rem',
-                outline: 'none',
-                fontFamily: 'inherit',
-              }}
-            />
-          </div>
-
-          {/* Category Filter */}
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            style={{
-              padding: '9px 14px',
-              borderRadius: '10px',
-              border: '1px solid rgba(0,0,0,0.12)',
-              fontSize: '0.88rem',
-              background: 'white',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
-          >
-            <option value="all">Todas las categorías</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-
-          {/* Subcategory Filter */}
-          <select
-            value={subcategoryFilter}
-            onChange={(e) => setSubcategoryFilter(e.target.value)}
-            style={{
-              padding: '9px 14px',
-              borderRadius: '10px',
-              border: '1px solid rgba(0,0,0,0.12)',
-              fontSize: '0.88rem',
-              background: 'white',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
-          >
-            <option value="all">Todas las subcategorías</option>
-            {SUBCATEGORIES.map((sub) => (
-              <option key={sub} value={sub}>
-                {sub}
-              </option>
-            ))}
-          </select>
-
-          {/* Product Type / Modality Filter */}
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            style={{
-              padding: '9px 14px',
-              borderRadius: '10px',
-              border: '1px solid rgba(0,0,0,0.12)',
-              fontSize: '0.88rem',
-              background: 'white',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
-          >
-            <option value="all">Todas las modalidades</option>
-            <option value="digital">Productos Digitales (Guías, Recetarios)</option>
-            <option value="service">Servicios / Asesorías</option>
-          </select>
-
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            style={{
-              padding: '9px 14px',
-              borderRadius: '10px',
-              border: '1px solid rgba(0,0,0,0.12)',
-              fontSize: '0.88rem',
-              background: 'white',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
-          >
-            <option value="all">Todos los estados</option>
-            <option value="published">Publicados</option>
-            <option value="draft">Borradores / Ocultos</option>
-          </select>
-        </div>
-
-        {/* Counter and Reset */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.75 }}>
-            Mostrando <strong>{filteredProducts.length}</strong> de <strong>{products.length}</strong>
-          </span>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={resetFilters}
-              style={{
-                background: 'rgba(0,0,0,0.06)',
-                border: 'none',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-                color: 'var(--color-blue-gray)',
-                fontWeight: 500,
-              }}
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-      </div>
 
       {/* Grid of Products */}
       {filteredProducts.length === 0 ? (

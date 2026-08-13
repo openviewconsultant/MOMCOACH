@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
-import { getMercadoPagoClient, getSiteUrl } from '@/lib/mercadopago';
+import { getMercadoPagoClient, getSiteUrl, resolveCheckoutUrl } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { Product } from '@/lib/types';
 
@@ -141,11 +141,12 @@ export async function POST(request: Request) {
       },
     });
 
-    if (!result.init_point) {
+    const checkoutUrl = resolveCheckoutUrl(result);
+    if (!checkoutUrl) {
       throw new Error('Mercado Pago no devolvió un init_point');
     }
 
-    return NextResponse.json({ initPoint: result.init_point });
+    return NextResponse.json({ initPoint: checkoutUrl });
   } catch (error) {
     console.error('Error creando preferencia de Mercado Pago', error);
     return NextResponse.json(

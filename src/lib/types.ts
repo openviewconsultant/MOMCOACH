@@ -63,6 +63,7 @@ export interface Booking {
   id: string;
   product_id: string | null;
   order_id: string | null;
+  calendar_id: string | null;
   buyer_name: string;
   buyer_email: string;
   start_time: string;
