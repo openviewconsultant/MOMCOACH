@@ -44,12 +44,11 @@ export async function saveProductAction(
     : [];
   const isPopular = formData.get('is_popular') === 'on';
   const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
-  const calLink = (formData.get('cal_link') as string | null)?.trim() || null;
   const paymentProviderRaw = (formData.get('payment_provider') as string | null) || 'mercadopago';
-  const paymentProvider =
-    paymentProviderRaw === 'hotmart' || paymentProviderRaw === 'calendar' ? paymentProviderRaw : 'mercadopago';
+  const paymentProvider = paymentProviderRaw === 'hotmart' ? 'hotmart' : 'mercadopago';
   const hotmartUrl = (formData.get('hotmart_url') as string | null)?.trim() || null;
   const videoUrl = (formData.get('video_url') as string | null)?.trim() || null;
+  const bookingCalendarId = (formData.get('booking_calendar_id') as string | null)?.trim() || null;
 
   if (!title) {
     return { error: 'El título es obligatorio' };
@@ -64,10 +63,6 @@ export async function saveProductAction(
     return { error: 'Ingresa el link de checkout de Hotmart' };
   }
 
-  if (price > 0 && paymentProvider === 'calendar' && !calLink) {
-    return { error: 'Ingresa el link de calendario' };
-  }
-
   const payload = {
     title,
     description,
@@ -79,9 +74,9 @@ export async function saveProductAction(
     features,
     is_popular: isPopular,
     whatsapp_text: whatsappText,
-    cal_link: calLink,
     payment_provider: price > 0 ? paymentProvider : 'mercadopago',
     hotmart_url: price > 0 && paymentProvider === 'hotmart' ? hotmartUrl : null,
+    booking_calendar_id: productType === 'service' ? bookingCalendarId : null,
     video_url: videoUrl,
     is_published: isPublished,
     cover_image_url: coverImageUrl,

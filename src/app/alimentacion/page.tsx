@@ -22,6 +22,7 @@ const fallbackServices = [
     id: 'f-1',
     title: 'Curso Inicio de Alimentación Complementaria',
     price: 'USD $85',
+    priceNumber: 85,
     tag: 'BLW & BLISS & Mixto',
     desc: 'Todo lo que necesitas saber para comenzar la alimentación de tu bebé a partir de los 6 meses de forma segura, relajada y nutritiva.',
     features: [
@@ -36,11 +37,13 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
   {
     id: 'f-2',
     title: 'Llamada de Consulta de Alimentación',
     price: 'USD $65',
+    priceNumber: 65,
     tag: 'Sesión express de orientación',
     desc: 'Ideal si necesitas resolver dudas puntuales sobre inicio de la alimentación, selectividad alimentaria o ajustar un plan que ya tenías.',
     features: [
@@ -54,11 +57,13 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/infant-baby-eating-finger-food-2023-11-27-04-54-34-utc-scaled-e1705513415708-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
   {
     id: 'f-3',
     title: 'Asesoría para Picky Eaters (Comedores Selectivos)',
     price: 'USD $120',
+    priceNumber: 120,
     tag: 'Acompañamiento Personalizado',
     desc: 'Especial para niños que rechazan alimentos, sienten neofobia alimentaria o tienen comidas muy estresantes en la mesa.',
     features: [
@@ -73,6 +78,7 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
 ];
 
@@ -98,6 +104,8 @@ export default async function AlimentacionPage() {
     id: p.id,
     title: p.title,
     price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+    priceNumber: p.price,
+    calendarId: p.booking_calendar_id,
     tag: p.subtitle || 'Alimentación',
     desc: p.description,
     features: Array.isArray(p.features) ? p.features : [],
@@ -232,12 +240,12 @@ export default async function AlimentacionPage() {
                   </Link>
                 ) : (
                   <ServiceBookingButton
+                    productId={service.id}
                     title={service.title}
-                    price={service.price}
-                    whatsappText={service.whatsappText}
+                    price={service.priceNumber}
+                    calendarId={service.calendarId}
                     popular={service.popular}
                     buttonText="Solicitar Asesoría"
-                    calLink={service.calLink || 'open-view-consultant-7ng550/alimentacion'}
                   />
                 )}
               </div>

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProductForm from '../../ProductForm';
+import { getCalendarOptions } from '@/lib/calendarOptions';
 import type { Product } from '@/lib/types';
 
 export default async function EditarProductoPage({
@@ -12,6 +13,7 @@ export default async function EditarProductoPage({
   const { id } = await params;
   const supabase = await createClient();
   const { data: product } = await supabase.from('products').select('*').eq('id', id).single();
+  const calendarOptions = await getCalendarOptions();
 
   if (!product) {
     notFound();
@@ -26,7 +28,7 @@ export default async function EditarProductoPage({
           <p className="admin-subtitle">{product.title}</p>
         </div>
       </div>
-      <ProductForm product={product as Product} />
+      <ProductForm product={product as Product} calendarOptions={calendarOptions} />
     </div>
   );
 }

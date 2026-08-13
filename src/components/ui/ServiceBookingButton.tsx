@@ -1,67 +1,80 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { getCalApi } from '@calcom/embed-react';
+import React, { useState } from 'react';
 import Button from './Button';
+import BookingModal from './BookingModal';
+import FreeCallModal from './FreeCallModal';
+import { prefetchAvailability } from '@/lib/booking-availability-cache';
+import { formatCOP } from '@/lib/format';
+
+const DEFAULT_CALENDAR_ID = 'default';
 
 interface ServiceBookingButtonProps {
-  title?: string;
-  price?: string;
-  whatsappText?: string;
+  productId?: string;
+  title: string;
+  price?: number;
+  calendarId?: string | null;
   popular?: boolean;
   buttonText?: string;
-  calLink?: string;
   className?: string;
   variant?: 'primary' | 'secondary' | 'ghost';
 }
 
 export default function ServiceBookingButton({
+  productId,
+  title,
+  price = 0,
+  calendarId,
   popular = false,
   buttonText = 'Solicitar Asesoría',
-  calLink = 'open-view-consultant-7ng550/30min',
   className,
   variant,
 }: ServiceBookingButtonProps) {
-  const namespace = calLink.split('/')[1] || 'booking';
+  const [open, setOpen] = useState(false);
+  const isPaid = price > 0 && Boolean(productId);
+  const resolvedCalendarId = calendarId || DEFAULT_CALENDAR_ID;
 
-  useEffect(() => {
-    (async () => {
-      const cal = await getCalApi({ namespace });
-      cal('ui', {
-        theme: 'dark',
-        hideEventTypeDetails: false,
-        layout: 'month_view',
-      });
-    })();
-  }, [namespace]);
+  const handlePrefetch = () => prefetchAvailability(resolvedCalendarId);
+  const handleOpen = () => {
+    handlePrefetch();
+    setOpen(true);
+  };
 
-  async function handleOpenModal() {
-    const cal = await getCalApi({ namespace });
-    cal('modal', {
-      calLink,
-      config: { layout: 'month_view' },
-    });
-  }
-
-  if (className) {
-    return (
-      <button
-        type="button"
-        className={className}
-        onClick={handleOpenModal}
-      >
-        {buttonText}
-      </button>
-    );
-  }
-
-  return (
+  const button = className ? (
+    <button type="button" className={className} onClick={handleOpen} onMouseEnter={handlePrefetch}>
+      {buttonText}
+    </button>
+  ) : (
     <Button
       variant={variant || (popular ? 'primary' : 'secondary')}
       style={{ width: '100%' }}
-      onClick={handleOpenModal}
+      onClick={handleOpen}
+      onMouseEnter={handlePrefetch}
     >
       {buttonText}
     </Button>
+  );
+
+  return (
+    <>
+      {button}
+      {open && isPaid && productId && (
+        <BookingModal
+          productId={productId}
+          productTitle={title}
+          priceLabel={formatCOP(price)}
+          calendarId={resolvedCalendarId}
+          onClose={() => setOpen(false)}
+        />
+      )}
+      {open && !isPaid && (
+        <FreeCallModal
+          title={title}
+          subtitle="Elige el horario que mejor te quede y te confirmamos por correo."
+          calendarId={resolvedCalendarId}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
   );
 }

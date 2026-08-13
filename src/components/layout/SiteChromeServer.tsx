@@ -7,8 +7,8 @@ const DEFAULT_CONFIG = {
   title:    'Llamada de descubrimiento',
   subtitle: '¡sin costo!',
   cta:      'Agenda aquí',
-  calLink:  'open-view-consultant-7ng550/30min',
   enabled:  true,
+  calendarId: 'default',
 };
 
 export default async function SiteChromeServer({ children }: { children: React.ReactNode }) {
@@ -19,7 +19,7 @@ export default async function SiteChromeServer({ children }: { children: React.R
     const { data } = await supabase
       .from('site_settings')
       .select('key, value')
-      .in('key', ['popup_eyebrow', 'popup_title', 'popup_subtitle', 'popup_cta', 'popup_cal_link', 'popup_enabled']);
+      .in('key', ['popup_eyebrow', 'popup_title', 'popup_subtitle', 'popup_cta', 'popup_enabled', 'popup_calendar_id']);
 
     if (data) {
       const map: Record<string, string> = {};
@@ -30,8 +30,8 @@ export default async function SiteChromeServer({ children }: { children: React.R
         title:    map['popup_title']    ?? DEFAULT_CONFIG.title,
         subtitle: map['popup_subtitle'] ?? DEFAULT_CONFIG.subtitle,
         cta:      map['popup_cta']      ?? DEFAULT_CONFIG.cta,
-        calLink:  map['popup_cal_link'] ?? DEFAULT_CONFIG.calLink,
         enabled:  (map['popup_enabled'] ?? 'true') === 'true',
+        calendarId: map['popup_calendar_id'] ?? DEFAULT_CONFIG.calendarId,
       };
     }
   } catch {

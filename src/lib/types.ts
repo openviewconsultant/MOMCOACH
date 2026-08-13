@@ -14,6 +14,7 @@ export interface Product {
   cal_link?: string | null;
   payment_provider?: 'mercadopago' | 'hotmart' | 'calendar';
   hotmart_url?: string | null;
+  booking_calendar_id?: string | null;
   video_url?: string | null;
   cover_image_url: string | null;
   file_path: string | null;
@@ -56,4 +57,20 @@ export interface OrderItem {
   title: string;
   price: number;
   quantity: number;
+}
+
+export interface Booking {
+  id: string;
+  product_id: string | null;
+  order_id: string | null;
+  buyer_name: string;
+  buyer_email: string;
+  start_time: string;
+  end_time: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  calendar_event_id: string | null;
+  meet_link: string | null;
+  notified_at: string | null;
+  created_at: string;
+  updated_at: string;
 }

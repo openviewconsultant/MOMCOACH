@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { getCalApi } from '@calcom/embed-react';
+import FreeCallModal from './FreeCallModal';
+import { prefetchAvailability } from '@/lib/booking-availability-cache';
 import './discovery-call-popup.css';
 
 interface PopupConfig {
@@ -10,45 +11,41 @@ interface PopupConfig {
   title: string;
   subtitle: string;
   cta: string;
-  calLink: string;
   enabled: boolean;
+  calendarId: string;
 }
 
 export default function DiscoveryCallPopup({ config }: { config: PopupConfig }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const [open, setOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
-  const namespace = config.calLink.split('/').pop() || '30min';
-
-  useEffect(() => {
-    (async () => {
-      const cal = await getCalApi({ namespace });
-      cal('ui', {
-        theme: 'dark',
-        hideEventTypeDetails: false,
-        layout: 'month_view',
-      });
-    })();
-  }, [namespace]);
-
-  // Open on first scroll (only on homepage, only if enabled)
+  // Open on first scroll (only on homepage, only if enabled). Precarga la
+  // disponibilidad en ese momento, en vez de esperar a que se abra el
+  // formulario, para que no se note el tiempo de carga al hacer clic.
   useEffect(() => {
     if (!isHomePage || !config.enabled) return;
-    const showOnScroll = () => setOpen(true);
+    const showOnScroll = () => {
+      setOpen(true);
+      prefetchAvailability(config.calendarId);
+    };
     window.addEventListener('scroll', showOnScroll, { once: true, passive: true });
     return () => window.removeEventListener('scroll', showOnScroll);
-  }, [isHomePage, config.enabled]);
+  }, [isHomePage, config.enabled, config.calendarId]);
 
-  async function openCalModal() {
-    const calSlug = config.calLink.startsWith('http')
-      ? config.calLink.replace(/^https?:\/\/cal\.com\//, '')
-      : config.calLink;
-    const cal = await getCalApi({ namespace });
-    cal('modal', {
-      calLink: calSlug,
-      config: { layout: 'month_view' },
-    });
+  if (bookingOpen) {
+    return (
+      <FreeCallModal
+        title={config.title}
+        subtitle={`${config.subtitle} Elige el horario que mejor te quede.`}
+        calendarId={config.calendarId}
+        onClose={() => {
+          setBookingOpen(false);
+          setOpen(false);
+        }}
+      />
+    );
   }
 
   if (!isHomePage || !open || !config.enabled) return null;
@@ -56,7 +53,7 @@ export default function DiscoveryCallPopup({ config }: { config: PopupConfig }) 
   return (
     <div className="discovery-popup-backdrop" onClick={() => setOpen(false)}>
       <div className="discovery-popup-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="discovery-popup-media" onClick={openCalModal}>
+        <div className="discovery-popup-media" onClick={() => setBookingOpen(true)}>
           <video
             className="discovery-popup-video"
             src="/discovery-popup-bg.mp4"
@@ -74,7 +71,7 @@ export default function DiscoveryCallPopup({ config }: { config: PopupConfig }) 
               className="discovery-popup-cta"
               onClick={(e) => {
                 e.stopPropagation();
-                openCalModal();
+                setBookingOpen(true);
               }}
             >
               {config.cta}

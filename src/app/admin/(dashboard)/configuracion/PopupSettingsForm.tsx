@@ -2,23 +2,29 @@
 
 import React, { useState } from 'react';
 
+interface CalendarOption {
+  id: string;
+  name: string;
+}
+
 interface Props {
   initialSettings: Record<string, string>;
+  calendarOptions: CalendarOption[];
 }
 
 const DEFAULT_EYEBROW  = 'Agenda tu';
 const DEFAULT_TITLE    = 'Llamada de descubrimiento';
 const DEFAULT_SUBTITLE = '¡sin costo!';
 const DEFAULT_CTA      = 'Agenda aquí';
-const DEFAULT_CAL_LINK = 'open-view-consultant-7ng550/30min';
+const DEFAULT_CALENDAR_ID = 'default';
 
-export default function PopupSettingsForm({ initialSettings }: Props) {
+export default function PopupSettingsForm({ initialSettings, calendarOptions }: Props) {
   const [eyebrow,  setEyebrow]  = useState(initialSettings['popup_eyebrow']  ?? DEFAULT_EYEBROW);
   const [title,    setTitle]    = useState(initialSettings['popup_title']    ?? DEFAULT_TITLE);
   const [subtitle, setSubtitle] = useState(initialSettings['popup_subtitle'] ?? DEFAULT_SUBTITLE);
   const [cta,      setCta]      = useState(initialSettings['popup_cta']      ?? DEFAULT_CTA);
-  const [calLink,  setCalLink]  = useState(initialSettings['popup_cal_link'] ?? DEFAULT_CAL_LINK);
   const [enabled,  setEnabled]  = useState((initialSettings['popup_enabled'] ?? 'true') === 'true');
+  const [calendarId, setCalendarId] = useState(initialSettings['popup_calendar_id'] ?? DEFAULT_CALENDAR_ID);
 
   const [saving,  setSaving]  = useState(false);
   const [saved,   setSaved]   = useState(false);
@@ -39,8 +45,8 @@ export default function PopupSettingsForm({ initialSettings }: Props) {
           popup_title:    title,
           popup_subtitle: subtitle,
           popup_cta:      cta,
-          popup_cal_link: calLink,
           popup_enabled:  String(enabled),
+          popup_calendar_id: calendarId,
         }),
       });
       if (!res.ok) {
@@ -56,16 +62,11 @@ export default function PopupSettingsForm({ initialSettings }: Props) {
     }
   }
 
-  // Build Cal.com link from the cal_link value
-  const calPreviewUrl = calLink.startsWith('http')
-    ? calLink
-    : `https://cal.com/${calLink}`;
-
   return (
     <div className="admin-settings-page">
       <div className="admin-settings-header">
         <div>
-          <h1 className="admin-settings-title font-forum">Configuración</h1>
+          <h1 className="admin-settings-title font-forum">Mensaje PopUp</h1>
           <p className="admin-settings-subtitle font-inter">
             Gestiona el popup de llamada de descubrimiento que aparece en el sitio
           </p>
@@ -92,33 +93,25 @@ export default function PopupSettingsForm({ initialSettings }: Props) {
           </div>
 
           <div className="admin-settings-fields">
-            {/* Cal.com link */}
+            <p className="admin-field-hint">
+              El horario de la llamada gratuita se agenda con Google Calendar. Crea o ajusta calendarios en <b>Calendario</b> en el menú lateral.
+            </p>
+
+            {/* Calendario asociado */}
             <div className="admin-field">
-              <label className="admin-field-label font-inter" htmlFor="ps-cal-link">
-                URL de agenda (Cal.com)
-                <span className="admin-field-hint">
-                  Slug del evento, ej. <code>username/evento</code> o URL completa
-                </span>
+              <label className="admin-field-label font-inter" htmlFor="ps-calendar">
+                Calendario donde se agenda esta llamada
               </label>
-              <div className="admin-cal-input-wrap">
-                <span className="admin-cal-prefix">https://cal.com/</span>
-                <input
-                  id="ps-cal-link"
-                  type="text"
-                  className="admin-field-input admin-cal-slug-input font-inter"
-                  value={calLink.replace(/^https?:\/\/cal\.com\//, '')}
-                  onChange={e => setCalLink(e.target.value)}
-                  placeholder="tu-usuario/nombre-evento"
-                />
-              </div>
-              <a
-                href={calPreviewUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="admin-cal-preview-link font-inter"
+              <select
+                id="ps-calendar"
+                className="admin-field-input font-inter"
+                value={calendarId}
+                onChange={e => setCalendarId(e.target.value)}
               >
-                🔗 Ver en Cal.com →
-              </a>
+                {calendarOptions.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
             </div>
 
             {/* Eyebrow */}

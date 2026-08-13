@@ -43,12 +43,12 @@ export default function ProductDetailCTA({ product }: { product: Product }) {
   if (isService || product.payment_provider === 'calendar') {
     return (
       <ServiceBookingButton
+        productId={product.id}
         title={product.title}
-        price={`USD $${product.price}`}
-        whatsappText={product.whatsapp_text || `Hola! Quiero información sobre ${product.title}`}
+        price={product.price}
+        calendarId={product.booking_calendar_id}
         buttonText={isService ? 'Solicitar Asesoría' : 'Agendar cita'}
         className="tienda-card-btn font-inter"
-        calLink={product.cal_link || 'open-view-consultant-7ng550/30min'}
       />
     );
   }

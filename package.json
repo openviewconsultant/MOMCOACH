@@ -9,9 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@calcom/embed-react": "^1.5.3",
     "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.8",
+    "googleapis": "^174.0.1",
     "mercadopago": "^3.2.1",
     "next": "16.2.10",
     "nodemailer": "^9.0.5",

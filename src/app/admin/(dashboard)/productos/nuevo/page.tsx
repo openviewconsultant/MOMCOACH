@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import ProductForm from '../ProductForm';
+import { getCalendarOptions } from '@/lib/calendarOptions';
 
-export default function NuevoProductoPage() {
+export default async function NuevoProductoPage() {
+  const calendarOptions = await getCalendarOptions();
+
   return (
     <div>
       <Link href="/admin/productos" className="admin-back-link">← Volver a productos</Link>
@@ -11,7 +14,7 @@ export default function NuevoProductoPage() {
           <p className="admin-subtitle">Complétalo y publícalo cuando esté listo.</p>
         </div>
       </div>
-      <ProductForm />
+      <ProductForm calendarOptions={calendarOptions} />
     </div>
   );
 }

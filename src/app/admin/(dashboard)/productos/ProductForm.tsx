@@ -4,10 +4,11 @@ import React, { useActionState, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { saveProductAction, type ProductFormState } from '../../actions';
 import type { Product } from '@/lib/types';
+import type { CalendarOption } from '@/lib/calendarOptions';
 
 const initialState: ProductFormState = { error: null };
 
-export default function ProductForm({ product }: { product?: Product }) {
+export default function ProductForm({ product, calendarOptions = [] }: { product?: Product; calendarOptions?: CalendarOption[] }) {
   const [state, formAction, isSubmitting] = useActionState(saveProductAction, initialState);
   const [coverUrl, setCoverUrl] = useState(product?.cover_image_url ?? '');
   const [filePath, setFilePath] = useState(product?.file_path ?? '');
@@ -16,7 +17,18 @@ export default function ProductForm({ product }: { product?: Product }) {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
   const [productType, setProductType] = useState<'digital' | 'service'>(product?.product_type ?? 'digital');
-  const [paymentProvider, setPaymentProvider] = useState<'mercadopago' | 'hotmart' | 'calendar'>(product?.payment_provider ?? 'mercadopago');
+  const [paymentProvider, setPaymentProvider] = useState<'mercadopago' | 'hotmart' | 'calendar'>(
+    product?.product_type === 'service' ? 'mercadopago' : (product?.payment_provider ?? 'mercadopago')
+  );
+
+  function handleProductTypeChange(next: 'digital' | 'service') {
+    setProductType(next);
+    // Un servicio/asesoría pago siempre se cobra con Mercado Pago: es el
+    // único que dispara nuestro flujo de agenda (día/hora + evento en
+    // Google Calendar). Hotmart redirige a un checkout externo donde no
+    // hay forma de agendar la cita.
+    if (next === 'service') setPaymentProvider('mercadopago');
+  }
 
   async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -56,7 +68,6 @@ export default function ProductForm({ product }: { product?: Product }) {
   }
 
   const busy = isSubmitting || uploadingCover || uploadingFile;
-  const showCalLink = productType === 'service' || paymentProvider === 'calendar';
 
   return (
     <form action={formAction} className="admin-form admin-form-v2">
@@ -69,7 +80,7 @@ export default function ProductForm({ product }: { product?: Product }) {
 
         <label>
           Modalidad
-          <select name="product_type" value={productType} onChange={(e) => setProductType(e.target.value as 'digital' | 'service')}>
+          <select name="product_type" value={productType} onChange={(e) => handleProductTypeChange(e.target.value as 'digital' | 'service')}>
             <option value="digital">Producto Digital (Recetario, Guía, PDF)</option>
             <option value="service">Servicio / Asesoría (Programa, Consulta 1 a 1)</option>
           </select>
@@ -118,16 +129,17 @@ export default function ProductForm({ product }: { product?: Product }) {
           />
         </label>
 
-        {showCalLink && (
+        {productType === 'service' && (
           <label>
-            Link de Cal.com / Calendario de reserva (ej: open-view-consultant-7ng550/alimentacion)
-            <input
-              type="text"
-              name="cal_link"
-              placeholder="open-view-consultant-7ng550/alimentacion"
-              defaultValue={product?.cal_link ?? ''}
-              required={productType !== 'service'}
-            />
+            Calendario
+            <select name="booking_calendar_id" defaultValue={product?.booking_calendar_id ?? calendarOptions[0]?.id ?? 'default'}>
+              {calendarOptions.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+            <span className="admin-field-hint">
+              A qué calendario van las citas de este servicio. Créalos o edítalos en <b>Calendario</b> en el menú lateral.
+            </span>
           </label>
         )}
       </section>
@@ -158,7 +170,17 @@ export default function ProductForm({ product }: { product?: Product }) {
               </label>
             )}
 
-            {!isFree && (
+            {!isFree && productType === 'service' && (
+              <div className="admin-payment-provider-box">
+                <input type="hidden" name="payment_provider" value="mercadopago" />
+                <span className="admin-inline-label">Pasarela de pago</span>
+                <p className="admin-field-hint">
+                  Los servicios/asesorías pagos siempre se cobran con <b>Mercado Pago</b>: es el único que dispara nuestro flujo de agenda (el cliente elige día y hora, y se crea el evento en Google Calendar al aprobarse el pago). Hotmart no está disponible para servicios porque su checkout es externo y no puede agendar la cita.
+                </p>
+              </div>
+            )}
+
+            {!isFree && productType === 'digital' && (
               <div className="admin-payment-provider-box">
                 <span className="admin-inline-label">Pasarela de pago</span>
                 <div className="admin-pill-group">
@@ -182,23 +204,10 @@ export default function ProductForm({ product }: { product?: Product }) {
                     />
                     Hotmart
                   </label>
-                  {productType !== 'service' && (
-                    <label className={`admin-pill ${paymentProvider === 'calendar' ? 'is-active' : ''}`}>
-                      <input
-                        type="radio"
-                        name="payment_provider"
-                        value="calendar"
-                        checked={paymentProvider === 'calendar'}
-                        onChange={() => setPaymentProvider('calendar')}
-                      />
-                      Agendar cita
-                    </label>
-                  )}
                 </div>
                 <p className="admin-field-hint">
                   {paymentProvider === 'mercadopago' && 'El cliente paga dentro del sitio con el checkout de Mercado Pago.'}
                   {paymentProvider === 'hotmart' && 'El cliente es redirigido al checkout externo de Hotmart.'}
-                  {paymentProvider === 'calendar' && 'El botón abre el calendario de Cal.com para agendar una cita en vez de cobrar en línea.'}
                 </p>
                 {paymentProvider === 'hotmart' && (
                   <label style={{ marginTop: '4px' }}>

@@ -61,17 +61,12 @@ function SupabaseProductCard({
           </a>
         ) : isService || product.payment_provider === 'calendar' ? (
           <ServiceBookingButton
+            productId={product.id}
             title={product.title}
-            price={formatCOP(product.price)}
-            whatsappText={product.whatsapp_text || `Hola! Quiero reservar ${product.title}`}
+            price={product.price}
+            calendarId={product.booking_calendar_id}
             buttonText={isService ? 'Solicitar Asesoría' : 'Agendar cita'}
             className="tienda-card-btn font-inter"
-            calLink={
-              product.cal_link ||
-              (product.category === 'Alimentación'
-                ? 'open-view-consultant-7ng550/alimentacion'
-                : 'open-view-consultant-7ng550/30min')
-            }
           />
         ) : (
           <button type="button" className="tienda-card-btn font-inter" onClick={() => addBook(product)}>

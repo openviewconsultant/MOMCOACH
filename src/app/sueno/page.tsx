@@ -22,6 +22,7 @@ const fallbackServices = [
     id: 'fs-1',
     title: 'Programa Recién Nacidos (0 a 4 meses)',
     price: 'USD $95',
+    priceNumber: 95,
     tag: 'Previene problemas de sueño',
     desc: 'Diseñado para crear bases saludables de sueño desde los primeros días. Aprende sobre ventanas de sueño, ambiente ideal y ritmos biológicos sin presiones.',
     features: [
@@ -36,11 +37,13 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC08734-scaled-e1705350733440-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
   {
     id: 'fs-2',
     title: 'Plan de Sueño Infantil (4 meses a 6 años)',
     price: 'USD $260',
+    priceNumber: 260,
     tag: 'Acompañamiento 1 a 1',
     desc: 'Un plan totalmente personalizado según el temperamento de tu hijo y la dinámica familiar, con seguimiento diario para lograr noches completas y descanso continuo.',
     features: [
@@ -55,11 +58,13 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
   {
     id: 'fs-3',
     title: 'Llamada de Consulta de Sueño',
     price: 'USD $65',
+    priceNumber: 65,
     tag: 'Sesión express de orientación',
     desc: 'Ideal si necesitas resolver dudas puntuales sobre regresiones de sueño, transiciones de siestas, viajes o ajustar un plan que ya tenías.',
     features: [
@@ -73,6 +78,7 @@ const fallbackServices = [
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC00073-scaled-e1705350168224-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
+    calendarId: null as string | null,
   },
 ];
 
@@ -111,6 +117,8 @@ export default async function SuenoPage() {
     id: p.id,
     title: p.title,
     price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+    priceNumber: p.price,
+    calendarId: p.booking_calendar_id,
     tag: p.subtitle || 'Sueño Infantil',
     desc: p.description,
     features: Array.isArray(p.features) ? p.features : [],
@@ -240,12 +248,12 @@ export default async function SuenoPage() {
                   </Link>
                 ) : (
                   <ServiceBookingButton
+                    productId={service.id}
                     title={service.title}
-                    price={service.price}
-                    whatsappText={service.whatsappText}
+                    price={service.priceNumber}
+                    calendarId={service.calendarId}
                     popular={service.popular}
                     buttonText="Solicitar Asesoría"
-                    calLink={service.calLink || 'open-view-consultant-7ng550/30min'}
                   />
                 )}
               </div>

@@ -14,8 +14,8 @@ interface PopupConfig {
   title: string;
   subtitle: string;
   cta: string;
-  calLink: string;
   enabled: boolean;
+  calendarId: string;
 }
 
 interface Props {

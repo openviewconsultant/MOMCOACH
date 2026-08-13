@@ -7,7 +7,7 @@ import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
 import FreebiesCarousel from '@/components/tienda/FreebiesCarousel';
 import { useCart } from '@/lib/cart-context';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
-import { getCalApi } from '@calcom/embed-react';
+import BookingModal from '@/components/ui/BookingModal';
 import { formatCOP } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
@@ -23,13 +23,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
   const { addBook, openCart, items } = useCart();
   const [downloadTarget, setDownloadTarget] = useState<Product | null>(null);
   const [previewTarget, setPreviewTarget] = useState<{ item: Product; rect: DOMRect | null } | null>(null);
-
-  async function openBookingModal(item: Product) {
-    const calLink = item.cal_link || 'open-view-consultant-7ng550/30min';
-    const namespace = calLink.split('/')[1] || 'booking';
-    const cal = await getCalApi({ namespace });
-    cal('modal', { calLink, config: { layout: 'month_view' } });
-  }
+  const [bookingTarget, setBookingTarget] = useState<Product | null>(null);
 
   function previewCta(item: Product): { label: string; onClick: () => void } {
     const inCart = items.some((cartItem) => cartItem.id === item.id);
@@ -40,8 +34,8 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
     if (item.payment_provider === 'hotmart' && item.hotmart_url) {
       return { label: 'Comprar', onClick: () => window.open(item.hotmart_url!, '_blank', 'noopener,noreferrer') };
     }
-    if (item.payment_provider === 'calendar' && item.cal_link) {
-      return { label: 'Agendar cita', onClick: () => openBookingModal(item) };
+    if (item.payment_provider === 'calendar') {
+      return { label: 'Agendar cita', onClick: () => setBookingTarget(item) };
     }
     return {
       label: inCart ? 'Añadir otro' : 'Añadir al carrito',
@@ -99,14 +93,14 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                       >
                         Comprar
                       </a>
-                    ) : guide.payment_provider === 'calendar' && guide.cal_link ? (
+                    ) : guide.payment_provider === 'calendar' ? (
                       <ServiceBookingButton
+                        productId={guide.id}
                         title={guide.title}
-                        price={`USD $${guide.price}`}
-                        whatsappText={guide.whatsapp_text || `Hola! Quiero agendar ${guide.title}`}
+                        price={guide.price}
+                        calendarId={guide.booking_calendar_id}
                         buttonText="Agendar cita"
                         className="shop-mini-btn font-inter"
-                        calLink={guide.cal_link}
                       />
                     ) : (
                       <button
@@ -162,6 +156,16 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
           productId={downloadTarget.id}
           productTitle={downloadTarget.title}
           onClose={() => setDownloadTarget(null)}
+        />
+      )}
+
+      {bookingTarget && (
+        <BookingModal
+          productId={bookingTarget.id}
+          productTitle={bookingTarget.title}
+          priceLabel={formatCOP(bookingTarget.price)}
+          calendarId={bookingTarget.booking_calendar_id}
+          onClose={() => setBookingTarget(null)}
         />
       )}
     </>
