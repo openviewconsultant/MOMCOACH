@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import type { Booking } from '@/lib/types';
+import { formatDateTimeCO } from '@/lib/format';
 import { deleteBookingsAction, deleteAllBookingsAction } from '../../actions';
 
 export interface CitaRow extends Booking {
@@ -19,6 +20,10 @@ const BADGE_CLASS: Record<Booking['status'], string> = {
   pending: 'pending',
   cancelled: 'rejected',
 };
+
+function formatCitaDate(iso: string) {
+  return formatDateTimeCO(iso, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Bogota' });
+}
 
 export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[]; calendarNames: string[] }) {
   const [search, setSearch] = useState('');
@@ -181,13 +186,7 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                       aria-label={`Seleccionar cita de ${cita.buyer_name}`}
                     />
                   </td>
-                  <td>
-                    {new Date(cita.start_time).toLocaleString('es-CO', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                      timeZone: 'America/Bogota',
-                    })}
-                  </td>
+                  <td>{formatCitaDate(cita.start_time)}</td>
                   <td>{cita.calendarName}</td>
                   <td className="admin-cell-wrap">
                     {cita.buyer_name}

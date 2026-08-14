@@ -144,12 +144,32 @@
   height: 100vh;
 }
 
+.admin-sidebar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .admin-sidebar-brand {
   display: flex;
   align-items: baseline;
   gap: 8px;
   padding: 0 8px;
   margin-bottom: 32px;
+}
+
+.admin-mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-blue-gray);
+  cursor: pointer;
 }
 
 .admin-sidebar-logo {
@@ -263,7 +283,7 @@
   flex: 1;
   min-width: 0;
   padding: 40px 48px 80px;
-  max-width: 1180px;
+  max-width: 1600px;
 }
 
 /* ---------- Page header ---------- */
@@ -972,33 +992,50 @@
   .admin-sidebar {
     width: 100%;
     height: auto;
-    position: static;
-    flex-direction: row;
-    align-items: center;
-    padding: 14px 18px;
-    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 18px;
+    gap: 0;
   }
 
   .admin-sidebar-brand {
     margin-bottom: 0;
   }
 
+  .admin-mobile-menu-btn {
+    display: flex;
+  }
+
+  .admin-sidebar-menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 14px;
+  }
+
+  .admin-sidebar-menu.is-open {
+    display: flex;
+  }
+
   .admin-sidebar-nav {
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .admin-sidebar-footer {
-    margin-top: 0;
-    margin-left: auto;
-    flex-direction: row;
-    align-items: center;
-    border-top: none;
-    padding-top: 0;
+    margin-top: 10px;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 10px;
   }
 
   .admin-sidebar-view-site,
   .admin-sidebar-user {
-    display: none;
+    display: flex;
   }
 
   .admin-content {
@@ -1007,6 +1044,14 @@
 
   .admin-form-row {
     grid-template-columns: 1fr;
+  }
+
+  .admin-products-sticky-top,
+  .analytics-sticky-top {
+    margin-left: -5%;
+    margin-right: -5%;
+    padding-left: 5%;
+    padding-right: 5%;
   }
 }
 

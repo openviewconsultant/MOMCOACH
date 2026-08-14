@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Order } from '@/lib/types';
-import { formatCOP } from '@/lib/format';
+import { formatCOP, formatDateTimeCO } from '@/lib/format';
 import { friendlyStatusDetail } from './status-detail';
 
 export interface OrderRow extends Order {
@@ -87,7 +87,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                 const detail = friendlyStatusDetail(order.status_detail);
                 return (
                   <tr key={order.id}>
-                    <td>{new Date(order.created_at).toLocaleString('es-CO')}</td>
+                    <td>{formatDateTimeCO(order.created_at)}</td>
                     <td>{order.buyer_email}</td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
                     <td>{formatCOP(order.total)}</td>

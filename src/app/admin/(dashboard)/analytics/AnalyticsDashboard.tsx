@@ -6,6 +6,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
+import { formatDateTimeCO } from '@/lib/format';
 
 // ─────────────────────────────────────────────
 // Types
@@ -696,10 +697,7 @@ export default function AnalyticsDashboard({
                     </td>
                     <td className="analytics-anon">{e.visitor_id?.substring(0, 8)}…</td>
                     <td>
-                      {new Date(e.created_at).toLocaleString('es-CO', {
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                      })}
+                      {formatDateTimeCO(e.created_at, { dateStyle: 'short', timeStyle: 'short' })}
                     </td>
                   </tr>
                 ))

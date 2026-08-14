@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOutAction } from '../actions';
@@ -70,51 +71,69 @@ const navItems = [
 
 export default function AdminSidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <aside className="admin-sidebar">
-      <div className="admin-sidebar-brand">
-        <span className="admin-sidebar-logo font-forum">The Mom Coach</span>
-        <span className="admin-sidebar-badge">Admin</span>
+      <div className="admin-sidebar-top-row">
+        <div className="admin-sidebar-brand">
+          <span className="admin-sidebar-logo font-forum">The Mom Coach</span>
+          <span className="admin-sidebar-badge">Admin</span>
+        </div>
+
+        <button
+          type="button"
+          className="admin-mobile-menu-btn"
+          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {menuOpen ? <path d="M18 6 6 18M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
+          </svg>
+        </button>
       </div>
 
-      <nav className="admin-sidebar-nav">
-        {navItems.map((item) => {
-          const active = pathname?.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`admin-sidebar-link ${active ? 'active' : ''}`}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+      <div className={`admin-sidebar-menu ${menuOpen ? 'is-open' : ''}`}>
+        <nav className="admin-sidebar-nav">
+          {navItems.map((item) => {
+            const active = pathname?.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`admin-sidebar-link ${active ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-      <div className="admin-sidebar-footer">
-        <Link href="/" className="admin-sidebar-link admin-sidebar-view-site">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
-          Ver el sitio
-        </Link>
-        <div className="admin-sidebar-user">
-          <div className="admin-sidebar-avatar">{userEmail.charAt(0).toUpperCase()}</div>
-          <span className="admin-sidebar-email">{userEmail}</span>
-        </div>
-        <form action={signOutAction}>
-          <button type="submit" className="admin-signout-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
+        <div className="admin-sidebar-footer">
+          <Link href="/" className="admin-sidebar-link admin-sidebar-view-site" onClick={() => setMenuOpen(false)}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12h18M3 6h18M3 18h18" />
             </svg>
-            Cerrar sesión
-          </button>
-        </form>
+            Ver el sitio
+          </Link>
+          <div className="admin-sidebar-user">
+            <div className="admin-sidebar-avatar">{userEmail.charAt(0).toUpperCase()}</div>
+            <span className="admin-sidebar-email">{userEmail}</span>
+          </div>
+          <form action={signOutAction}>
+            <button type="submit" className="admin-signout-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Cerrar sesión
+            </button>
+          </form>
+        </div>
       </div>
     </aside>
   );
