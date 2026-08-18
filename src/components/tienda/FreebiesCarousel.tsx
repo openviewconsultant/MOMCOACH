@@ -50,8 +50,13 @@ const RESUME_AFTER_INTERACTION_MS = 5000;
 export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }: FreebiesCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const [paused, setPaused] = useState(false);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   function cardWidth() {
     const track = trackRef.current;
@@ -62,15 +67,21 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
     return card.offsetWidth + gap;
   }
 
+  // Targets the destination card directly with scrollIntoView instead of a
+  // pixel-based scrollBy: with `scroll-snap-type: x mandatory` on the track,
+  // a relative scrollBy() gets fought by the browser's snap correction and
+  // stalls a few pixels in — scrollIntoView lets the snap machinery itself
+  // drive the animation to the right place.
   function scrollByCards(direction: 'prev' | 'next') {
     const track = trackRef.current;
-    if (!track) return;
-    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
-    if (direction === 'next' && atEnd) {
-      track.scrollTo({ left: 0, behavior: 'smooth' });
-      return;
-    }
-    track.scrollBy({ left: direction === 'next' ? cardWidth() : -cardWidth(), behavior: 'smooth' });
+    if (!track || items.length === 0) return;
+    const nextIndex =
+      direction === 'next'
+        ? (activeIndexRef.current + 1) % items.length
+        : (activeIndexRef.current - 1 + items.length) % items.length;
+    const card = track.querySelectorAll<HTMLElement>('.freebies-card')[nextIndex];
+    card?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    setActiveIndex(nextIndex);
   }
 
   function pauseAutoplayTemporarily() {

@@ -1,9 +1,14 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
 interface PurchasedItem {
   title: string;
   downloadUrl: string;
 }
+
+const LOGO_FILENAME = 'PHOTO-2026-07-14-08-47-02.jpg';
+const LOGO_CID = 'momcoach-logo';
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (char) => {
@@ -37,24 +42,76 @@ function getTransporter(): { transporter: nodemailer.Transporter; from: string }
   return { transporter, from: `${fromName} <${user}>` };
 }
 
-function getLogoUrl(): string {
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.themomcoaching.com').replace(/\/+$/, '');
-  return `${siteUrl}/PHOTO-2026-07-14-08-47-02.jpg`;
+// Embedding the logo as a cid: attachment (instead of a remote <img src="...">
+// pointing at NEXT_PUBLIC_SITE_URL) means it always renders — it doesn't
+// depend on the site being publicly reachable, and mail clients don't block
+// it as "external content".
+function getLogoAttachment(): nodemailer.SendMailOptions['attachments'] {
+  try {
+    const filePath = path.join(process.cwd(), 'public', LOGO_FILENAME);
+    return [
+      {
+        filename: LOGO_FILENAME,
+        content: fs.readFileSync(filePath),
+        cid: LOGO_CID,
+      },
+    ];
+  } catch {
+    return [];
+  }
 }
 
+// Colors are all explicit (both as inline `style` and, where it matters most,
+// as `bgcolor`/`color` attributes) and the <head> opts out of automatic
+// "dark mode" re-coloring (Gmail app, Outlook.com, etc.), which otherwise
+// inverts our light card design into unreadable dark-on-dark text and can
+// hide images. This keeps the email looking the same regardless of the
+// recipient's device theme.
 function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml: string }): string {
-  return `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8F2DA; padding:32px 16px; font-family:Arial, sans-serif;">
+  return `<!doctype html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="color-scheme" content="light" />
+    <meta name="supported-color-scheme" content="light" />
+    <title>The Mom Coach</title>
+    <!--[if mso]>
+    <style>table, td { font-family: Arial, sans-serif !important; }</style>
+    <![endif]-->
+    <style>
+      body { margin:0; padding:0; background-color:#F8F2DA; }
+      /* Force our own palette even when the client tries to auto-darken. */
+      :root { color-scheme: light; supported-color-scheme: light; }
+      [data-ogsc] .force-bg-cream { background-color:#F8F2DA !important; }
+      [data-ogsc] .force-bg-white { background-color:#ffffff !important; }
+      [data-ogsc] .force-bg-dark { background-color:#2d2a26 !important; }
+      [data-ogsc] .force-text-dark { color:#2d2a26 !important; }
+      [data-ogsc] .force-text-blue { color:#4C577C !important; }
+      [data-ogsc] .force-text-cream { color:#F8F2DA !important; }
+      @media (prefers-color-scheme: dark) {
+        .force-bg-cream { background-color:#F8F2DA !important; }
+        .force-bg-white { background-color:#ffffff !important; }
+        .force-bg-dark { background-color:#2d2a26 !important; }
+        .force-text-dark { color:#2d2a26 !important; }
+        .force-text-blue { color:#4C577C !important; }
+        .force-text-cream { color:#F8F2DA !important; }
+      }
+    </style>
+  </head>
+  <body style="margin:0; padding:0; background-color:#F8F2DA;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; padding:32px 16px; font-family:Arial, sans-serif;">
       <tr>
         <td align="center">
-          <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden;">
+          <table role="presentation" width="560" cellpadding="0" cellspacing="0" bgcolor="#ffffff" class="force-bg-white" style="max-width:560px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden;">
             <tr>
-              <td style="background:#ffffff; padding:24px 32px 8px; text-align:center;">
-                <img src="${getLogoUrl()}" alt="The Mom Coach" width="160" style="display:inline-block; width:160px; max-width:60%; height:auto;" />
+              <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:24px 32px 8px; text-align:center;">
+                <img src="cid:${LOGO_CID}" alt="The Mom Coach" width="160" height="160" style="display:inline-block; width:160px; max-width:60%; height:auto; border-radius:16px; border:0; outline:none;" />
               </td>
             </tr>
             <tr>
-              <td style="background:linear-gradient(135deg, #71B0B4, #CD807B); background-color:#71B0B4; padding:28px 32px 28px; text-align:center;">
+              <td bgcolor="#71B0B4" style="background:linear-gradient(135deg, #71B0B4, #CD807B); background-color:#71B0B4; padding:28px 32px 28px; text-align:center;">
                 <p style="margin:0 0 6px 0; font-size:34px;">${params.headerEmoji}</p>
                 <h1 style="margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:26px; color:#ffffff;">
                   ${params.headerTitle}
@@ -62,20 +119,22 @@ function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml
               </td>
             </tr>
             <tr>
-              <td style="padding:32px;">
+              <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:32px;">
                 ${params.bodyHtml}
               </td>
             </tr>
             <tr>
-              <td style="background:#2d2a26; padding:20px 32px; text-align:center;">
-                <p style="margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:15px; color:#F8F2DA;">The Mom Coach</p>
+              <td bgcolor="#2d2a26" class="force-bg-dark" style="background:#2d2a26; padding:26px 32px; text-align:center;">
+                <p class="force-text-cream" style="margin:0 0 4px; font-family:Georgia, 'Times New Roman', serif; font-size:16px; color:#F8F2DA; letter-spacing:0.02em;">The Mom Coach</p>
+                <p style="margin:0; font-family:Arial, sans-serif; font-size:11px; color:rgba(248,242,218,0.55); letter-spacing:0.08em; text-transform:uppercase;">Coach de sueño infantil y alimentación complementaria</p>
               </td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
-  `;
+  </body>
+</html>`;
 }
 
 export async function sendPurchaseEmail(params: {
@@ -90,10 +149,10 @@ export async function sendPurchaseEmail(params: {
       (item) => `
         <tr>
           <td style="padding:0 0 16px 0;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8F2DA; border-radius:14px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px;">
               <tr>
                 <td style="padding:18px 20px;">
-                  <p style="margin:0 0 12px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
+                  <p class="force-text-blue" style="margin:0 0 12px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
                     ${escapeHtml(item.title)}
                   </p>
                   <a href="${item.downloadUrl}"
@@ -109,7 +168,7 @@ export async function sendPurchaseEmail(params: {
     .join('');
 
   const bodyHtml = `
-    <p style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+    <p class="force-text-dark" style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
       Ya puedes descargar tu(s) libro(s). Toca el botón debajo de cada título para acceder a tu archivo.
     </p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -117,8 +176,8 @@ export async function sendPurchaseEmail(params: {
     </table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
       <tr>
-        <td style="background:#F8F2DA; border-radius:12px; padding:14px 18px;">
-          <p style="margin:0; font-size:13px; line-height:1.5; color:#4C577C;">
+        <td bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:12px; padding:14px 18px;">
+          <p class="force-text-blue" style="margin:0; font-size:13px; line-height:1.5; color:#4C577C;">
             📩 <strong>Cada enlace es válido solo por 48 horas</strong> desde que recibiste este correo. Después de ese tiempo dejará de funcionar por seguridad.
           </p>
         </td>
@@ -137,6 +196,7 @@ export async function sendPurchaseEmail(params: {
     to: params.to,
     subject: '🎉 Tu compra en The Mom Coach — enlaces de descarga',
     html: emailShell({ headerEmoji: '🎉', headerTitle: '¡Gracias por tu compra!', bodyHtml }),
+    attachments: getLogoAttachment(),
   });
 }
 
@@ -150,27 +210,29 @@ export async function sendBookingConfirmationEmail(params: {
 }): Promise<void> {
   const { transporter, from } = getTransporter();
 
-  const formattedDate = new Date(params.start).toLocaleString('es-CO', {
-    timeZone: params.timeZone,
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
+  const formattedDate = new Date(params.start)
+    .toLocaleString('es-CO', {
+      timeZone: params.timeZone,
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+    .replace(/[\xa0 ]/g, ' ');
 
   const bodyHtml = `
-    <p style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
       Hola <strong>${escapeHtml(params.name)}</strong>, tu cita quedó confirmada. Aquí tienes los detalles:
     </p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8F2DA; border-radius:14px; margin-bottom:16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px; margin-bottom:16px;">
       <tr>
         <td style="padding:18px 20px;">
-          <p style="margin:0 0 6px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
+          <p class="force-text-blue" style="margin:0 0 6px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
             ${escapeHtml(params.title)}
           </p>
-          <p style="margin:0; font-size:14px; color:#2d2a26; text-transform:capitalize;">
+          <p class="force-text-dark" style="margin:0; font-size:14px; color:#2d2a26; text-transform:capitalize;">
             📅 ${formattedDate}
           </p>
         </td>
@@ -191,5 +253,6 @@ export async function sendBookingConfirmationEmail(params: {
     to: params.to,
     subject: `✅ Tu cita "${params.title}" quedó confirmada`,
     html: emailShell({ headerEmoji: '✅', headerTitle: '¡Cita confirmada!', bodyHtml }),
+    attachments: getLogoAttachment(),
   });
 }

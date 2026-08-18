@@ -47,68 +47,109 @@ export default function CartDrawer() {
     }
   }
 
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <div className="cart-drawer-overlay" onClick={closeCart}>
       <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="cart-drawer-header">
-          <h2 className="font-inter">Tu carrito de libros</h2>
+          <div className="cart-drawer-header-title">
+            <span className="cart-drawer-header-icon" aria-hidden="true">🛍️</span>
+            <div>
+              <h2 className="font-inter">Tu carrito</h2>
+              {itemCount > 0 && (
+                <span className="cart-drawer-header-count font-inter">
+                  {itemCount} {itemCount === 1 ? 'libro' : 'libros'}
+                </span>
+              )}
+            </div>
+          </div>
           <button type="button" className="cart-drawer-close" onClick={closeCart} aria-label="Cerrar">
             ✕
           </button>
         </div>
 
-            {items.length === 0 ? (
-              <p className="cart-drawer-empty font-inter">Aún no has añadido libros.</p>
-            ) : (
-              <>
-                <ul className="cart-drawer-list">
-                  {items.map((item) => (
-                    <li key={item.id} className="cart-drawer-item">
-                      <div className="cart-drawer-item-info">
-                        <p className="font-inter">{item.title}</p>
-                        <span className="font-inter">{formatCOP(item.price)}</span>
-                      </div>
-                      <div className="cart-drawer-item-controls">
-                        <button type="button" onClick={() => updateQuantity(item.id, item.quantity - 1)}>−</button>
+        <div className="cart-drawer-body">
+          {items.length === 0 ? (
+            <div className="cart-drawer-empty">
+              <span className="cart-drawer-empty-icon" aria-hidden="true">📚</span>
+              <p className="font-inter">Aún no has añadido libros.</p>
+              <span className="cart-drawer-empty-hint font-inter">Explora la tienda y agrega tus favoritos</span>
+            </div>
+          ) : (
+            <>
+              <ul className="cart-drawer-list">
+                {items.map((item) => (
+                  <li key={item.id} className="cart-drawer-item">
+                    <div className="cart-drawer-item-info">
+                      <p className="font-inter">{item.title}</p>
+                      <span className="font-inter">{formatCOP(item.price)}</span>
+                    </div>
+                    <div className="cart-drawer-item-controls">
+                      <div className="cart-drawer-stepper">
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          aria-label="Disminuir cantidad"
+                        >
+                          −
+                        </button>
                         <span>{item.quantity}</span>
-                        <button type="button" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
-                        <button type="button" className="cart-drawer-remove" onClick={() => removeItem(item.id)}>
-                          Eliminar
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          aria-label="Aumentar cantidad"
+                        >
+                          +
                         </button>
                       </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="cart-drawer-total font-inter">
-                  <span>Total</span>
-                  <strong>{formatCOP(totalPrice)}</strong>
-                </div>
-
-                <label className="cart-drawer-email font-inter">
-                  Correo para recibir tus libros
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tucorreo@ejemplo.com"
-                    required
-                  />
-                </label>
-
-                {error && <p className="cart-drawer-error font-inter">{error}</p>}
-
-                <button
-                  type="button"
-                  className="cart-drawer-checkout font-inter"
-                  onClick={handleCheckout}
-                  disabled={loading}
-                >
-                  {loading ? 'Redirigiendo a Mercado Pago…' : 'Pagar con Mercado Pago'}
-                </button>
-              </>
-            )}
-          </div>
+                      <button
+                        type="button"
+                        className="cart-drawer-remove"
+                        onClick={() => removeItem(item.id)}
+                        aria-label={`Eliminar ${item.title}`}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
+
+        {items.length > 0 && (
+          <div className="cart-drawer-footer">
+            <div className="cart-drawer-total font-inter">
+              <span>Total</span>
+              <strong>{formatCOP(totalPrice)}</strong>
+            </div>
+
+            <label className="cart-drawer-email font-inter">
+              Correo para recibir tus libros
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tucorreo@ejemplo.com"
+                required
+              />
+            </label>
+
+            {error && <p className="cart-drawer-error font-inter">{error}</p>}
+
+            <button
+              type="button"
+              className="cart-drawer-checkout font-inter"
+              onClick={handleCheckout}
+              disabled={loading}
+            >
+              {loading ? 'Redirigiendo a Mercado Pago…' : 'Pagar con Mercado Pago'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
