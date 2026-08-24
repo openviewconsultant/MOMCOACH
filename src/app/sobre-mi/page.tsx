@@ -25,7 +25,7 @@ export default function SobreMiPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center', marginBottom: '80px' }}>
           <div>
             <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
-              Conoce a tu coach
+              Conoce a tu coach de confianza
             </span>
             <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '24px', lineHeight: 1.15 }}>
               Hola, soy Denisse

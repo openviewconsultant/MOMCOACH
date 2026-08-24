@@ -16,10 +16,10 @@ export default function Hero() {
                 <path d="M4 10 C60 4, 160 14, 316 6" stroke="var(--color-turquoise)" strokeWidth="4" strokeLinecap="round"/>
               </svg>
             </span>
-            <span className="hero-line-3 font-forum">hábitos de tu <em>bebé</em></span>
+            <span className="hero-line-3 font-forum">hábitos de tu bebé</span>
           </h1>
           <p className="hero-tagline font-inter">
-            Con mis cursos y asesorías te enseñaré cómo superar todo tipo de problemas relacionados con el sueño de tu bebé de forma gentil y sin métodos que impliquen dejarlo llorar. Juntos lograremos enseñarle a tu bebé a dormir la noche de corrido, enseñarle a dormir en su cuna o enseñarle a tu toddler a quedarse toda la noche en su habitación.
+            Con mis programas te acompañaré a resolver los retos de sueño y alimentación de tus hijos, desde los 0 hasta los 7 años. Te enseñaré a construir hábitos saludables de una manera gentil y respetuosa, sin dejarlo llorar. Juntos trabajaremos para lograr noches más tranquilas, momentos agradables en la mesa y crear las bases sólidas de aquellos hábitos que acompañarán a tus hijos a lo largo de su vida.
           </p>
           <div className="hero-buttons">
             <Button variant="primary" size="lg">Conoce mis programas</Button>

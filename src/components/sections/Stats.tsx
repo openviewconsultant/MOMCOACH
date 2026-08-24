@@ -9,7 +9,7 @@ export default function Stats() {
           Resultados Positivos
         </h2>
         <p className="font-inter" style={{ fontSize: '1.2rem', lineHeight: 1.8, marginBottom: '40px' }}>
-          La implementación de programas de entrenamiento del sueño en bebés ha demostrado ser exitosa para muchas familias, proporcionando beneficios tanto para los padres como para los niños.
+          Más de 3.000 familias alrededor del mundo han confiado en The Mom Coach para acompañarlas en el proceso de sueño de sus hijos. Un buen descanso transforma las noches y también los días. Los programas de sueño traen beneficios tanto para los niños como para sus padres.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
           <div>

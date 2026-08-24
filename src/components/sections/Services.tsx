@@ -6,22 +6,22 @@ import './sections.css';
 export default function Services() {
   const packages = [
     {
-      title: "Asesorías de Sueño",
+      title: "Programas de Sueño",
       description: "Programas de sueño infantil que benefician a toda la familia, logrando descanso de calidad para los bebés, niños y padres. Transiciones suaves y amorosas.",
       buttonText: "Saber más",
-      buttonHref: "#sleep",
+      buttonHref: "/sueno",
       icon: <StarShape size={110} />,
     },
     {
-      title: "Asesorías de Alimentación",
-      description: "Aprende todo lo que debes saber sobre Picky Eaters y cómo establecer hábitos de alimentación saludables guiados por una coach certificada.",
+      title: "Programas en Alimentación",
+      description: "Aprende todo lo que necesitas saber para iniciar la alimentación complementaria y prevenir y acompañar la selectividad alimentaria. Te acompaño a fomentar hábitos saludables y a construir desde el inicio una relación positiva con la comida.",
       buttonText: "Saber más",
-      buttonHref: "#food",
+      buttonHref: "/alimentacion",
       icon: <HalfCirclesShape size={110} />,
     },
     {
-      title: "Guías y Recetarios",
-      description: "Recetario Booster Calórico, Postres Saludables, Solucionar Siestas Cortas, Regresiones de Sueño y mucho más para apoyar tu crianza.",
+      title: "Herramientas para acompañarte en cada etapa de la crianza",
+      description: "Encuentra ebooks, recetarios y recursos prácticos sobre sueño, alimentación y comportamiento infantil, creados desde mi experiencia y formación como consultora de sueño pediátrico, coach certificada por el Institute for Integrative Nutrition (IIN) y educadora de padres certificada en Disciplina Positiva.",
       buttonText: "Ver Tienda",
       buttonHref: "/tienda",
       icon: <FlowerShape size={110} />,

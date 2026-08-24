@@ -22,13 +22,13 @@ export default function SiteFooter() {
             The Mom Coach
           </h3>
           <p className="font-inter" style={{ fontSize: '0.9rem', lineHeight: '1.8', color: '#B8A99E', marginBottom: '6px' }}>
-            (313) 456-7893
+            +57 3102158656
           </p>
           <p className="font-inter" style={{ fontSize: '0.9rem', color: '#B8A99E', marginBottom: '6px' }}>
             themomcoaching.com
           </p>
           <p className="font-inter" style={{ fontSize: '0.9rem', color: '#B8A99E' }}>
-            hola@themomcoaching.com
+            denisselafaurie00@gmail.com
           </p>
         </div>
 
@@ -40,8 +40,8 @@ export default function SiteFooter() {
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
               { label: 'Inicio', href: '/' },
-              { label: 'Sueño', href: '/#sleep' },
-              { label: 'Alimentación', href: '/#food' },
+              { label: 'Sueño', href: '/sueno' },
+              { label: 'Alimentación', href: '/alimentacion' },
               { label: 'Privacidad', href: '/politica-de-privacidad' },
             ].map(link => (
               <li key={link.href}>
@@ -59,7 +59,7 @@ export default function SiteFooter() {
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
               { label: 'Sobre mí', href: '/#about' },
-              { label: 'Alimentación', href: '/#food' },
+              { label: 'Alimentación', href: '/alimentacion' },
               { label: 'Blog', href: '/#blog' },
               { label: 'Contacto', href: '/#contact' },
             ].map(link => (

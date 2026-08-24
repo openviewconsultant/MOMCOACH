@@ -38,13 +38,16 @@ export default function About() {
         <div className="about-content animate-fade-in">
           <h2 className="about-title font-forum">¡Tu coach de sueño elegida!</h2>
           <p className="about-text font-inter">
-            Soy mamá, consultora en sueño pediátrico certificada y coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition. Tras el nacimiento de mi primera hija, nació también mi pasión por el complejo, pero maravilloso mundo de la crianza. Este mundo está lleno de interrogantes y decisiones importantes.
+            Soy mamá, consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva y miembro de The Positive Discipline Association.
           </p>
           <p className="about-text font-inter">
-            La crianza nos presenta un sinfín de preguntas: ¿Cuál será mi estilo de crianza? ¿Leche materna o leche de fórmula? ¿Cuándo pasaré a mi bebé a la cuna? ¿Cómo y cuándo enseñarle los mejores hábitos para su salud? Estas cuestiones y muchas más inundaron mi experiencia, llevándome a explorar nuevas técnicas para enseñar con amor.
+            Cuando nació mi primera hija, también nació mi pasión por el maravilloso —y a veces desafiante— mundo de la crianza. Como mamá, sé que esta etapa está llena de preguntas, decisiones y momentos en los que necesitamos sentirnos bien aconsejados, y sobre todo, acompañados.
           </p>
           <p className="about-text font-inter">
-            Fundé The Mom Coach para compartir las mejores prácticas para enseñar a dormir a los bebés, impulsar a los padres a encontrar la armonía y ayudar a todas las familias a volver a dormir. Estoy aquí para darles una mano a todas esas mamás y papás que buscan dar la mejor versión de ellos mismos. Un buen descanso conlleva a una crianza feliz y saludable.
+            Fundé The Mom Coach para acompañar a las familias a construir hábitos saludables de sueño y alimentación de una manera respetuosa, práctica y basada en las necesidades de cada niño. Cuando nuestros hijos descansan, se alimentan bien y tienen hábitos saludables, toda la familia puede disfrutar más de la crianza.
+          </p>
+          <p className="about-text font-inter">
+            Estoy aquí para acompañarte en ese camino.
           </p>
         </div>
         <div className="about-image-wrapper animate-fade-in" style={{ animationDelay: '0.2s', background: 'var(--color-cream)' }}>

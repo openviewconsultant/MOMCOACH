@@ -67,11 +67,10 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
     return card.offsetWidth + gap;
   }
 
-  // Targets the destination card directly with scrollIntoView instead of a
-  // pixel-based scrollBy: with `scroll-snap-type: x mandatory` on the track,
-  // a relative scrollBy() gets fought by the browser's snap correction and
-  // stalls a few pixels in — scrollIntoView lets the snap machinery itself
-  // drive the animation to the right place.
+  // Scrolls the track element itself (via scrollLeft), not scrollIntoView:
+  // scrollIntoView walks up every scrollable ancestor including the page,
+  // so on mobile — where the card isn't always fully visible vertically —
+  // it was dragging the whole page down on every autoplay tick.
   function scrollByCards(direction: 'prev' | 'next') {
     const track = trackRef.current;
     if (!track || items.length === 0) return;
@@ -80,7 +79,9 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
         ? (activeIndexRef.current + 1) % items.length
         : (activeIndexRef.current - 1 + items.length) % items.length;
     const card = track.querySelectorAll<HTMLElement>('.freebies-card')[nextIndex];
-    card?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    if (card) {
+      track.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+    }
     setActiveIndex(nextIndex);
   }
 

@@ -38,7 +38,7 @@ export default function DiscoveryCallPopup({ config }: { config: PopupConfig }) 
     return (
       <FreeCallModal
         title={config.title}
-        subtitle={`${config.subtitle} Elige el horario que mejor te quede.`}
+        subtitle="Llamada para conocernos y darte detalles sobre mis programas."
         calendarId={config.calendarId}
         onClose={() => {
           setBookingOpen(false);
