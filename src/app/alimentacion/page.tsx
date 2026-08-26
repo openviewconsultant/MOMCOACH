@@ -20,18 +20,18 @@ export const metadata = buildMetadata({
 const fallbackServices = [
   {
     id: 'f-1',
-    title: 'Curso Inicio de Alimentación Complementaria',
+    title: 'Programa Inicio de Alimentación Complementaria (0 a 12 meses)',
     price: 'USD $85',
     priceNumber: 85,
-    tag: 'BLW & BLISS & Mixto',
+    tag: 'Acompañamiento 0 a 12 meses',
     desc: 'Todo lo que necesitas saber para comenzar la alimentación de tu bebé a partir de los 6 meses de forma segura, relajada y nutritiva.',
     features: [
-      'Cortes seguros y presentación de alimentos',
-      'Prevención de atragantamiento vs arcadas',
-      'Planificación de menú semanal equilibrado',
-      'Acceso a material descargable y recetario',
+      'Llamadas grupales de seguimiento',
+      'Acompañamiento vía WhatsApp',
+      'Recetarios prácticos',
+      'Menús semanales equilibrados',
     ],
-    whatsappText: 'Hola! Quiero información del Curso de Alimentación Complementaria',
+    whatsappText: 'Hola! Quiero información del Programa de Alimentación Complementaria',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: true,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
@@ -41,11 +41,11 @@ const fallbackServices = [
   },
   {
     id: 'f-2',
-    title: 'Llamada de Consulta de Alimentación',
-    price: 'USD $65',
-    priceNumber: 65,
-    tag: 'Sesión express de orientación',
-    desc: 'Ideal si necesitas resolver dudas puntuales sobre inicio de la alimentación, selectividad alimentaria o ajustar un plan que ya tenías.',
+    title: 'Llamada de Consulta',
+    price: 'USD $75',
+    priceNumber: 75,
+    tag: 'Orientación inicial',
+    desc: 'Una breve llamada de orientación inicial, ideal si necesitas resolver dudas puntuales sobre inicio de la alimentación, BLW o selectividad alimentaria.',
     features: [
       'Videollamada de 45 minutos 1 a 1',
       'Análisis de la rutina alimentaria actual',
@@ -61,18 +61,18 @@ const fallbackServices = [
   },
   {
     id: 'f-3',
-    title: 'Asesoría para Picky Eaters (Comedores Selectivos)',
+    title: 'Programa Selectividad Alimentaria (1 a 7 años)',
     price: 'USD $120',
     priceNumber: 120,
-    tag: 'Acompañamiento Personalizado',
+    tag: '',
     desc: 'Especial para niños que rechazan alimentos, sienten neofobia alimentaria o tienen comidas muy estresantes en la mesa.',
     features: [
       'Evaluación detallada de la conducta alimentaria',
       'Estrategias sensoriales y de exposición progresiva',
-      'Sesión 1 a 1 de 60 minutos con la familia',
-      'Plan de acción escrito + seguimiento',
+      'Ebook / workbook de acompañamiento',
+      '3 semanas de seguimiento',
     ],
-    whatsappText: 'Hola! Quiero reservar la Asesoría para Picky Eaters',
+    whatsappText: 'Hola! Quiero reservar el Programa de Selectividad Alimentaria',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
     image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
@@ -128,40 +128,18 @@ export default async function AlimentacionPage() {
         {/* Header */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
-            Nutrición y Alimentación Infantil
+            Nutrición y hábitos de alimentación
           </span>
           <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Alimentación Sin Estrés
           </h1>
           <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-            Desde el primer bocado a los 6 meses hasta convertir la mesa en un espacio de disfrute y nutrición para tus hijos.
-          </p>
-        </Reveal>
-
-        {/* Intro banner */}
-        <Reveal as="div" className="aliment-intro">
-          <span className="aliment-intro-eyebrow font-inter">Te ayudo con la alimentación de tu bebé</span>
-          <h2 className="font-forum aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
-          <p className="font-inter aliment-intro-text">
-            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
-            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
-            distintos factores alrededor de la hora de comer y de los alimentos.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Te enseño cómo fomentar en tus hijos una relación saludable con la comida. Conoce mis asesorías
-            en alimentación de 0 a 5 años — la que elijas dependerá de la edad de tu hijo.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
-            largo de toda la vida.
+            Te acompaño a construir, desde el primer bocado, una relación tranquila y positiva con la comida — para que las horas de comer se conviertan en un espacio de disfrute para toda la familia.
           </p>
         </Reveal>
 
         {/* Services Cards (de pago) */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-coral)' }} className="font-inter">
-            Asesorías de pago
-          </span>
           <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
             Acompañamiento 1 a 1
           </h2>
@@ -245,13 +223,32 @@ export default async function AlimentacionPage() {
                     price={service.priceNumber}
                     calendarId={service.calendarId}
                     popular={service.popular}
-                    buttonText="Solicitar Asesoría"
+                    buttonText="Solicitar Programa"
                   />
                 )}
               </div>
             </Reveal>
           ))}
         </div>
+
+        {/* Intro banner */}
+        <Reveal as="div" className="aliment-intro">
+          <span className="aliment-intro-eyebrow font-inter">Te ayudo con la alimentación de tu bebé</span>
+          <h2 className="font-forum aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
+          <p className="font-inter aliment-intro-text">
+            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
+            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
+            distintos factores alrededor de la hora de comer y de los alimentos.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Te acompaño en la alimentación de tu hijo de 0 a 5 años — el programa que elijas dependerá de
+            la edad y las necesidades de tu hijo.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
+            largo de toda la vida.
+          </p>
+        </Reveal>
 
         {/* Recipe books, guides (de pago) + Free downloads (gratis) */}
         <CategoryDigitalShop

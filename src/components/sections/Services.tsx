@@ -20,7 +20,7 @@ export default function Services() {
       icon: <HalfCirclesShape size={110} />,
     },
     {
-      title: "Herramientas para acompañarte en cada etapa de la crianza",
+      title: "Herramientas para acompañarte en cada etapa de la crianza.",
       description: "Encuentra ebooks, recetarios y recursos prácticos sobre sueño, alimentación y comportamiento infantil, creados desde mi experiencia y formación como consultora de sueño pediátrico, coach certificada por el Institute for Integrative Nutrition (IIN) y educadora de padres certificada en Disciplina Positiva.",
       buttonText: "Ver Tienda",
       buttonHref: "/tienda",

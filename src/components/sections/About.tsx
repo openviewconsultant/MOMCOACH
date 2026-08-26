@@ -54,6 +54,9 @@ export default function About() {
            <img src="https://www.themomcoaching.com/wp-content/uploads/2023/12/historia_JPEG.webp" alt="Silueta de madre e hijo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
            <div className="about-badges">
+             {/* TODO: agregar insignia de Disciplina Positiva (Positive Discipline
+                 Association) cuando el cliente entregue el archivo — pendiente,
+                 checklist items 9 y 23. */}
              <div className="about-badges-stack">
                <div
                  className="about-badge-card about-badge-card--acs"

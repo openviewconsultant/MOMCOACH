@@ -23,18 +23,18 @@ const fallbackServices = [
     title: 'Programa Recién Nacidos (0 a 4 meses)',
     price: 'USD $95',
     priceNumber: 95,
-    tag: 'Previene problemas de sueño',
+    tag: 'Acompañamiento desde el primer día',
     desc: 'Diseñado para crear bases saludables de sueño desde los primeros días. Aprende sobre ventanas de sueño, ambiente ideal y ritmos biológicos sin presiones.',
     features: [
       'Guía paso a paso de hábitos saludables',
-      'Manejo del día y la noche',
-      'Prevención del sobrecansancio',
-      'Acceso a videollamada o resolución de dudas',
+      'Llamadas grupales de seguimiento',
+      'Acompañamiento vía WhatsApp',
+      'Contenido grabado a tu disposición',
     ],
     whatsappText: 'Hola! Quiero información sobre el Programa Recién Nacidos',
     calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC08734-scaled-e1705350733440-600x600.jpg',
+    image: '/recien-nacidos.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,
@@ -42,15 +42,15 @@ const fallbackServices = [
   {
     id: 'fs-2',
     title: 'Plan de Sueño Infantil (4 meses a 6 años)',
-    price: 'USD $260',
-    priceNumber: 260,
+    price: 'USD $280',
+    priceNumber: 280,
     tag: 'Acompañamiento 1 a 1',
     desc: 'Un plan totalmente personalizado según el temperamento de tu hijo y la dinámica familiar, con seguimiento diario para lograr noches completas y descanso continuo.',
     features: [
       'Evaluación inicial completa del caso',
       'Plan personalizado escrito',
-      'Llamada de consulta de 60 minutos',
-      '2 semanas de seguimiento diario vía WhatsApp',
+      'Llamada 1 a 1',
+      '2 semanas de seguimiento vía WhatsApp',
     ],
     whatsappText: 'Hola! Quiero reservar el Plan de Sueño Infantil (4m a 6 años)',
     calLink: 'open-view-consultant-7ng550/30min',
@@ -62,11 +62,11 @@ const fallbackServices = [
   },
   {
     id: 'fs-3',
-    title: 'Llamada de Consulta de Sueño',
-    price: 'USD $65',
-    priceNumber: 65,
-    tag: 'Sesión express de orientación',
-    desc: 'Ideal si necesitas resolver dudas puntuales sobre regresiones de sueño, transiciones de siestas, viajes o ajustar un plan que ya tenías.',
+    title: 'Llamada de Consulta',
+    price: 'USD $75',
+    priceNumber: 75,
+    tag: 'Orientación inicial',
+    desc: 'Una breve llamada de orientación inicial, ideal si necesitas resolver dudas puntuales sobre regresiones de sueño, transiciones de siestas, viajes o ajustar un plan que ya tenías.',
     features: [
       'Videollamada de 45 minutos 1 a 1',
       'Análisis de la rutina actual',
@@ -144,16 +144,12 @@ export default async function SuenoPage() {
             Servicios de Sueño Infantil
           </span>
           <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
-            Sueño y Descanso Familiar
+            Volver a dormir, Sí es posible.
           </h1>
-          <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-            Te acompaño de forma empática y respetuosa para lograr que tu bebé y toda tu familia vuelvan a dormir noches completas.
-          </p>
         </Reveal>
 
         {/* Intro banner */}
         <Reveal as="div" className="sueno-intro">
-          <span className="sueno-intro-eyebrow font-inter">Mi enfoque</span>
           <h2 className="font-forum sueno-intro-title">
             Familias Descansadas.<br />
             <em>Familias Felices.</em>
@@ -167,9 +163,6 @@ export default async function SuenoPage() {
 
         {/* Services Cards Grid (de pago) */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-coral)' }} className="font-inter">
-            Asesorías de pago
-          </span>
           <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
             Acompañamiento 1 a 1
           </h2>
@@ -253,7 +246,7 @@ export default async function SuenoPage() {
                     price={service.priceNumber}
                     calendarId={service.calendarId}
                     popular={service.popular}
-                    buttonText="Solicitar Asesoría"
+                    buttonText="Solicitar Programa"
                   />
                 )}
               </div>
@@ -264,7 +257,6 @@ export default async function SuenoPage() {
         {/* Benefits */}
         <div className="sueno-benefits">
           <Reveal as="div" className="sueno-benefit-card child">
-            <div className="sueno-benefit-icon">🌙</div>
             <h3 className="font-forum">Con un plan de entrenamiento, tu hijo logrará:</h3>
             <ul>
               {childOutcomes.map((item) => (
@@ -273,7 +265,6 @@ export default async function SuenoPage() {
             </ul>
           </Reveal>
           <Reveal as="div" delay={120} className="sueno-benefit-card parent">
-            <div className="sueno-benefit-icon">💛</div>
             <h3 className="font-forum">Con un plan de entrenamiento, tú lograrás:</h3>
             <ul>
               {parentOutcomes.map((item) => (
@@ -287,8 +278,8 @@ export default async function SuenoPage() {
         <CategoryDigitalShop
           guides={dbGuides}
           freebies={freebies}
-          guidesTitle="Guías Digitales de Sueño"
-          guidesSubtitle="Formatos prácticos y descargables para aplicar a tu propio ritmo. Contenido descargable de pago."
+          guidesTitle="EBooks Sueño Infantil"
+          guidesSubtitle="Consejos prácticos y formatos descargables para aplicar a tu propio ritmo, creados desde mi experiencia como consultora de sueño pediátrico."
         />
 
       </div>

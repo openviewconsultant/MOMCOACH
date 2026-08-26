@@ -42,9 +42,6 @@ export default async function BlogPage() {
           <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Artículos y Consejos
           </h1>
-          <p className="font-inter" style={{ fontSize: '1.05rem', color: 'var(--foreground)', opacity: 0.85, lineHeight: 1.6 }}>
-            Información práctica y respetuosa para guiarte en cada etapa de la crianza, el sueño y la alimentación.
-          </p>
         </Reveal>
 
         {posts.length === 0 ? (

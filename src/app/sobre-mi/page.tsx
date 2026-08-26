@@ -31,7 +31,7 @@ export default function SobreMiPage() {
               Hola, soy Denisse
             </h1>
             <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9, marginBottom: '24px' }}>
-              Soy mamá, consultora en sueño pediátrico certificada y coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition. Fundadora de The Mom Coach: un espacio para ayudar a todas las familias a volver a dormir.
+              Soy mamá, consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva y miembro de The Positive Discipline Association. Fundadora de The Mom Coach: un espacio para acompañar a las familias a construir hábitos saludables de sueño y alimentación de una manera respetuosa, práctica y basada en las necesidades de cada niño.
             </p>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <Link href="https://wa.me/573102158656?text=Hola%20quiero%20conocer%20mas%20sobre%20tus%20asesorias" target="_blank">
@@ -44,7 +44,7 @@ export default function SobreMiPage() {
           </div>
           <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
             <img
-              src="https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp"
+              src="/sobre-mi-foto.jpg"
               alt="Denisse, fundadora de The Mom Coach"
               style={{ width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', display: 'block' }}
             />
@@ -61,10 +61,13 @@ export default function SobreMiPage() {
               Cuando quedé embarazada empecé a investigar sobre puericultura y a leer sobre diferentes temas todos relacionados con la maternidad y la crianza. Ahí encontré apasionante el tema del sueño y el descanso, sobre todo por su relación directa con la salud mental y con la calidad de vida que viene junto con descansar correctamente.
             </p>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              Al tener a mi hija, noté como se normaliza el estar privado de sueño y como muchas mamás y familias sufren por falta de descanso. También noté que era común el no hablar del tema ni buscar ayuda por miedo a ser criticadas, por sentir culpa de sentirse mal y por vergüenza de querer aceptar que no todo en la maternidad es color de rosa. Así mismo, noté mucho silencio ante temas como la depresión y la ansiedad post parto.
+              Al tener a mi hija, noté como se normaliza el estar privado de sueño y como muchas mamás y familias sufren por falta de descanso. También noté que era común el no hablar del tema ni buscar ayuda por miedo a ser criticadas, por sentir culpa de sentirse mal y por vergüenza de querer aceptar que no todo en la maternidad es color de rosa. Así mismo, noté mucho silencio ante temas como la depresión y la ansiedad post parto. Ahí nació también mi pasión por el maravilloso —y a veces desafiante— mundo de la crianza.
             </p>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              The Mom Coach nace para que encontremos soluciones y acompañamiento. Donde no criticamos estilos de crianza, sino que buscamos el método que mejor se ajuste a tu familia. Es el espacio donde las mamás pueden contar con apoyo sin ser juzgadas y donde encontrarán una mano amiga dispuesta a ayudar.
+              The Mom Coach nace para que encontremos soluciones y acompañamiento. Donde no criticamos estilos de crianza, sino que buscamos el método que mejor se ajuste a tu familia. Es el espacio donde las mamás pueden contar con apoyo sin ser juzgadas y donde encontrarán una mano amiga dispuesta a ayudar. Con el tiempo, seguí formándome y hoy soy consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva, miembro de The Positive Discipline Association.
+            </p>
+            <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
+              Cuando nuestros hijos descansan, se alimentan bien y tienen hábitos saludables, toda la familia puede disfrutar más de la crianza. Estoy aquí para acompañarte en ese camino.
             </p>
           </div>
         </div>
@@ -77,6 +80,9 @@ export default function SobreMiPage() {
           <h2 className="font-forum" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '32px' }}>
             Certificaciones
           </h2>
+          {/* TODO: agregar insignia "Educadora de Padres Certificada en Disciplina
+              Positiva" (Positive Discipline Association) cuando el cliente
+              entregue el archivo — pendiente, checklist items 9 y 23. */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', maxWidth: '600px', margin: '0 auto' }}>
             {[
               { title: 'Consultora de Sueño Infantil Certificada', org: 'Academia Consultoría de Sueño (ACS)', badge: '/badge-acs.png' },
