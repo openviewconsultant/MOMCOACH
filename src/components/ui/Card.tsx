@@ -40,7 +40,7 @@ export default function Card({
         </div>
       )}
       <div className="card-content">
-        <h3 className="card-title font-fraunces">{title}</h3>
+        <h3 className="card-title font-fraunces" style={icon ? { paddingRight: '56px' } : undefined}>{title}</h3>
         <p className="card-description font-inter">{description}</p>
         
         {buttonText && (
