@@ -62,7 +62,7 @@ export default function About() {
                  onMouseLeave={handleMouseLeave}
                  style={{
                    cursor: 'pointer',
-                   transform: hoveredBadge === 'pda' ? 'scale(1.8)' : 'rotate(-5deg)',
+                   transform: hoveredBadge === 'pda' ? 'scale(1.8)' : 'rotate(-4deg)',
                    zIndex: hoveredBadge === 'pda' ? 10 : 3,
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
@@ -76,7 +76,7 @@ export default function About() {
                  onMouseLeave={handleMouseLeave}
                  style={{
                    cursor: 'pointer',
-                   transform: hoveredBadge === 'acs' ? 'scale(1.8) translate(-20px, 0px)' : 'rotate(5deg)',
+                   transform: hoveredBadge === 'acs' ? 'scale(1.8) translate(20px, 0px)' : 'rotate(-4deg)',
                    zIndex: hoveredBadge === 'acs' ? 10 : 1,
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
@@ -90,7 +90,7 @@ export default function About() {
                  onMouseLeave={handleMouseLeave}
                  style={{
                    cursor: 'pointer',
-                   transform: hoveredBadge === 'iin' ? 'scale(1.8)' : 'rotate(-5deg)',
+                   transform: hoveredBadge === 'iin' ? 'scale(1.8)' : 'rotate(4deg)',
                    zIndex: hoveredBadge === 'iin' ? 10 : 2,
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
