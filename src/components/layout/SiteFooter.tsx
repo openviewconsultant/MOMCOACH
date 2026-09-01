@@ -43,6 +43,7 @@ export default function SiteFooter() {
               { label: 'Sueño', href: '/sueno' },
               { label: 'Alimentación', href: '/alimentacion' },
               { label: 'Privacidad', href: '/politica-de-privacidad' },
+              { label: 'Términos y condiciones', href: '/terminos-y-condiciones' },
             ].map(link => (
               <li key={link.href}>
                 <a href={link.href} className="footer-link">{link.label}</a>

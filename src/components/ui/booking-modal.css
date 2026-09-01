@@ -5,9 +5,14 @@
   backdrop-filter: blur(4px);
   z-index: 10000;
   display: flex;
-  align-items: center;
+  /* flex-start + margin:auto on the card centers it when there's room but
+     lets it stick to the top (and the overlay scroll) when it's taller than
+     the visible area — e.g. on a phone with the on-screen keyboard open. */
+  align-items: flex-start;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   animation: fadeIn 0.25s ease-out;
 }
 
@@ -17,11 +22,46 @@
   padding: 32px 28px;
   max-width: 480px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  margin: auto;
   box-shadow: var(--shadow-lg);
   position: relative;
   text-align: center;
+}
+
+@media (max-width: 560px) {
+  .booking-modal-overlay {
+    padding: 12px;
+    /* keep clear of the notch / home indicator */
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .booking-modal-card {
+    padding: 20px 16px 22px;
+  }
+
+  /* Tighter header so the form + primary button fit above the keyboard */
+  .booking-modal-logo {
+    height: 44px;
+    margin-bottom: 6px;
+  }
+
+  .booking-modal-title {
+    font-size: 1.3rem;
+  }
+
+  .booking-modal-desc {
+    margin-bottom: 12px;
+  }
+
+  .booking-step-indicator {
+    margin-bottom: 12px;
+  }
+
+  .booking-modal-close {
+    top: 10px;
+    right: 12px;
+  }
 }
 
 .booking-modal-close {
