@@ -8,7 +8,9 @@
 }
 
 .tienda-back-section {
-  padding: 142px 5% 0; /* 118px (navbar offset) + 24px (original top padding) */
+  /* Mismo offset superior que el resto de páginas interiores
+     (Contacto, Sobre mí, Términos…): 120px desde el borde. */
+  padding: 120px 5% 0;
   position: relative;
   z-index: 50;
 }
@@ -42,8 +44,8 @@
 .tienda-back {
   display: inline-block;
   color: var(--color-blue-gray);
-  font-size: 0.95rem;
-  margin-bottom: 20px;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
 }
 
 .tienda-title {
@@ -165,7 +167,7 @@
   }
 
   .tienda-back-section {
-    padding-top: 116px; /* 92px + 24px */
+    padding-top: 120px;
   }
 
   .tienda-header-sticky {
@@ -187,7 +189,7 @@
   }
 
   .tienda-back-section {
-    padding-top: 108px; /* 92px + 16px */
+    padding-top: 120px;
     padding-left: 6%;
     padding-right: 6%;
   }
