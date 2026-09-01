@@ -379,7 +379,7 @@
 
 .about-badge-card {
   position: absolute;
-  width: 68%;
+  width: 54%;
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   background: #fff;
@@ -397,14 +397,14 @@
 }
 
 .about-badge-card--acs {
-  top: 14%;
-  right: 8%;
+  top: 4%;
+  right: 2%;
   background: rgb(244, 241, 243);
 }
 
 .about-badge-card--iin {
-  bottom: 14%;
-  left: 8%;
+  bottom: 3%;
+  left: 23%;
   z-index: 2;
 }
 
@@ -413,7 +413,7 @@
 .about-badge-card--pda {
   top: 4%;
   left: 2%;
-  width: 46%;
+  width: 42%;
   aspect-ratio: 1 / 1;
   background: transparent;
   border: none;
