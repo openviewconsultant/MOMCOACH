@@ -10,19 +10,19 @@ export const metadata = buildMetadata({
 
 export default function TerminosYCondiciones() {
   return (
-    <div style={{ backgroundColor: "var(--color-cream)", minHeight: "100vh", padding: "160px 5% 100px" }}>
-      <div style={{ maxWidth: 820, margin: "0 auto" }}>
+    <div style={{ paddingTop: "120px", paddingBottom: "80px", backgroundColor: "var(--color-cream)", minHeight: "100vh" }}>
+      <div style={{ padding: "0 5%" }}>
         <Link
           href="/"
           className="font-inter"
-          style={{ color: "var(--color-blue-gray)", fontSize: "0.95rem" }}
+          style={{ color: "var(--color-blue-gray)", fontSize: "0.9rem", display: "inline-block", marginBottom: "24px" }}
         >
           ← Volver al inicio
         </Link>
 
         <h1
           className="font-fraunces"
-          style={{ fontSize: "2.6rem", color: "var(--color-blue-gray)", margin: "24px 0 8px" }}
+          style={{ fontSize: "2.6rem", color: "var(--color-blue-gray)", margin: "0 0 8px" }}
         >
           Términos y Condiciones
         </h1>
