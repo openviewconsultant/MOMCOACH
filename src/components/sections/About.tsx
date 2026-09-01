@@ -36,7 +36,7 @@ export default function About() {
     <section id="about" className="section about-section">
       <div className="about-grid">
         <div className="about-content animate-fade-in">
-          <h2 className="about-title font-forum">¡Tu coach de sueño elegida!</h2>
+          <h2 className="about-title font-fraunces">¡Tu coach de sueño elegida!</h2>
           <p className="about-text font-inter">
             Soy mamá, consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva y miembro de The Positive Discipline Association.
           </p>
@@ -54,10 +54,21 @@ export default function About() {
            <img src="https://www.themomcoaching.com/wp-content/uploads/2023/12/historia_JPEG.webp" alt="Silueta de madre e hijo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
            <div className="about-badges">
-             {/* TODO: agregar insignia de Disciplina Positiva (Positive Discipline
-                 Association) cuando el cliente entregue el archivo — pendiente,
-                 checklist items 9 y 23. */}
              <div className="about-badges-stack">
+               <div
+                 className="about-badge-card about-badge-card--pda"
+                 onClick={() => handleBadgeClick('pda')}
+                 onMouseEnter={() => handleMouseEnter('pda')}
+                 onMouseLeave={handleMouseLeave}
+                 style={{
+                   cursor: 'pointer',
+                   transform: hoveredBadge === 'pda' ? 'scale(1.8)' : 'rotate(-4deg) translate(0px, 0px)',
+                   zIndex: hoveredBadge === 'pda' ? 10 : 3,
+                   transition: 'transform 0.3s ease, z-index 0.3s ease'
+                 }}
+               >
+                 <img src="/badge-pda.png" alt="Miembro de The Positive Discipline Association 2026" className="about-badge" />
+               </div>
                <div
                  className="about-badge-card about-badge-card--acs"
                  onClick={() => handleBadgeClick('acs')}

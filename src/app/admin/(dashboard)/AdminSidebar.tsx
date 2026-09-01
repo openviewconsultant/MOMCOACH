@@ -77,7 +77,7 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
     <aside className="admin-sidebar">
       <div className="admin-sidebar-top-row">
         <div className="admin-sidebar-brand">
-          <span className="admin-sidebar-logo font-forum">The Mom Coach</span>
+          <span className="admin-sidebar-logo font-fraunces">The Mom Coach</span>
           <span className="admin-sidebar-badge">Admin</span>
         </div>
 

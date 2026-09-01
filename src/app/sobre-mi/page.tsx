@@ -27,7 +27,7 @@ export default function SobreMiPage() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
               Conoce a tu coach de confianza
             </span>
-            <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '24px', lineHeight: 1.15 }}>
+            <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '24px', lineHeight: 1.15 }}>
               Hola, soy Denisse
             </h1>
             <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9, marginBottom: '24px' }}>
@@ -53,7 +53,7 @@ export default function SobreMiPage() {
 
         {/* Story Section */}
         <div style={{ background: 'white', borderRadius: '24px', padding: '48px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
-          <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
+          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
             Mi Historia
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -77,7 +77,7 @@ export default function SobreMiPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Acreditaciones
           </span>
-          <h2 className="font-forum" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '32px' }}>
+          <h2 className="font-fraunces" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '32px' }}>
             Certificaciones
           </h2>
           {/* TODO: agregar insignia "Educadora de Padres Certificada en Disciplina
@@ -92,7 +92,7 @@ export default function SobreMiPage() {
                 <div style={{ position: 'relative', width: '64px', height: '64px', margin: '0 auto 12px' }}>
                   <Image src={c.badge} alt={c.org} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{c.title}</h4>
+                <h4 className="font-fraunces" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)', marginBottom: '8px' }}>{c.title}</h4>
                 <p className="font-inter" style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.7 }}>{c.org}</p>
               </div>
             ))}
@@ -101,7 +101,7 @@ export default function SobreMiPage() {
 
         {/* Bottom CTA */}
         <div style={{ background: 'linear-gradient(135deg, var(--color-blue-gray), #384260)', color: 'white', borderRadius: '24px', padding: '48px 32px', textAlign: 'center' }}>
-          <h2 className="font-forum" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>¿Lista para transformar tus noches y días?</h2>
+          <h2 className="font-fraunces" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>¿Lista para transformar tus noches y días?</h2>
           <p className="font-inter" style={{ fontSize: '1.05rem', opacity: 0.9, maxWidth: '600px', margin: '0 auto 32px' }}>
             Agenda tu llamada de valoración gratuita o explora nuestros programas personalizados.
           </p>

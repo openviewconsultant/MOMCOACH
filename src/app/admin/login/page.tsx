@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </div>
-        <h1 className="admin-login-title font-forum">Administración</h1>
+        <h1 className="admin-login-title font-fraunces">Administración</h1>
         <p className="admin-login-subtitle font-inter">Ingresa para gestionar los productos de la tienda.</p>
 
         <label className="admin-login-label">

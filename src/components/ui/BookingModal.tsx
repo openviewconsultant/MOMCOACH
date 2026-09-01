@@ -96,7 +96,7 @@ export default function BookingModal({ productId, productTitle, priceLabel, cale
       <div className="booking-modal-card" onClick={(e) => e.stopPropagation()}>
         <button className="booking-modal-close" onClick={onClose} aria-label="Cerrar">✕</button>
         <img src="/logo-white-bg.png" alt="The Mom Coach" className="booking-modal-logo" />
-        <h3 className="booking-modal-title font-forum">{productTitle}</h3>
+        <h3 className="booking-modal-title font-fraunces">{productTitle}</h3>
         <p className="booking-modal-desc font-inter">
           Precio: <strong>{priceLabel}</strong>. Al confirmar pasarás a Mercado Pago para pagar; tu cita queda agendada en cuanto el pago sea aprobado.
         </p>

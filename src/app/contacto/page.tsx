@@ -60,7 +60,7 @@ export default function ContactoPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Estamos para ayudarte
           </span>
-          <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Hablemos de tu descanso
           </h1>
           <p className="font-inter" style={{ fontSize: '1.05rem', color: 'var(--foreground)', opacity: 0.85, lineHeight: 1.6 }}>
@@ -91,7 +91,7 @@ export default function ContactoPage() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
               Sobre mí
             </span>
-            <h2 className="font-forum" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', margin: '8px 0 20px' }}>
+            <h2 className="font-fraunces" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', margin: '8px 0 20px' }}>
               Mi historia
             </h2>
             <p className="font-inter" style={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.85, marginBottom: '16px' }}>
@@ -111,7 +111,7 @@ export default function ContactoPage() {
 
           {/* Direct Channels */}
           <div style={{ background: 'white', borderRadius: '24px', padding: '40px', boxShadow: 'var(--shadow-md)' }}>
-            <h2 className="font-forum" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
+            <h2 className="font-fraunces" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
               Canales Directos
             </h2>
 
@@ -119,7 +119,7 @@ export default function ContactoPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ fontSize: '1.5rem' }}>💬</span>
                 <div>
-                  <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>WhatsApp</h4>
+                  <h4 className="font-fraunces" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>WhatsApp</h4>
                   <p className="font-inter" style={{ fontSize: '0.85rem', opacity: 0.7 }}>Respuesta prioritaria en horario de atención</p>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function ContactoPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '1.5rem' }}>📧</span>
                 <div>
-                  <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Correo electrónico</h4>
+                  <h4 className="font-fraunces" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Correo electrónico</h4>
                   <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>denisse@themomcoaching.com</p>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default function ContactoPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '1.5rem' }}>📱</span>
                 <div>
-                  <h4 className="font-forum" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Teléfono</h4>
+                  <h4 className="font-fraunces" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Teléfono</h4>
                   <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>+57 310 215 8656</p>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function ContactoPage() {
 
           {/* Contact Form */}
           <div style={{ background: 'white', borderRadius: '24px', padding: '40px', boxShadow: 'var(--shadow-md)' }}>
-            <h2 className="font-forum" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
+            <h2 className="font-fraunces" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
               Envíanos un mensaje
             </h2>
             <form style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -206,13 +206,13 @@ export default function ContactoPage() {
 
         {/* FAQs */}
         <div style={{ background: 'white', borderRadius: '24px', padding: '48px 40px', boxShadow: 'var(--shadow-md)' }}>
-          <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '32px', textAlign: 'center' }}>
+          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '32px', textAlign: 'center' }}>
             Preguntas Frecuentes (FAQs)
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
             {faqs.map((item, idx) => (
               <div key={idx}>
-                <h3 className="font-forum" style={{ fontSize: '1.25rem', color: 'var(--color-turquoise)', marginBottom: '8px' }}>
+                <h3 className="font-fraunces" style={{ fontSize: '1.25rem', color: 'var(--color-turquoise)', marginBottom: '8px' }}>
                   {item.q}
                 </h3>
                 <p className="font-inter" style={{ fontSize: '0.92rem', color: 'var(--foreground)', opacity: 0.85, lineHeight: 1.6 }}>

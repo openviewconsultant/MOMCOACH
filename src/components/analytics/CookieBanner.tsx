@@ -55,7 +55,7 @@ export function CookieBanner() {
     <div className="cookie-banner-overlay">
       <div className="cookie-banner-card">
         {submitted ? (
-          <div className="cookie-banner-thanks font-forum">
+          <div className="cookie-banner-thanks font-fraunces">
             <h3>¡Gracias por tu preferencia! 🎉</h3>
             <p>Tus preferencias han sido guardadas.</p>
           </div>
@@ -63,7 +63,7 @@ export function CookieBanner() {
           <>
             <div className="cookie-banner-header">
               <span className="cookie-icon">🍪</span>
-              <h3 className="font-forum">Tu privacidad y experiencia</h3>
+              <h3 className="font-fraunces">Tu privacidad y experiencia</h3>
             </div>
             <p className="cookie-banner-text font-inter">
               Usamos cookies para ofrecerte la mejor experiencia y personalizar nuestro contenido. Ingresa tu correo para avisarte cuando haya nuevas guías o regalos.

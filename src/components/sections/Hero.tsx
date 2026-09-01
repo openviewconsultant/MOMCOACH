@@ -16,7 +16,7 @@ export default function Hero() {
                 <path d="M4 10 C60 4, 160 14, 316 6" stroke="var(--color-turquoise)" strokeWidth="4" strokeLinecap="round"/>
               </svg>
             </span>
-            <span className="hero-line-3 font-forum">hábitos de tu <span className="font-forum" style={{ color: 'var(--color-blue-gray)' }}>bebé</span></span>
+            <span className="hero-line-3 font-fraunces">hábitos de tu <span className="font-fraunces" style={{ color: 'var(--color-blue-gray)' }}>bebé</span></span>
           </h1>
           <p className="hero-tagline font-inter">
             Con mis programas te acompañaré a resolver los retos de sueño y alimentación de tus hijos, desde los 0 hasta los 7 años. Te enseñaré a construir hábitos saludables de una manera gentil y respetuosa, sin dejarlo llorar. Juntos trabajaremos para lograr noches más tranquilas, momentos agradables en la mesa y crear las bases sólidas de aquellos hábitos que acompañarán a tus hijos a lo largo de su vida.

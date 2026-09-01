@@ -143,14 +143,14 @@ export default async function SuenoPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Servicios de Sueño Infantil
           </span>
-          <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Volver a dormir, Sí es posible.
           </h1>
         </Reveal>
 
         {/* Intro banner */}
         <Reveal as="div" className="sueno-intro">
-          <h2 className="font-forum sueno-intro-title">
+          <h2 className="font-fraunces sueno-intro-title">
             Familias Descansadas.<br />
             <em>Familias Felices.</em>
           </h2>
@@ -163,7 +163,7 @@ export default async function SuenoPage() {
 
         {/* Services Cards Grid (de pago) */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
-          <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
+          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
             Acompañamiento 1 a 1
           </h2>
         </Reveal>
@@ -206,7 +206,7 @@ export default async function SuenoPage() {
                   <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
                     {service.tag}
                   </span>
-                  <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
+                  <h3 className="font-fraunces" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
                     {service.id.startsWith('fs-') ? (
                       service.title
                     ) : (
@@ -215,7 +215,7 @@ export default async function SuenoPage() {
                       </Link>
                     )}
                   </h3>
-                  <p className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
+                  <p className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}
                   </p>
                   <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
@@ -257,7 +257,7 @@ export default async function SuenoPage() {
         {/* Benefits */}
         <div className="sueno-benefits">
           <Reveal as="div" className="sueno-benefit-card child">
-            <h3 className="font-forum">Con un plan de entrenamiento, tu hijo logrará:</h3>
+            <h3 className="font-fraunces">Con un plan de entrenamiento, tu hijo logrará:</h3>
             <ul>
               {childOutcomes.map((item) => (
                 <li key={item} className="font-inter">{item}</li>
@@ -265,7 +265,7 @@ export default async function SuenoPage() {
             </ul>
           </Reveal>
           <Reveal as="div" delay={120} className="sueno-benefit-card parent">
-            <h3 className="font-forum">Con un plan de entrenamiento, tú lograrás:</h3>
+            <h3 className="font-fraunces">Con un plan de entrenamiento, tú lograrás:</h3>
             <ul>
               {parentOutcomes.map((item) => (
                 <li key={item} className="font-inter">{item}</li>

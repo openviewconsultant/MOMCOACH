@@ -106,7 +106,7 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
       <div className="shop-layout">
         <div className="shop-intro">
           <p className="shop-eyebrow font-inter">Los más vendidos</p>
-          <h2 className="shop-heading font-forum">Productos Premium</h2>
+          <h2 className="shop-heading font-fraunces">Productos Premium</h2>
           <p className="shop-description font-inter">
             Quiero compartir mis consejos contigo. La maternidad puede ser maravillosa si entre mamás nos damos una mano.
           </p>

@@ -40,7 +40,7 @@ export default async function AdminPedidosPage() {
     <div>
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-title font-forum">Pedidos</h1>
+          <h1 className="admin-title font-fraunces">Pedidos</h1>
           <p className="admin-subtitle">Historial de compras procesadas por Mercado Pago.</p>
         </div>
       </div>

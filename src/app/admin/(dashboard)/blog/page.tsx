@@ -17,7 +17,7 @@ export default async function AdminBlogPage() {
     <div>
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-title font-forum">Blog</h1>
+          <h1 className="admin-title font-fraunces">Blog</h1>
           <p className="admin-subtitle">Publica y gestiona los artículos del blog.</p>
         </div>
         <Link href="/admin/blog/nuevo" className="admin-new-btn">

@@ -106,7 +106,7 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
       </div>
 
       <div className="tienda-header-sticky">
-        <h1 className="tienda-title font-forum">Tienda</h1>
+        <h1 className="tienda-title font-fraunces">Tienda</h1>
       </div>
 
       <div className="tienda-subtitle-section">

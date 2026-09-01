@@ -72,7 +72,7 @@ export default function PdfPreviewModal({
       <div className="pdf-preview-card" ref={cardRef} onClick={(e) => e.stopPropagation()}>
         <button className="pdf-preview-close" onClick={handleClose} aria-label="Cerrar">✕</button>
         <div className="pdf-preview-header">
-          <h3 className="font-forum">{productTitle}</h3>
+          <h3 className="font-fraunces">{productTitle}</h3>
           <span className="pdf-preview-badge font-inter">{badgeLabel}</span>
         </div>
         <div className="pdf-preview-viewport">

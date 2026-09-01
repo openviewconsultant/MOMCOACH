@@ -130,7 +130,7 @@ export default async function AlimentacionPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Nutrición y hábitos de alimentación
           </span>
-          <h1 className="font-forum" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Alimentación Sin Estrés
           </h1>
           <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
@@ -140,7 +140,7 @@ export default async function AlimentacionPage() {
 
         {/* Services Cards (de pago) */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
-          <h2 className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
+          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
             Acompañamiento 1 a 1
           </h2>
         </Reveal>
@@ -183,7 +183,7 @@ export default async function AlimentacionPage() {
                   <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
                     {service.tag}
                   </span>
-                  <h3 className="font-forum" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
+                  <h3 className="font-fraunces" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
                     {service.id.startsWith('f-') ? (
                       service.title
                     ) : (
@@ -192,7 +192,7 @@ export default async function AlimentacionPage() {
                       </Link>
                     )}
                   </h3>
-                  <p className="font-forum" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
+                  <p className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}
                   </p>
                   <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
@@ -234,7 +234,7 @@ export default async function AlimentacionPage() {
         {/* Intro banner */}
         <Reveal as="div" className="aliment-intro">
           <span className="aliment-intro-eyebrow font-inter">Te ayudo con la alimentación de tu bebé</span>
-          <h2 className="font-forum aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
+          <h2 className="font-fraunces aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
           <p className="font-inter aliment-intro-text">
             La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
             positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los

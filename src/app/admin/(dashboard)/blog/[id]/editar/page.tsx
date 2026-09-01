@@ -22,7 +22,7 @@ export default async function EditarArticuloPage({
       <Link href="/admin/blog" className="admin-back-link">← Volver al blog</Link>
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-title font-forum">Editar artículo</h1>
+          <h1 className="admin-title font-fraunces">Editar artículo</h1>
           <p className="admin-subtitle">{post.title}</p>
         </div>
       </div>

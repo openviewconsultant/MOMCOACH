@@ -66,7 +66,7 @@ export default function PopupSettingsForm({ initialSettings, calendarOptions }: 
     <div className="admin-settings-page">
       <div className="admin-settings-header">
         <div>
-          <h1 className="admin-settings-title font-forum">Mensaje PopUp</h1>
+          <h1 className="admin-settings-title font-fraunces">Mensaje PopUp</h1>
           <p className="admin-settings-subtitle font-inter">
             Gestiona el popup de llamada de descubrimiento que aparece en el sitio
           </p>
@@ -78,7 +78,7 @@ export default function PopupSettingsForm({ initialSettings, calendarOptions }: 
         <form className="admin-settings-card" onSubmit={handleSave}>
           <div className="admin-settings-card-header">
             <span className="admin-settings-card-icon">🗓️</span>
-            <h2 className="admin-settings-card-title font-forum">Popup de agenda</h2>
+            <h2 className="admin-settings-card-title font-fraunces">Popup de agenda</h2>
             <label className="admin-toggle" title="Habilitar popup">
               <input
                 type="checkbox"
@@ -194,7 +194,7 @@ export default function PopupSettingsForm({ initialSettings, calendarOptions }: 
         <div className="admin-settings-card admin-popup-preview-wrap">
           <div className="admin-settings-card-header">
             <span className="admin-settings-card-icon">👁️</span>
-            <h2 className="admin-settings-card-title font-forum">Vista previa</h2>
+            <h2 className="admin-settings-card-title font-fraunces">Vista previa</h2>
           </div>
 
           <div className="admin-popup-preview-stage">

@@ -125,7 +125,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
       <div className="admin-products-sticky-top">
         <div className="admin-page-header">
           <div>
-            <h1 className="admin-title font-forum">Productos</h1>
+            <h1 className="admin-title font-fraunces">Productos</h1>
             <p className="admin-subtitle">Publica y gestiona los libros, guías y servicios de la tienda.</p>
           </div>
           <Link href="/admin/productos/nuevo" className="admin-new-btn">

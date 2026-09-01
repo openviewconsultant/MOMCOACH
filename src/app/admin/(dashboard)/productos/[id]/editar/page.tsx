@@ -24,7 +24,7 @@ export default async function EditarProductoPage({
       <Link href="/admin/productos" className="admin-back-link">← Volver a productos</Link>
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-title font-forum">Editar producto</h1>
+          <h1 className="admin-title font-fraunces">Editar producto</h1>
           <p className="admin-subtitle">{product.title}</p>
         </div>
       </div>

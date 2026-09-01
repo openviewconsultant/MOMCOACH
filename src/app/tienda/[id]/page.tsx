@@ -58,8 +58,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
         <div className="producto-info-card">
           {p.subtitle && <span className="producto-subtitle font-inter">{p.subtitle}</span>}
-          <h1 className="producto-title font-forum">{p.title}</h1>
-          <p className={`producto-price font-forum ${isFree ? 'is-free' : ''}`}>
+          <h1 className="producto-title font-fraunces">{p.title}</h1>
+          <p className={`producto-price font-fraunces ${isFree ? 'is-free' : ''}`}>
             {isFree ? 'Gratis' : formatCOP(p.price)}
           </p>
 

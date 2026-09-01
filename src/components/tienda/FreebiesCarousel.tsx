@@ -147,7 +147,7 @@ export default function FreebiesCarousel({ items, onCardClick, onDownloadClick }
               <EbookCoverThumbnail productId={item.id} coverImageUrl={item.cover_image_url} />
             </span>
             <span className="freebies-card-body">
-              <h4 className="font-forum">{item.title}</h4>
+              <h4 className="font-fraunces">{item.title}</h4>
               <span
                 className="freebies-card-btn font-inter"
                 onClick={(e) => {

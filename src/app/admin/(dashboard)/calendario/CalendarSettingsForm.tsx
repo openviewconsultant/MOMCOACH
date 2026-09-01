@@ -189,7 +189,7 @@ export default function CalendarSettingsForm({ initialSettings }: Props) {
     <div className="admin-settings-page">
       <div className="admin-settings-header">
         <div>
-          <h1 className="admin-settings-title font-forum">Calendario</h1>
+          <h1 className="admin-settings-title font-fraunces">Calendario</h1>
           <p className="admin-settings-subtitle font-inter">
             Un calendario por servicio (ej. Sueño, Alimentación), cada uno con su propio Google Calendar, duración y horario. La disponibilidad real siempre se cruza con el Google Calendar de cada uno.
           </p>

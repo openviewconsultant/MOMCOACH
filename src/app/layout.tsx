@@ -1,17 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Forum, Fraunces, Montserrat } from "next/font/google";
+import { Fraunces, Montserrat } from "next/font/google";
 import SiteChromeServer from "@/components/layout/SiteChromeServer";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
 import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import { SITE_NAME, SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
-const forum = Forum({
-  weight: "400",
-  variable: "--font-forum",
-  subsets: ["latin"],
-});
-
+// Headings/subheadings use Fraunces to match the live themomcoaching.com site.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
@@ -86,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${forum.variable} ${fraunces.variable} ${montserrat.variable}`}>
+    <html lang="es" className={`${fraunces.variable} ${montserrat.variable}`}>
       <head>
         <link rel="preconnect" href="https://app.cal.com" />
         <link rel="preconnect" href="https://cal.com" />

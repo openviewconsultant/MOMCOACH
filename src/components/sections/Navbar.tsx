@@ -97,7 +97,7 @@ export default function Navbar() {
             <li key={item.href} style={{ animationDelay: `${i * 0.06}s` }} className="nav-mobile-item">
               <Link
                 href={item.href}
-                className="nav-mobile-link font-forum"
+                className="nav-mobile-link font-fraunces"
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}

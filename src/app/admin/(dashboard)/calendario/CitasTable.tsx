@@ -90,7 +90,7 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
     <div className="admin-settings-card" style={{ maxWidth: 'none' }}>
       <div className="admin-settings-card-header">
         <span className="admin-settings-card-icon">🗒️</span>
-        <h2 className="admin-settings-card-title font-forum">Citas agendadas</h2>
+        <h2 className="admin-settings-card-title font-fraunces">Citas agendadas</h2>
         {citas.length > 0 && (
           <button
             type="button"

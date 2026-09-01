@@ -18,7 +18,7 @@ export default function SiteFooter() {
 
         {/* Col 1 — Brand */}
         <div>
-          <h3 className="font-forum" style={{ fontSize: '1.6rem', color: '#E8DDD5', marginBottom: '20px' }}>
+          <h3 className="font-fraunces" style={{ fontSize: '1.6rem', color: '#E8DDD5', marginBottom: '20px' }}>
             The Mom Coach
           </h3>
           <p className="font-inter" style={{ fontSize: '0.9rem', lineHeight: '1.8', color: '#B8A99E', marginBottom: '6px' }}>

@@ -53,7 +53,7 @@ export default function DownloadModal({ productId, productTitle, onClose }: Down
         {status === 'done' ? (
           <div className="download-modal-success">
             <div className="download-modal-success-icon">🎉</div>
-            <h3 className="font-forum">¡Iniciando tu descarga!</h3>
+            <h3 className="font-fraunces">¡Iniciando tu descarga!</h3>
             <p className="font-inter">
               Gracias <strong>{name}</strong>. Tu archivo comenzará a descargarse en unos segundos.
             </p>
@@ -65,7 +65,7 @@ export default function DownloadModal({ productId, productTitle, onClose }: Down
           <>
             <button className="download-modal-close" onClick={onClose} aria-label="Cerrar">✕</button>
             <div className="download-modal-icon">🎁</div>
-            <h3 className="download-modal-title font-forum">Descarga gratuita</h3>
+            <h3 className="download-modal-title font-fraunces">Descarga gratuita</h3>
             <p className="download-modal-desc font-inter">
               Ingresa tus datos para descargar gratis
               <br /><strong>{productTitle}</strong>

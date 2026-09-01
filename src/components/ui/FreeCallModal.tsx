@@ -97,7 +97,7 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
         {status === 'done' ? (
           <div>
             <div className="booking-modal-success-icon">🎉</div>
-            <h3 className="booking-modal-title font-forum">¡Cita agendada!</h3>
+            <h3 className="booking-modal-title font-fraunces">¡Cita agendada!</h3>
             <p className="booking-modal-desc font-inter">
               Gracias <strong>{name}</strong>, te enviamos la confirmación y el enlace de la videollamada a <strong>{email}</strong>.
             </p>
@@ -109,7 +109,7 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
           <>
             <button className="booking-modal-close" onClick={onClose} aria-label="Cerrar">✕</button>
             <img src="/logo-white-bg.png" alt="The Mom Coach" className="booking-modal-logo" />
-            <h3 className="booking-modal-title font-forum">{title}</h3>
+            <h3 className="booking-modal-title font-fraunces">{title}</h3>
             <p className="booking-modal-desc font-inter">{subtitle}</p>
 
             <StepIndicator step={step} />

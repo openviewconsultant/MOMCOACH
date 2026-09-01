@@ -20,7 +20,7 @@ export default function PoliticaDePrivacidad() {
         </Link>
 
         <h1
-          className="font-forum"
+          className="font-fraunces"
           style={{ fontSize: "2.6rem", color: "var(--color-blue-gray)", margin: "24px 0 8px" }}
         >
           Política de Privacidad
@@ -37,14 +37,14 @@ export default function PoliticaDePrivacidad() {
             acuerdo con la Ley 1581 de 2012 y sus decretos reglamentarios en Colombia.
           </p>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>1. Responsable del tratamiento</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>1. Responsable del tratamiento</h2>
           <p style={pStyle}>
             The Mom Coach es la responsable del tratamiento de los datos personales que
             recolecta a través de este sitio web, sus canales de contacto y sus servicios de
             coaching y acompañamiento a familias.
           </p>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>2. Datos que recolectamos</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>2. Datos que recolectamos</h2>
           <p style={pStyle}>Dependiendo de cómo interactúes con nosotros, podemos recolectar:</p>
           <ul style={ulStyle}>
             <li>Datos de contacto: nombre, correo electrónico y número de teléfono.</li>
@@ -52,7 +52,7 @@ export default function PoliticaDePrivacidad() {
             <li>Datos de navegación y uso del sitio (páginas visitadas, dispositivo, origen del tráfico).</li>
           </ul>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>3. Para qué usamos tus datos</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>3. Para qué usamos tus datos</h2>
           <ul style={ulStyle}>
             <li>Responder tus consultas y agendar sesiones de coaching.</li>
             <li>Enviarte información sobre nuestros programas, eventos y contenido, cuando lo hayas autorizado.</li>
@@ -64,7 +64,7 @@ export default function PoliticaDePrivacidad() {
             a los aquí descritos, salvo que la ley lo exija.
           </p>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>4. Tus derechos</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>4. Tus derechos</h2>
           <p style={pStyle}>Como titular de tus datos personales, tienes derecho a:</p>
           <ul style={ulStyle}>
             <li>Conocer, actualizar y rectificar tu información.</li>
@@ -73,7 +73,7 @@ export default function PoliticaDePrivacidad() {
             <li>Presentar quejas ante la Superintendencia de Industria y Comercio por el manejo indebido de tus datos.</li>
           </ul>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>5. Cómo ejercer tus derechos</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>5. Cómo ejercer tus derechos</h2>
           <p style={pStyle}>
             Puedes escribirnos a{" "}
             <a href="mailto:hola@themomcoaching.com" style={{ color: "var(--color-coral)" }}>
@@ -83,7 +83,7 @@ export default function PoliticaDePrivacidad() {
             personales. Atenderemos tu solicitud dentro de los plazos establecidos por la ley.
           </p>
 
-          <h2 className="font-forum" style={sectionTitleStyle}>6. Cambios a esta política</h2>
+          <h2 className="font-fraunces" style={sectionTitleStyle}>6. Cambios a esta política</h2>
           <p style={pStyle}>
             Podemos actualizar esta política ocasionalmente para reflejar cambios en nuestras
             prácticas o en la normativa aplicable. Publicaremos cualquier cambio en esta misma

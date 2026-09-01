@@ -53,7 +53,7 @@ export default async function ConfirmacionPage({
     <div className="tienda-main purchase-popup-wrap">
       <div className={`purchase-popup-card`}>
         <div className={`purchase-popup-icon purchase-popup-icon--${copy.variant}`}>{copy.icon}</div>
-        <h1 className="purchase-popup-title font-forum">{copy.title}</h1>
+        <h1 className="purchase-popup-title font-fraunces">{copy.title}</h1>
         <p className="purchase-popup-message font-inter">{copy.message}</p>
         {copy.note && <p className="purchase-popup-note font-inter">{copy.note}</p>}
         <Link href="/tienda" className="purchase-popup-btn font-inter">

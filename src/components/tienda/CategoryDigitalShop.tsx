@@ -51,7 +51,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
       {guides.length > 0 && (
         <div className="shop-section">
           <Reveal as="div" className="shop-section-head">
-            <h2 className="font-forum">{guidesTitle}</h2>
+            <h2 className="font-fraunces">{guidesTitle}</h2>
             <p className="font-inter">{guidesSubtitle}</p>
           </Reveal>
           <div className="shop-card-grid">
@@ -81,7 +81,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                       </svg>
                     </span>
                   )}
-                  <h4 className="font-forum">{guide.title}</h4>
+                  <h4 className="font-fraunces">{guide.title}</h4>
                   <div className="shop-mini-footer" onClick={(e) => e.stopPropagation()}>
                     <span className="shop-mini-price font-inter">USD ${guide.price}</span>
                     {guide.payment_provider === 'hotmart' && guide.hotmart_url ? (
@@ -125,7 +125,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
       {freebies.length > 0 && (
         <div className="shop-section">
           <Reveal as="div" className="shop-section-head">
-            <h2 className="font-forum">Material Descargable Gratuito</h2>
+            <h2 className="font-fraunces">Material Descargable Gratuito</h2>
             <p className="font-inter">Recursos para acompañarte hoy mismo, sin costo.</p>
           </Reveal>
           <FreebiesCarousel

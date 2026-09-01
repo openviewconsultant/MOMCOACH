@@ -85,7 +85,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span className="blog-card-date font-inter">{formatDate(typedPost.published_at)}</span>
           </div>
 
-          <h1 className="font-forum" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginBottom: '12px', lineHeight: 1.25 }}>
+          <h1 className="font-fraunces" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginBottom: '12px', lineHeight: 1.25 }}>
             {typedPost.title}
           </h1>
 

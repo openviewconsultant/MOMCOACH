@@ -65,7 +65,7 @@ export default function Testimonials() {
 
   return (
     <section className="section testimonials-section" style={{ backgroundColor: 'var(--color-cream)' }}>
-      <h2 className="section-title font-forum">Lo que dicen los padres...</h2>
+      <h2 className="section-title font-fraunces">Lo que dicen los padres...</h2>
 
       <div
         onMouseEnter={() => setPaused(true)}
@@ -84,7 +84,7 @@ export default function Testimonials() {
           justifyContent: 'center',
         }}
       >
-        <span className="font-forum" style={{ position: 'absolute', top: '10px', left: '20px', fontSize: '6rem', color: 'var(--color-peach)', opacity: 0.5, lineHeight: 1 }}>"</span>
+        <span className="font-fraunces" style={{ position: 'absolute', top: '10px', left: '20px', fontSize: '6rem', color: 'var(--color-peach)', opacity: 0.5, lineHeight: 1 }}>"</span>
         <p className="font-inter" style={{ fontSize: '1.2rem', lineHeight: 1.8, position: 'relative', zIndex: 1, marginBottom: '24px', color: 'var(--color-foreground)' }}>
           {current.quote}
         </p>

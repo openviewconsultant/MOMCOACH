@@ -7,7 +7,7 @@ export default function NuevoArticuloPage() {
       <Link href="/admin/blog" className="admin-back-link">← Volver al blog</Link>
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-title font-forum">Nuevo artículo</h1>
+          <h1 className="admin-title font-fraunces">Nuevo artículo</h1>
           <p className="admin-subtitle">Complétalo y publícalo cuando esté listo.</p>
         </div>
       </div>

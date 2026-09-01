@@ -292,7 +292,7 @@ export default function AnalyticsDashboard({
         {/* Header */}
         <div className="analytics-header">
           <div>
-            <h1 className="analytics-title font-forum">Analytics</h1>
+            <h1 className="analytics-title font-fraunces">Analytics</h1>
             <p className="analytics-subtitle font-inter">
               Comportamiento de visitantes — {rangeLabel}
               {filtered.length !== events.length && (
@@ -428,7 +428,7 @@ export default function AnalyticsDashboard({
                 {k.icon}
               </div>
               <div>
-                <p className="analytics-kpi-value font-forum" style={{ color: k.color }}>
+                <p className="analytics-kpi-value font-fraunces" style={{ color: k.color }}>
                   {k.value.toLocaleString()}
                 </p>
                 <p className="analytics-kpi-label font-inter">{k.label}</p>
@@ -450,7 +450,7 @@ export default function AnalyticsDashboard({
       <div className="analytics-charts-grid">
         {/* Views over time */}
         <div className="analytics-chart-card analytics-chart-wide">
-          <h3 className="analytics-chart-title font-forum">Vistas de página por día</h3>
+          <h3 className="analytics-chart-title font-fraunces">Vistas de página por día</h3>
           {viewsPerDay.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={viewsPerDay}>
@@ -483,7 +483,7 @@ export default function AnalyticsDashboard({
 
         {/* Clicks over time */}
         <div className="analytics-chart-card analytics-chart-wide">
-          <h3 className="analytics-chart-title font-forum">Clics por día</h3>
+          <h3 className="analytics-chart-title font-fraunces">Clics por día</h3>
           {clicksPerDay.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={clicksPerDay}>
@@ -516,7 +516,7 @@ export default function AnalyticsDashboard({
 
         {/* Event distribution */}
         <div className="analytics-chart-card">
-          <h3 className="analytics-chart-title font-forum">Distribución de eventos</h3>
+          <h3 className="analytics-chart-title font-fraunces">Distribución de eventos</h3>
           {eventDist.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
@@ -545,7 +545,7 @@ export default function AnalyticsDashboard({
 
         {/* Top pages */}
         <div className="analytics-chart-card">
-          <h3 className="analytics-chart-title font-forum">Páginas más visitadas</h3>
+          <h3 className="analytics-chart-title font-fraunces">Páginas más visitadas</h3>
           {topPages.length > 0 ? (
             <div className="analytics-rank-list">
               {topPages.map((p, i) => (
@@ -565,7 +565,7 @@ export default function AnalyticsDashboard({
 
         {/* Top clicks */}
         <div className="analytics-chart-card analytics-chart-wide">
-          <h3 className="analytics-chart-title font-forum">Elementos más clickeados</h3>
+          <h3 className="analytics-chart-title font-fraunces">Elementos más clickeados</h3>
           {topClicks.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={topClicks} layout="vertical" margin={{ left: 10 }}>
@@ -588,7 +588,7 @@ export default function AnalyticsDashboard({
 
         {/* Top countries */}
         <div className="analytics-chart-card">
-          <h3 className="analytics-chart-title font-forum">Países</h3>
+          <h3 className="analytics-chart-title font-fraunces">Países</h3>
           {topCountries.length > 0 ? (
             <div className="analytics-rank-list">
               {topCountries.map((c, i) => (
@@ -606,7 +606,7 @@ export default function AnalyticsDashboard({
 
         {/* Top cities */}
         <div className="analytics-chart-card">
-          <h3 className="analytics-chart-title font-forum">Ciudades</h3>
+          <h3 className="analytics-chart-title font-fraunces">Ciudades</h3>
           {topCities.length > 0 ? (
             <div className="analytics-rank-list">
               {topCities.map((c, i) => (
@@ -625,7 +625,7 @@ export default function AnalyticsDashboard({
         {/* Top products */}
         {topProducts.length > 0 && (
           <div className="analytics-chart-card analytics-chart-wide">
-            <h3 className="analytics-chart-title font-forum">Productos más vistos / descargados</h3>
+            <h3 className="analytics-chart-title font-fraunces">Productos más vistos / descargados</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={topProducts}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -648,7 +648,7 @@ export default function AnalyticsDashboard({
       {/* Recent events table */}
       <div className="analytics-table-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-          <h3 className="analytics-chart-title font-forum" style={{ margin: 0 }}>
+          <h3 className="analytics-chart-title font-fraunces" style={{ margin: 0 }}>
             Eventos recientes
           </h3>
           <span className="analytics-filter-count font-inter">

@@ -30,7 +30,7 @@ export default function Services() {
 
   return (
     <section id="coaching" className="section services-section">
-      <h2 className="section-title font-forum">Mis Programas</h2>
+      <h2 className="section-title font-fraunces">Mis Programas</h2>
       <p className="section-subtitle font-inter">Juntos lograremos enseñarle a tu bebé a dormir y comer mejor, para que disfrutes al máximo de la maternidad.</p>
 
       <div className="services-grid">
