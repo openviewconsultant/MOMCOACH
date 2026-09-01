@@ -379,7 +379,7 @@
 
 .about-badge-card {
   position: absolute;
-  width: 52%;
+  width: 50%;
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   background: #fff;
@@ -397,13 +397,13 @@
 }
 
 .about-badge-card--acs {
-  top: 3%;
+  top: 9%;
   left: 2%;
   background: rgb(244, 241, 243);
 }
 
 .about-badge-card--iin {
-  top: 3%;
+  top: 9%;
   right: 2%;
   z-index: 2;
 }
@@ -411,7 +411,7 @@
 /* La insignia de Positive Discipline Association es un sello circular con
    fondo transparente, así que va sin la tarjeta blanca con marco dorado. */
 .about-badge-card--pda {
-  bottom: 1%;
+  top: 46%;
   left: 29%;
   width: 42%;
   aspect-ratio: 1 / 1;
