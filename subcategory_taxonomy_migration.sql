@@ -15,3 +15,9 @@ alter table products add constraint products_subcategory_check
 --   Libro     -> Ebook: Newborn Sleep Shaping Guide
 --   Curso     -> Curso Inicio de Alimentación Complementaria, Programa Recién Nacidos (0 a 4 meses)
 --   Asesoría  -> Plan de Sueño Infantil, Llamada de Consulta (Sueño y Alimentación), Asesoría Picky Eaters
+
+-- 2026-09: "Guía" y "Libro" se unifican en "Ebook" en el filtro de /tienda.
+alter table products drop constraint if exists products_subcategory_check;
+update products set subcategory = 'Ebook' where subcategory in ('Guía','Libro');
+alter table products add constraint products_subcategory_check
+  check (subcategory is null or subcategory = any (array['Curso','Ebook','Recetario','Asesoría','Tarjeta de regalo','Gratuitos']::text[]));

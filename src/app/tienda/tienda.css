@@ -149,23 +149,13 @@
   opacity: 1;
 }
 
+.tienda-card.is-previewable {
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
-  .tienda-container {
-    padding-top: 0;
-  }
-
   .tienda-back-section {
-    padding-top: 120px;
-  }
-
-  .tienda-header-sticky {
-    padding-top: 92px;
-    margin-top: -92px;
-    height: 152px; /* 92 + 60 */
-  }
-
-  .tienda-filters-sticky {
-    top: 152px;
+    padding-top: 100px;
   }
 }
 

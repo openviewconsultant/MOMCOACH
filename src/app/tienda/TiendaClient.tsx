@@ -3,33 +3,43 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import './tienda.css';
-import { CartProvider, useCart } from '@/lib/cart-context';
-import CartDrawer from '@/components/tienda/CartDrawer';
+import { useCart } from '@/lib/cart-context';
 import DownloadModal from '@/components/tienda/DownloadModal';
+import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatUSD } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
-type Subcategory = 'Todas' | 'Curso' | 'Guía' | 'Recetario' | 'Libro' | 'Asesoría' | 'Tarjeta de regalo' | 'Gratuitos';
+type Subcategory = 'Todas' | 'Curso' | 'Ebook' | 'Recetario' | 'Asesoría' | 'Tarjeta de regalo' | 'Gratuitos';
 
 const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Regalo'];
-const subcategories: Subcategory[] = ['Todas', 'Curso', 'Guía', 'Recetario', 'Libro', 'Asesoría', 'Tarjeta de regalo', 'Gratuitos'];
+const subcategories: Subcategory[] = ['Todas', 'Curso', 'Ebook', 'Recetario', 'Asesoría', 'Tarjeta de regalo', 'Gratuitos'];
 
 function SupabaseProductCard({
   product,
   onDownloadClick,
+  onPreviewClick,
 }: {
   product: SupabaseProduct;
   onDownloadClick: (p: SupabaseProduct) => void;
+  onPreviewClick: (p: SupabaseProduct, rect: DOMRect) => void;
 }) {
   const { addBook, items } = useCart();
   const inCart = items.some((item) => item.id === product.id);
   const isFree = product.price === 0;
   const isService = product.product_type === 'service';
+  const isPreviewable = Boolean(product.file_path);
 
   return (
-    <div className="tienda-card">
+    <div
+      className={`tienda-card ${isPreviewable ? 'is-previewable' : ''}`}
+      onClick={
+        isPreviewable
+          ? (e) => onPreviewClick(product, e.currentTarget.getBoundingClientRect())
+          : undefined
+      }
+    >
       <div className="tienda-card-image">
         {product.cover_image_url ? (
           <img src={product.cover_image_url} alt={product.title} loading="lazy" />
@@ -39,7 +49,7 @@ function SupabaseProductCard({
           </div>
         )}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onClick={(e) => e.stopPropagation()}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
         <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatUSD(product.price)}</p>
         {isFree ? (
@@ -79,6 +89,8 @@ function SupabaseProductCard({
 }
 
 export default function TiendaClient({ products }: { products: SupabaseProduct[] }) {
+  const { addBook, openCart, items } = useCart();
+
   const categories = useMemo(() => {
     const dynamic = Array.from(new Set(products.map((p) => p.category))).filter(
       (cat) => !baseCategories.includes(cat as Category)
@@ -98,6 +110,24 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
     });
 
   const [downloadingProduct, setDownloadingProduct] = useState<SupabaseProduct | null>(null);
+  const [previewTarget, setPreviewTarget] = useState<{ item: SupabaseProduct; rect: DOMRect | null } | null>(null);
+
+  function previewCta(item: SupabaseProduct): { label: string; onClick: () => void } {
+    const inCart = items.some((cartItem) => cartItem.id === item.id);
+    if (item.price === 0) {
+      return { label: 'Descargar gratis', onClick: () => setDownloadingProduct(item) };
+    }
+    if (item.payment_provider === 'hotmart' && item.hotmart_url) {
+      return { label: 'Comprar', onClick: () => window.open(item.hotmart_url!, '_blank', 'noopener,noreferrer') };
+    }
+    return {
+      label: inCart ? 'Añadir otro' : 'Añadir al carrito',
+      onClick: () => {
+        addBook(item);
+        openCart();
+      },
+    };
+  }
 
   return (
     <div className="tienda-main">
@@ -147,10 +177,26 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
               key={product.id}
               product={product}
               onDownloadClick={(p) => setDownloadingProduct(p)}
+              onPreviewClick={(p, rect) => setPreviewTarget({ item: p, rect })}
             />
           ))}
         </div>
       </div>
+
+      {previewTarget && (
+        <PdfPreviewModal
+          productId={previewTarget.item.id}
+          productTitle={previewTarget.item.title}
+          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(previewTarget.item.price)}
+          originRect={previewTarget.rect}
+          onClose={() => setPreviewTarget(null)}
+          ctaLabel={previewCta(previewTarget.item).label}
+          onCta={() => {
+            previewCta(previewTarget.item).onClick();
+            setPreviewTarget(null);
+          }}
+        />
+      )}
 
       {downloadingProduct && (
         <DownloadModal
