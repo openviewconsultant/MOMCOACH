@@ -101,9 +101,42 @@
 }
 
 .tienda-card-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+}
+
+.tienda-card-preview-hint {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(42, 31, 26, 0.82);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.tienda-card.is-previewable:hover .tienda-card-preview-hint {
+  transform: translateY(-2px);
+  background: var(--color-coral);
+}
+
+.tienda-card.is-previewable:hover .tienda-card-image img {
+  transform: scale(1.04);
+}
+
+.tienda-card-image img {
+  transition: transform 0.4s ease;
 }
 
 .tienda-card-image img {
