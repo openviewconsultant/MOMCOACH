@@ -195,9 +195,15 @@ export default async function AlimentacionPage() {
                   <p className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}
                   </p>
-                  <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
-                    {service.desc}
-                  </p>
+                  {service.id.startsWith('f-') ? (
+                    <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
+                      {service.desc}
+                    </p>
+                  ) : (
+                    <Link href={`/tienda/${service.id}`} className="font-inter" style={{ display: 'inline-block', marginBottom: '24px', fontSize: '0.88rem', fontWeight: 600, color: 'var(--color-turquoise)' }}>
+                      Ver todos los detalles →
+                    </Link>
+                  )}
                   {service.features.length > 0 && (
                     <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
                       {service.features.map((feat, fIdx) => (
@@ -208,15 +214,7 @@ export default async function AlimentacionPage() {
                     </ul>
                   )}
                 </div>
-                {service.paymentProvider === 'hotmart' && service.hotmartUrl && !service.id.startsWith('f-') ? (
-                  <Link
-                    href={`/tienda/${service.id}`}
-                    className={`btn btn-${service.popular ? 'primary' : 'secondary'} btn-md`}
-                    style={{ width: '100%', textAlign: 'center' }}
-                  >
-                    Comprar
-                  </Link>
-                ) : (
+                {service.id.startsWith('f-') ? (
                   <ServiceBookingButton
                     productId={service.id}
                     title={service.title}
@@ -225,6 +223,14 @@ export default async function AlimentacionPage() {
                     popular={service.popular}
                     buttonText="Solicitar Programa"
                   />
+                ) : (
+                  <Link
+                    href={`/tienda/${service.id}`}
+                    className={`btn btn-${service.popular ? 'primary' : 'secondary'} btn-md`}
+                    style={{ width: '100%', textAlign: 'center' }}
+                  >
+                    {service.paymentProvider === 'hotmart' && service.hotmartUrl ? 'Comprar' : 'Solicitar Programa'}
+                  </Link>
                 )}
               </div>
             </Reveal>
