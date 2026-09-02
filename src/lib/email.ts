@@ -257,7 +257,7 @@ export async function sendBookingConfirmationEmail(params: {
   });
 }
 
-export async function sendGiftCardEmail(params: {
+interface GiftCardEmailParams {
   to: string;
   recipientName: string | null;
   purchaserEmail: string;
@@ -265,9 +265,10 @@ export async function sendGiftCardEmail(params: {
   amount: number;
   programLabel: string;
   message: string | null;
-}): Promise<void> {
-  const { transporter, from } = getTransporter();
+}
 
+/** Devuelve el HTML del correo de gift card (sin enviarlo). Útil para previsualizar. */
+export function giftCardEmailHtml(params: Omit<GiftCardEmailParams, 'to'>): string {
   const greeting = params.recipientName ? `Hola <strong>${escapeHtml(params.recipientName)}</strong>,` : 'Hola,';
 
   const bodyHtml = `
@@ -303,11 +304,16 @@ export async function sendGiftCardEmail(params: {
     </p>
   `;
 
+  return emailShell({ headerEmoji: '🎁', headerTitle: '¡Tienes un regalo!', bodyHtml });
+}
+
+export async function sendGiftCardEmail(params: GiftCardEmailParams): Promise<void> {
+  const { transporter, from } = getTransporter();
   await transporter.sendMail({
     from,
     to: params.to,
     subject: `🎁 Te regalaron una Gift Card de The Mom Coach`,
-    html: emailShell({ headerEmoji: '🎁', headerTitle: '¡Tienes un regalo!', bodyHtml }),
+    html: giftCardEmailHtml(params),
     attachments: getLogoAttachment(),
   });
 }

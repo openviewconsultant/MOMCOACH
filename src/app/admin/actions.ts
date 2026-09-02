@@ -284,3 +284,105 @@ export async function deleteAllOrdersAction() {
   }
   revalidatePath('/admin/pedidos');
 }
+
+/** Elimina registros de descargas gratuitas (eventos de analytics). */
+export async function deleteDownloadEventsAction(ids: string[]) {
+  if (!ids || ids.length === 0) return;
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('analytics_events').delete().in('id', ids);
+  if (error) {
+    console.error('Error eliminando descargas', error);
+    return;
+  }
+  revalidatePath('/admin/descargas');
+}
+
+export async function deleteAllDownloadEventsAction() {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('analytics_events').delete().eq('event_type', 'product_download');
+  if (error) {
+    console.error('Error eliminando todas las descargas', error);
+    return;
+  }
+  revalidatePath('/admin/descargas');
+}
+
+/** Elimina gift cards (y sus redenciones). */
+export async function deleteGiftCardsAction(ids: string[]) {
+  if (!ids || ids.length === 0) return;
+  const supabase = createAdminClient();
+  await supabase.from('gift_card_redemptions').delete().in('gift_card_id', ids);
+  const { error } = await supabase.from('gift_cards').delete().in('id', ids);
+  if (error) {
+    console.error('Error eliminando gift cards', error);
+    return;
+  }
+  revalidatePath('/admin/gift-cards');
+}
+
+export async function deleteAllGiftCardsAction() {
+  const supabase = createAdminClient();
+  await supabase.from('gift_card_redemptions').delete().not('id', 'is', null);
+  const { error } = await supabase.from('gift_cards').delete().not('id', 'is', null);
+  if (error) {
+    console.error('Error eliminando todas las gift cards', error);
+    return;
+  }
+  revalidatePath('/admin/gift-cards');
+}
+
+/**
+ * Crea una gift card REAL y activa (para probar), y envía el correo con su
+ * código al destinatario. El código sí se puede canjear en el carrito.
+ */
+export async function sendTestGiftCardEmailAction(
+  _prev: { ok: boolean; message: string },
+  formData: FormData
+): Promise<{ ok: boolean; message: string }> {
+  const email = String(formData.get('email') || '').trim();
+  const program = String(formData.get('program') || 'sueno') === 'alimentacion' ? 'alimentacion' : 'sueno';
+  const amount = Math.max(1, Math.round(Number(formData.get('amount')) || 20));
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, message: 'Correo inválido' };
+  }
+  const { sendGiftCardEmail } = await import('@/lib/email');
+  const { generateGiftCardCode, GIFT_CARD_PROGRAM_LABEL } = await import('@/lib/gift-cards');
+  const supabase = createAdminClient();
+  const code = generateGiftCardCode();
+
+  const { error: insErr } = await supabase.from('gift_cards').insert({
+    code,
+    program,
+    initial_amount: amount,
+    balance: amount,
+    purchaser_email: 'prueba-admin',
+    recipient_email: email,
+    message: 'Gift card de prueba creada desde el panel de administración.',
+    status: 'active',
+  });
+  if (insErr) {
+    console.error('Error creando gift card de prueba', insErr);
+    return { ok: false, message: 'No se pudo crear la gift card de prueba' };
+  }
+
+  try {
+    await sendGiftCardEmail({
+      to: email,
+      recipientName: null,
+      purchaserEmail: 'prueba@themomcoaching.com',
+      code,
+      amount,
+      programLabel: GIFT_CARD_PROGRAM_LABEL[program as 'sueno' | 'alimentacion'],
+      message: 'Gift card de prueba. El código funciona: pruébalo en el carrito.',
+    });
+    revalidatePath('/admin/gift-cards');
+    return { ok: true, message: `Gift card ${code} creada y enviada a ${email} (canjeable en el carrito)` };
+  } catch (err) {
+    console.error('Error enviando correo de prueba de gift card', err);
+    revalidatePath('/admin/gift-cards');
+    return {
+      ok: false,
+      message: `Gift card ${code} creada pero el correo falló (revisa GMAIL_USER / GMAIL_APP_PASSWORD)`,
+    };
+  }
+}

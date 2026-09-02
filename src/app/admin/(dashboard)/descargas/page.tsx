@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { formatDateTimeCO } from '@/lib/format';
+import DescargasTable, { type DownloadRow } from './DescargasTable';
 
 interface DownloadEvent {
   id: string;
@@ -29,6 +29,17 @@ export default async function AdminDescargasPage() {
 
   const uniqueEmails = new Set(events.map((e) => e.visitor_email).filter(Boolean));
 
+  const rows: DownloadRow[] = events.map((ev) => {
+    const geo = (ev.metadata?.geo ?? {}) as { city?: string | null; country?: string | null };
+    return {
+      id: ev.id,
+      email: ev.visitor_email,
+      resource: ev.product_id ? titleById.get(ev.product_id) ?? ev.product_id : '—',
+      created_at: ev.created_at,
+      location: [geo.city, geo.country].filter(Boolean).join(', '),
+    };
+  });
+
   return (
     <div>
       <div className="admin-page-header">
@@ -54,34 +65,7 @@ export default async function AdminDescargasPage() {
       {events.length === 0 ? (
         <p className="admin-empty">Aún no hay descargas registradas.</p>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Correo</th>
-                <th>Recurso</th>
-                <th>Ubicación</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((ev) => {
-                const geo = (ev.metadata?.geo ?? {}) as { city?: string | null; country?: string | null };
-                const location = [geo.city, geo.country].filter(Boolean).join(', ');
-                return (
-                  <tr key={ev.id}>
-                    <td>{formatDateTimeCO(ev.created_at)}</td>
-                    <td className="admin-cell-wrap">{ev.visitor_email || '—'}</td>
-                    <td className="admin-cell-wrap">
-                      {ev.product_id ? titleById.get(ev.product_id) ?? ev.product_id : '—'}
-                    </td>
-                    <td className="admin-cell-wrap">{location || '—'}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <DescargasTable rows={rows} />
       )}
     </div>
   );
