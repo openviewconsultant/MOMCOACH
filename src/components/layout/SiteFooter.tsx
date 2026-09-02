@@ -99,7 +99,7 @@ export default function SiteFooter() {
       {/* Divider */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px', textAlign: 'center' }}>
         <p className="font-inter" style={{ fontSize: '0.8rem', color: '#7A6A62' }}>
-          © 2025 The Mom Coach · Todos los derechos reservados · Diseñado por THE INDIGO STUDIO
+          © 2026 The Mom Coach · Todos los derechos reservados · Diseñado por OPEN VIEW CONSULTING
         </p>
       </div>
     </footer>
