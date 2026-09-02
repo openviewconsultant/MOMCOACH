@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import { generateAndSaveCover } from '@/lib/render-pdf-cover';
 
 const PREDEFINED_CATEGORIES = [
@@ -419,7 +419,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
                   {product.price === 0 ? (
                     <span className="admin-badge free">Gratis</span>
                   ) : (
-                    <strong>{formatCOP(product.price)}</strong>
+                    <strong>{formatUSD(product.price)}</strong>
                   )}
                 </div>
                 <ProductRowActions product={product} />

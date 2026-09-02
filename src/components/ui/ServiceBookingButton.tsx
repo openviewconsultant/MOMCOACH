@@ -5,7 +5,7 @@ import Button from './Button';
 import BookingModal from './BookingModal';
 import FreeCallModal from './FreeCallModal';
 import { prefetchAvailability } from '@/lib/booking-availability-cache';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 
 const DEFAULT_CALENDAR_ID = 'default';
 
@@ -62,7 +62,7 @@ export default function ServiceBookingButton({
         <BookingModal
           productId={productId}
           productTitle={title}
-          priceLabel={formatCOP(price)}
+          priceLabel={formatUSD(price)}
           calendarId={resolvedCalendarId}
           onClose={() => setOpen(false)}
         />

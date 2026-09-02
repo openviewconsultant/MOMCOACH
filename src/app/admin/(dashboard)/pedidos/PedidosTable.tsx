@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Order } from '@/lib/types';
-import { formatCOP, formatDateTimeCO } from '@/lib/format';
+import { formatUSD, formatDateTimeCO } from '@/lib/format';
 import { friendlyStatusDetail } from './status-detail';
 
 export interface OrderRow extends Order {
@@ -90,7 +90,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                     <td>{formatDateTimeCO(order.created_at)}</td>
                     <td>{order.buyer_email}</td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
-                    <td>{formatCOP(order.total)}</td>
+                    <td>{formatUSD(order.total)}</td>
                     <td className="admin-cell-wrap">
                       <span className={`admin-badge ${BADGE_CLASS[order.status]}`}>
                         {STATUS_LABEL[order.status]}

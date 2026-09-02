@@ -1,5 +1,5 @@
-export function formatCOP(value: number): string {
-  return value.toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+export function formatUSD(value: number): string {
+  return `USD $${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 }
 
 // Node (SSR) and browser (client) ICU builds can render "a. m./p. m." with
@@ -7,5 +7,5 @@ export function formatCOP(value: number): string {
 // space) around otherwise identical text — normalize both to a plain space
 // so server-rendered and client-rendered output match during hydration.
 export function formatDateTimeCO(iso: string, options?: Intl.DateTimeFormatOptions): string {
-  return new Date(iso).toLocaleString('es-CO', options).replace(/[\xa0 ]/g, ' ');
+  return new Date(iso).toLocaleString('es-CO', options).replace(/[\xa0 ]/g, ' ');
 }

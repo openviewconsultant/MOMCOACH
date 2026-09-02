@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import ProductDetailCTA from '@/components/tienda/ProductDetailCTA';
 import VideoPlayer from '@/components/tienda/VideoPlayer';
 import type { Product } from '@/lib/types';
@@ -62,7 +62,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {p.subtitle && <span className="producto-subtitle font-inter">{p.subtitle}</span>}
           <h1 className="producto-title font-fraunces">{p.title}</h1>
           <p className={`producto-price font-fraunces ${isFree ? 'is-free' : ''}`}>
-            {isFree ? 'Gratis' : formatCOP(p.price)}
+            {isFree ? 'Gratis' : formatUSD(p.price)}
           </p>
           {p.price_note && <p className="producto-price-note font-inter">{p.price_note}</p>}
 

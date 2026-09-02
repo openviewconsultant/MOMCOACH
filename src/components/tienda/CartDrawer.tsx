@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import './cart-drawer.css';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,7 +83,7 @@ export default function CartDrawer() {
                   <li key={item.id} className="cart-drawer-item">
                     <div className="cart-drawer-item-info">
                       <p className="font-inter">{item.title}</p>
-                      <span className="font-inter">{formatCOP(item.price)}</span>
+                      <span className="font-inter">{formatUSD(item.price)}</span>
                     </div>
                     <div className="cart-drawer-item-controls">
                       <div className="cart-drawer-stepper">
@@ -123,7 +123,7 @@ export default function CartDrawer() {
           <div className="cart-drawer-footer">
             <div className="cart-drawer-total font-inter">
               <span>Total</span>
-              <strong>{formatCOP(totalPrice)}</strong>
+              <strong>{formatUSD(totalPrice)}</strong>
             </div>
 
             <label className="cart-drawer-email font-inter">

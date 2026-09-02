@@ -8,7 +8,7 @@ import FreebiesCarousel from '@/components/tienda/FreebiesCarousel';
 import { useCart } from '@/lib/cart-context';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import BookingModal from '@/components/ui/BookingModal';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
 
@@ -140,7 +140,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <PdfPreviewModal
           productId={previewTarget.item.id}
           productTitle={previewTarget.item.title}
-          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatCOP(previewTarget.item.price)}
+          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(previewTarget.item.price)}
           originRect={previewTarget.rect}
           onClose={() => setPreviewTarget(null)}
           ctaLabel={previewCta(previewTarget.item).label}
@@ -163,7 +163,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <BookingModal
           productId={bookingTarget.id}
           productTitle={bookingTarget.title}
-          priceLabel={formatCOP(bookingTarget.price)}
+          priceLabel={formatUSD(bookingTarget.price)}
           calendarId={bookingTarget.booking_calendar_id}
           onClose={() => setBookingTarget(null)}
         />

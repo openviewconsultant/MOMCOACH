@@ -7,7 +7,7 @@ import { CartProvider, useCart } from '@/lib/cart-context';
 import CartDrawer from '@/components/tienda/CartDrawer';
 import DownloadModal from '@/components/tienda/DownloadModal';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
@@ -41,7 +41,7 @@ function SupabaseProductCard({
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
-        <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatCOP(product.price)}</p>
+        <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatUSD(product.price)}</p>
         {isFree ? (
           <button
             type="button"

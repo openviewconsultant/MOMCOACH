@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import type { Order, OrderItem } from '@/lib/types';
-import { formatCOP } from '@/lib/format';
+import { formatUSD } from '@/lib/format';
 import PedidosTable, { type OrderRow } from './PedidosTable';
 
 export default async function AdminPedidosPage() {
@@ -64,7 +64,7 @@ export default async function AdminPedidosPage() {
         </div>
         <div className="admin-stat-card">
           <div className="admin-stat-label">Ingresos (aprobados)</div>
-          <div className="admin-stat-value">{formatCOP(revenue)}</div>
+          <div className="admin-stat-value">{formatUSD(revenue)}</div>
         </div>
       </div>
 
