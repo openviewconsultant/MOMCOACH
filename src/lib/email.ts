@@ -269,39 +269,99 @@ interface GiftCardEmailParams {
 
 /** Devuelve el HTML del correo de gift card (sin enviarlo). Útil para previsualizar. */
 export function giftCardEmailHtml(params: Omit<GiftCardEmailParams, 'to'>): string {
-  const greeting = params.recipientName ? `Hola <strong>${escapeHtml(params.recipientName)}</strong>,` : 'Hola,';
+  const greeting = params.recipientName
+    ? `Hola <strong>${escapeHtml(params.recipientName)}</strong>,`
+    : 'Hola,';
+  const program = escapeHtml(params.programLabel);
+  const storeUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://themomcoaching.com').replace(/\/$/, '');
+
+  const step = (n: string, text: string) => `
+    <tr>
+      <td width="34" valign="top" style="padding:0 12px 14px 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td width="26" height="26" align="center" valign="middle" bgcolor="#71B0B4"
+              style="background:#71B0B4; border-radius:999px; font-family:Arial,sans-serif; font-size:13px; font-weight:bold; color:#ffffff; line-height:26px;">${n}</td>
+        </tr></table>
+      </td>
+      <td valign="top" class="force-text-dark" style="padding:0 0 14px 0; font-family:Arial,sans-serif; font-size:14px; line-height:1.55; color:#2d2a26;">${text}</td>
+    </tr>`;
 
   const bodyHtml = `
-    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
-      ${greeting} te han regalado una <strong>Gift Card de The Mom Coach</strong> para el ${escapeHtml(params.programLabel)}.
+    <p class="force-text-dark" style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+      ${greeting} te regalaron una <strong>Gift Card de The Mom Coach</strong> para el ${program}. 🌙
     </p>
+
     ${
       params.message
-        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px; margin-bottom:16px;">
-             <tr><td style="padding:16px 20px;">
-               <p style="margin:0 0 4px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:#7A6A62;">Mensaje de ${escapeHtml(params.purchaserEmail)}</p>
-               <p class="force-text-dark" style="margin:0; font-size:14px; line-height:1.6; color:#2d2a26; font-style:italic;">"${escapeHtml(params.message)}"</p>
-             </td></tr>
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px 0;">
+             <tr>
+               <td width="4" bgcolor="#CD807B" style="background:#CD807B; border-radius:4px;"></td>
+               <td bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:0 12px 12px 0; padding:14px 18px;">
+                 <p style="margin:0 0 5px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#8A776C;">Un mensaje para ti</p>
+                 <p class="force-text-dark" style="margin:0; font-family:Georgia,'Times New Roman',serif; font-size:15px; line-height:1.6; color:#2d2a26; font-style:italic;">&ldquo;${escapeHtml(params.message)}&rdquo;</p>
+               </td>
+             </tr>
            </table>`
         : ''
     }
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C" style="background:#4C577C; border-radius:16px; margin-bottom:20px;">
-      <tr><td style="padding:26px 24px; text-align:center;">
-        <p style="margin:0 0 6px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Saldo de tu Gift Card</p>
-        <p style="margin:0 0 16px; font-family:Georgia,'Times New Roman',serif; font-size:34px; color:#ffffff;">USD $${params.amount}</p>
-        <p style="margin:0 0 6px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Código</p>
-        <p style="margin:0; font-family:'Courier New',monospace; font-size:22px; font-weight:bold; letter-spacing:0.12em; color:#EFC6A1;">${escapeHtml(params.code)}</p>
-      </td></tr>
+
+    <!-- Tarjeta de regalo -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C"
+           style="background:#4C577C; background:linear-gradient(135deg,#4C577C 0%,#71B0B4 100%); border-radius:20px; margin:0 0 26px 0;">
+      <tr>
+        <td style="padding:28px 26px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="left" style="font-family:Georgia,'Times New Roman',serif; font-size:15px; color:#ffffff; letter-spacing:0.04em;">The Mom Coach</td>
+              <td align="right" style="font-family:Arial,sans-serif; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.75);">Gift Card</td>
+            </tr>
+          </table>
+
+          <p style="margin:22px 0 2px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Saldo disponible</p>
+          <p style="margin:0 0 18px; font-family:Georgia,'Times New Roman',serif; font-size:40px; line-height:1.1; color:#ffffff;">USD&nbsp;$${params.amount}</p>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; border-radius:12px;">
+            <tr>
+              <td align="center" style="padding:12px 16px;">
+                <p style="margin:0 0 3px; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#8A776C;">Código para canjear</p>
+                <p class="force-text-blue" style="margin:0; font-family:'Courier New',Courier,monospace; font-size:23px; font-weight:bold; letter-spacing:0.16em; color:#4C577C;">${escapeHtml(params.code)}</p>
+              </td>
+            </tr>
+          </table>
+
+          <p style="margin:16px 0 0; font-size:12px; color:rgba(255,255,255,0.8);">Para el <strong style="color:#ffffff;">${program}</strong></p>
+        </td>
+      </tr>
     </table>
-    <p class="force-text-dark" style="margin:0 0 8px 0; font-size:14px; line-height:1.6; color:#2d2a26;">
-      <strong>¿Cómo canjearla?</strong>
-    </p>
-    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:14px; line-height:1.6; color:#2d2a26;">
-      Entra a la tienda, agrega al carrito los recursos que quieras del ${escapeHtml(params.programLabel)} y, en el carrito, escribe tu código en el campo <em>"¿Tienes una Gift Card?"</em>. Se descontará automáticamente del total y el saldo restante queda disponible para tu próxima compra.
-    </p>
-    <p style="margin:0; font-size:13px; color:#999;">
-      Esta Gift Card es válida solo para productos del ${escapeHtml(params.programLabel)}. Si tienes dudas, responde a este correo.
-    </p>
+
+    <!-- CTA -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0;">
+      <tr>
+        <td align="center">
+          <a href="${storeUrl}/tienda"
+             style="display:inline-block; background:#CD807B; color:#ffffff; text-decoration:none; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; padding:14px 40px; border-radius:999px;">
+            Canjear en la tienda
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <p class="force-text-dark" style="margin:0 0 14px 0; font-family:Georgia,'Times New Roman',serif; font-size:18px; color:#2d2a26;">Cómo usarla</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      ${step('1', `Entra a la tienda y agrega al carrito lo que quieras del <strong>${program}</strong>.`)}
+      ${step('2', 'En el carrito, toca <em>&ldquo;¿Tienes una Gift Card?&rdquo;</em> y escribe tu código.')}
+      ${step('3', 'El monto se descuenta automáticamente. Si sobra saldo, queda guardado para tu próxima compra.')}
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;">
+      <tr>
+        <td bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:12px; padding:14px 18px;">
+          <p class="force-text-blue" style="margin:0; font-size:12px; line-height:1.55; color:#4C577C;">
+            Válida solo para productos del ${program}. No caduca y puede usarse en varias compras hasta agotar el saldo. ¿Dudas? Responde a este correo.
+          </p>
+        </td>
+      </tr>
+    </table>
   `;
 
   return emailShell({ headerEmoji: '🎁', headerTitle: '¡Tienes un regalo!', bodyHtml });
