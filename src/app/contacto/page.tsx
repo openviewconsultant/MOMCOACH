@@ -135,7 +135,7 @@ export default function ContactoPage() {
                 <span style={{ fontSize: '1.5rem' }}>📧</span>
                 <div>
                   <h4 className="font-fraunces" style={{ fontSize: '1.2rem', color: 'var(--color-blue-gray)' }}>Correo electrónico</h4>
-                  <p className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>denisse@themomcoaching.com</p>
+                  <a href="mailto:denisselafaurie00@gmail.com" className="font-inter" style={{ fontSize: '0.9rem', color: 'var(--color-turquoise)', fontWeight: 600 }}>denisselafaurie00@gmail.com</a>
                 </div>
               </div>
             </div>
