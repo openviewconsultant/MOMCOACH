@@ -144,7 +144,7 @@ export default async function SuenoPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Programas de Sueño Infantil
           </span>
-          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: 'clamp(1.9rem, 7vw, 3rem)', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Volver a dormir, Sí es posible.
           </h1>
         </Reveal>
@@ -164,7 +164,7 @@ export default async function SuenoPage() {
 
         {/* Services Cards Grid (de pago) */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 36px' }}>
-          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
+          <h2 className="font-fraunces" style={{ fontSize: 'clamp(1.55rem, 5vw, 2.2rem)', color: 'var(--color-blue-gray)', marginTop: '8px' }}>
             Acompañamiento 1 a 1
           </h2>
         </Reveal>
@@ -224,7 +224,7 @@ export default async function SuenoPage() {
                       </Link>
                     )}
                   </h3>
-                  <p className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
+                  <p className="font-fraunces" style={{ fontSize: 'clamp(1.55rem, 5vw, 2.2rem)', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}
                   </p>
                   {service.id.startsWith('fs-') ? (

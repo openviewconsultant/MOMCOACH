@@ -39,7 +39,7 @@ export default async function BlogPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Blog & Noticias
           </span>
-          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: 'clamp(1.9rem, 7vw, 3rem)', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Artículos y Consejos
           </h1>
         </Reveal>

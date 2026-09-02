@@ -60,7 +60,7 @@ export default function ContactoPage() {
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
             Estamos para ayudarte
           </span>
-          <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
+          <h1 className="font-fraunces" style={{ fontSize: 'clamp(1.9rem, 7vw, 3rem)', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Hablemos de tu descanso
           </h1>
           <p className="font-inter" style={{ fontSize: '1.05rem', color: 'var(--foreground)', opacity: 0.85, lineHeight: 1.6 }}>
@@ -73,7 +73,7 @@ export default function ContactoPage() {
 
           {/* Direct Channels */}
           <div style={{ background: 'white', borderRadius: '24px', padding: '40px', boxShadow: 'var(--shadow-md)' }}>
-            <h2 className="font-fraunces" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
+            <h2 className="font-fraunces" style={{ fontSize: 'clamp(1.4rem, 4.5vw, 1.8rem)', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
               Canales Directos
             </h2>
 
@@ -115,7 +115,7 @@ export default function ContactoPage() {
 
           {/* Contact Form */}
           <div style={{ background: 'white', borderRadius: '24px', padding: '40px', boxShadow: 'var(--shadow-md)' }}>
-            <h2 className="font-fraunces" style={{ fontSize: '1.8rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
+            <h2 className="font-fraunces" style={{ fontSize: 'clamp(1.4rem, 4.5vw, 1.8rem)', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
               Envíanos un mensaje
             </h2>
             <form style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -167,8 +167,8 @@ export default function ContactoPage() {
         </div>
 
         {/* FAQs */}
-        <div style={{ background: 'white', borderRadius: '24px', padding: '48px 40px', boxShadow: 'var(--shadow-md)' }}>
-          <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '32px', textAlign: 'center' }}>
+        <div style={{ background: 'white', borderRadius: '24px', padding: 'clamp(24px, 6vw, 48px) clamp(20px, 5vw, 40px)', boxShadow: 'var(--shadow-md)' }}>
+          <h2 className="font-fraunces" style={{ fontSize: 'clamp(1.55rem, 5vw, 2.2rem)', color: 'var(--color-blue-gray)', marginBottom: '32px', textAlign: 'center' }}>
             Preguntas Frecuentes (FAQs)
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
