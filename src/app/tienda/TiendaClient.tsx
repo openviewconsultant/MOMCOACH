@@ -48,19 +48,23 @@ function SupabaseProductCard({
             <span>{product.title}</span>
           </div>
         )}
-        {isPreviewable && (
-          <span className="tienda-card-preview-hint font-inter" aria-hidden="true">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            Ver vista previa
-          </span>
-        )}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onClick={(e) => e.stopPropagation()}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
         <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatUSD(product.price)}</p>
+        {isPreviewable && (
+          <button
+            type="button"
+            className="tienda-card-preview-hint font-inter"
+            onClick={(e) => onPreviewClick(product, e.currentTarget.closest('.tienda-card')!.getBoundingClientRect())}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            Ver vista previa gratis
+          </button>
+        )}
         {isFree ? (
           <button
             type="button"
