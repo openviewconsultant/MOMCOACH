@@ -26,6 +26,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const p = product as Product;
   const features = Array.isArray(p.features) ? p.features : [];
   const isFree = p.price === 0;
+  const paragraphs = (p.description || '').split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
+  const details = p.details && Array.isArray(p.details.items) && p.details.items.length > 0 ? p.details : null;
 
   return (
     <div className="producto-main">
@@ -62,12 +64,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <p className={`producto-price font-fraunces ${isFree ? 'is-free' : ''}`}>
             {isFree ? 'Gratis' : formatCOP(p.price)}
           </p>
-
-          <div className="producto-cta">
-            <ProductDetailCTA product={p} />
-          </div>
-
-          <p className="producto-description font-inter">{p.description}</p>
+          {p.price_note && <p className="producto-price-note font-inter">{p.price_note}</p>}
 
           {features.length > 0 && (
             <>
@@ -76,6 +73,29 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 {features.map((feat, idx) => (
                   <li key={idx} className="font-inter">
                     <span aria-hidden="true">✓</span> {feat}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          <div className="producto-cta">
+            <ProductDetailCTA product={p} />
+          </div>
+
+          <div className="producto-description font-inter">
+            {paragraphs.length > 0
+              ? paragraphs.map((para, idx) => <p key={idx}>{para}</p>)
+              : <p>{p.description}</p>}
+          </div>
+
+          {details && (
+            <>
+              <span className="producto-features-title font-inter">{details.heading}</span>
+              <ul className="producto-features">
+                {details.items.map((item, idx) => (
+                  <li key={idx} className="font-inter">
+                    <span aria-hidden="true">✓</span> {item}
                   </li>
                 ))}
               </ul>

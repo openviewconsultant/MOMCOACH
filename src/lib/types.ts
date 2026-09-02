@@ -9,6 +9,8 @@ export interface Product {
   product_type?: 'digital' | 'service';
   subtitle?: string | null;
   features?: string[] | null;
+  price_note?: string | null;
+  details?: { heading: string; items: string[] } | null;
   is_popular?: boolean;
   whatsapp_text?: string | null;
   cal_link?: string | null;

@@ -193,12 +193,23 @@ export default async function SuenoPage() {
               )}
               {service.image && (
                 <div style={{ width: '100%', aspectRatio: '16 / 10', borderRadius: '24px 24px 0 0', overflow: 'hidden' }}>
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
+                  {service.id.startsWith('fs-') ? (
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      loading="lazy"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  ) : (
+                    <Link href={`/tienda/${service.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        loading="lazy"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                    </Link>
+                  )}
                 </div>
               )}
               <div style={{ padding: '32px 32px 36px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
@@ -218,9 +229,14 @@ export default async function SuenoPage() {
                   <p className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
                     {service.price}
                   </p>
-                  <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: '24px' }}>
+                  <p className="font-inter" style={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85, marginBottom: service.id.startsWith('fs-') ? '24px' : '12px' }}>
                     {service.desc}
                   </p>
+                  {!service.id.startsWith('fs-') && (
+                    <Link href={`/tienda/${service.id}`} className="font-inter" style={{ display: 'inline-block', marginBottom: '24px', fontSize: '0.88rem', fontWeight: 600, color: 'var(--color-turquoise)' }}>
+                      Ver todos los detalles →
+                    </Link>
+                  )}
                   {service.features.length > 0 && (
                     <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
                       {service.features.map((feat, fIdx) => (

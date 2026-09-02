@@ -175,12 +175,28 @@
   box-sizing: border-box;
 }
 
+.producto-price-note {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--foreground);
+  opacity: 0.6;
+  margin: -6px 0 0;
+}
+
 .producto-description {
   font-size: 1rem;
   line-height: 1.75;
   color: var(--foreground);
   opacity: 0.9;
   margin: 0;
+}
+
+.producto-description p {
+  margin: 0 0 14px;
+}
+
+.producto-description p:last-child {
+  margin-bottom: 0;
 }
 
 .producto-features-title {
