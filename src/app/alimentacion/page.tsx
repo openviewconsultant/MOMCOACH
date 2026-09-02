@@ -146,25 +146,8 @@ export default async function AlimentacionPage() {
           <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Alimentación Sin Estrés
           </h1>
-        </Reveal>
-
-        {/* Intro banner */}
-        <Reveal as="div" className="aliment-intro">
-          <h2 className="font-fraunces aliment-intro-title">
-            Te ayudo con la alimentación de tu bebé.
-          </h2>
-          <p className="font-inter aliment-intro-text">
-            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
-            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
-            distintos factores alrededor de la hora de comer y de los alimentos.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Te acompaño en la alimentación de tu hijo de 0 a 5 años — el programa que elijas dependerá de
-            la edad y las necesidades de tu hijo.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
-            largo de toda la vida.
+          <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
+            Aprende a construir hábitos saludables y una relación positiva con la comida desde el primer bocado. Convirtamos juntos los momentos en la mesa en un espacio grato para toda la familia.
           </p>
         </Reveal>
 
@@ -264,6 +247,31 @@ export default async function AlimentacionPage() {
           ))}
         </div>
 
+        {/* Intro banner (debajo de los programas) */}
+        <Reveal as="div" className="aliment-intro">
+          <h2 className="font-fraunces aliment-intro-title">
+            Te acompaño en la alimentación de tu hijo, desde su primer bocado.
+          </h2>
+          <p className="font-inter aliment-intro-text" style={{ fontWeight: 600 }}>
+            Una relación sana con la comida comienza en casa.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
+            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
+            distintos factores alrededor de la hora de comer y de los alimentos.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Te acompaño a fomentar hábitos saludables y a construir una relación positiva con la comida
+            desde el inicio, con asesorías de alimentación para niños de 0 a 5 años, adaptadas a las
+            necesidades de cada etapa.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Aprender a comer bien no se trata solo de qué comen, sino también de cómo viven y disfrutan la
+            experiencia de alimentarse. Fomentar hábitos saludables en torno a la comida promueve el
+            bienestar físico y emocional a lo largo de toda la vida.
+          </p>
+        </Reveal>
+
         {/* Benefits */}
         <div className="aliment-benefits">
           <Reveal as="div" className="aliment-benefit-card child">
@@ -288,8 +296,8 @@ export default async function AlimentacionPage() {
         <CategoryDigitalShop
           guides={dbGuides}
           freebies={freebies}
-          guidesTitle="Recetarios y Guías de Alimentación"
-          guidesSubtitle="Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día. Contenido descargable de pago."
+          guidesTitle="EBooks y Recetarios"
+          guidesSubtitle="Ideas nutritivas, preparaciones fáciles y orientación práctica para el día a día."
         />
 
       </div>

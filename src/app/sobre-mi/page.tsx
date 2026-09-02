@@ -30,8 +30,11 @@ export default function SobreMiPage() {
             <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '24px', lineHeight: 1.15 }}>
               Hola, soy Denisse
             </h1>
+            <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9, marginBottom: '16px' }}>
+              Soy mamá, consultora de sueño pediátrico certificada y coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition (IIN). También soy educadora de padres certificada en Disciplina Positiva y miembro de la Positive Discipline Association.
+            </p>
             <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9, marginBottom: '24px' }}>
-              Soy mamá, consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva y miembro de The Positive Discipline Association. Fundadora de The Mom Coach: un espacio para acompañar a las familias a construir hábitos saludables de sueño y alimentación de una manera respetuosa, práctica y basada en las necesidades de cada niño.
+              Creé The Mom Coach para acompañar a las familias a construir hábitos saludables alrededor del sueño y la alimentación, y disfrutar con mayor tranquilidad esta etapa tan importante de la crianza.
             </p>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <Link href="https://wa.me/573102158656?text=Hola%20quiero%20conocer%20mas%20sobre%20tus%20asesorias" target="_blank">
@@ -54,20 +57,23 @@ export default function SobreMiPage() {
         {/* Story Section */}
         <div style={{ background: 'white', borderRadius: '24px', padding: '48px', boxShadow: 'var(--shadow-md)', marginBottom: '64px' }}>
           <h2 className="font-fraunces" style={{ fontSize: '2.2rem', color: 'var(--color-blue-gray)', marginBottom: '24px' }}>
-            Mi Historia
+            Mi historia
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              Cuando quedé embarazada empecé a investigar sobre puericultura y a leer sobre diferentes temas todos relacionados con la maternidad y la crianza. Ahí encontré apasionante el tema del sueño y el descanso, sobre todo por su relación directa con la salud mental y con la calidad de vida que viene junto con descansar correctamente.
+              Cuando quedé embarazada de mi primera hija me apasioné por el mundo de la puericultura, la maternidad y la crianza. Ahí descubrí mi pasión por el sueño y el descanso, especialmente por su relación con nuestra salud mental y con la calidad de vida que viene cuando logramos descansar bien.
             </p>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              Al tener a mi hija, noté como se normaliza el estar privado de sueño y como muchas mamás y familias sufren por falta de descanso. También noté que era común el no hablar del tema ni buscar ayuda por miedo a ser criticadas, por sentir culpa de sentirse mal y por vergüenza de querer aceptar que no todo en la maternidad es color de rosa. Así mismo, noté mucho silencio ante temas como la depresión y la ansiedad post parto. Ahí nació también mi pasión por el maravilloso —y a veces desafiante— mundo de la crianza.
+              Cuando nació mi hija, noté cómo se normaliza vivir privados de sueño y cómo muchas mamás y familias sufren por falta de descanso. También descubrí que muchas veces no hablamos de estos temas ni buscamos ayuda por miedo a ser juzgadas, por sentir culpa o por vergüenza de reconocer que no todo en la maternidad es color de rosa. También encontré mucho silencio alrededor de temas como la ansiedad y la depresión posparto.
             </p>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              The Mom Coach nace para que encontremos soluciones y acompañamiento. Donde no criticamos estilos de crianza, sino que buscamos el método que mejor se ajuste a tu familia. Es el espacio donde las mamás pueden contar con apoyo sin ser juzgadas y donde encontrarán una mano amiga dispuesta a ayudar. Con el tiempo, seguí formándome y hoy soy consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva, miembro de The Positive Discipline Association.
+              The Mom Coach nace para ofrecer soluciones y acompañamiento. Un espacio donde no juzgamos estilos de crianza, sino que buscamos herramientas que se adapten a cada familia y a sus necesidades.
             </p>
             <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
-              Cuando nuestros hijos descansan, se alimentan bien y tienen hábitos saludables, toda la familia puede disfrutar más de la crianza. Estoy aquí para acompañarte en ese camino.
+              Con el tiempo, entendí que acompañar a una familia va mucho más allá del sueño. Por eso también incorporé herramientas de Disciplina Positiva, que nos ayudan a poner límites con respeto, conectar con nuestros hijos y acompañar sus emociones sin dejar de ser firmes.
+            </p>
+            <p className="font-inter" style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--foreground)', opacity: 0.9 }}>
+              The Mom Coach es ese espacio donde puedes encontrar información, herramientas y una mano amiga para transitar la crianza con más confianza, menos culpa y sintiéndote acompañada.
             </p>
           </div>
         </div>

@@ -11,7 +11,7 @@ import '@/app/tienda/tienda.css';
 import './sueno.css';
 
 export const metadata = buildMetadata({
-  title: 'Asesorías de Sueño Infantil | The Mom Coach',
+  title: 'Programas de Sueño Infantil | The Mom Coach',
   description: 'Programas y planes de sueño infantil personalizados para bebés de 0 meses a 6 años.',
   path: '/sueno',
   image: '/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
@@ -83,16 +83,17 @@ const fallbackServices = [
 ];
 
 const childOutcomes = [
-  'Pueda dormir toda la noche (de 10 a 12 horas).',
-  'Aprenda a conciliar el sueño de forma independiente.',
-  'Aprenda a despertarse a la hora que debería hacerlo en la mañana.',
-  'Genere asociaciones positivas con su habitación, cuna y con la hora de dormir.',
+  'Dormir tramos más largos durante la noche (de 10 a 12 horas).',
+  'Aprender a conciliar el sueño de forma independiente.',
+  'Establecer horarios de sueño más predecibles y acordes con sus necesidades.',
+  'Construir asociaciones positivas con su habitación, su cuna o cama y la hora de dormir.',
 ];
 
 const parentOutcomes = [
-  'Dormir mejor, con buen descanso en calidad y cantidad.',
-  'Predecir los horarios, siestas y noches de tu bebé.',
-  'Poner a tu bebé en la cuna despierto y sin llanto.',
+  'Dormir mejor y recuperar descanso de calidad.',
+  'Tener mayor claridad y previsibilidad sobre los horarios, siestas y noches de tu bebé.',
+  'Aprender a acompañar a tu bebé para que pueda ir a la cuna despierto y tranquilo.',
+  'Sentirte más seguro y tranquilo al momento de tomar decisiones sobre su sueño.',
 ];
 
 export default async function SuenoPage() {
@@ -141,7 +142,7 @@ export default async function SuenoPage() {
         {/* Header */}
         <Reveal as="div" style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 64px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-turquoise)' }} className="font-inter">
-            Servicios de Sueño Infantil
+            Programas de Sueño Infantil
           </span>
           <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Volver a dormir, Sí es posible.
@@ -151,8 +152,8 @@ export default async function SuenoPage() {
         {/* Intro banner */}
         <Reveal as="div" className="sueno-intro">
           <h2 className="font-fraunces sueno-intro-title">
-            Familias Descansadas.<br />
-            <em>Familias Felices.</em>
+            Familias Descansadas<br />
+            <em>= Familias Felices</em>
           </h2>
           <p className="font-inter sueno-intro-text">
             Como mamá, sé lo importante que es seguir nuestro instinto. Por eso mis programas de sueño
@@ -271,7 +272,7 @@ export default async function SuenoPage() {
         {/* Benefits */}
         <div className="sueno-benefits">
           <Reveal as="div" className="sueno-benefit-card child">
-            <h3 className="font-fraunces">Con un plan de entrenamiento, tu hijo logrará:</h3>
+            <h3 className="font-fraunces">Con mi programa de sueño, tu hijo logrará:</h3>
             <ul>
               {childOutcomes.map((item) => (
                 <li key={item} className="font-inter">{item}</li>
@@ -279,7 +280,7 @@ export default async function SuenoPage() {
             </ul>
           </Reveal>
           <Reveal as="div" delay={120} className="sueno-benefit-card parent">
-            <h3 className="font-fraunces">Con un plan de entrenamiento, tú lograrás:</h3>
+            <h3 className="font-fraunces">Con mi programa de sueño, tú lograrás:</h3>
             <ul>
               {parentOutcomes.map((item) => (
                 <li key={item} className="font-inter">{item}</li>
@@ -293,7 +294,7 @@ export default async function SuenoPage() {
           guides={dbGuides}
           freebies={freebies}
           guidesTitle="EBooks Sueño Infantil"
-          guidesSubtitle="Consejos prácticos y formatos descargables para aplicar a tu propio ritmo, creados desde mi experiencia como consultora de sueño pediátrico."
+          guidesSubtitle="Mis mejores consejos en ebooks y guías prácticas para aplicar a tu propio ritmo."
         />
 
       </div>
