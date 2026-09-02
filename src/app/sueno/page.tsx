@@ -214,9 +214,6 @@ export default async function SuenoPage() {
               )}
               <div style={{ padding: '32px 32px 36px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
                 <div>
-                  <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-coral)', textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight: 1.3, marginBottom: '6px' }} className="font-inter">
-                    {service.tag}
-                  </span>
                   <h3 className="font-fraunces" style={{ fontSize: '1.75rem', color: 'var(--color-blue-gray)', marginTop: '6px', marginBottom: '12px' }}>
                     {service.id.startsWith('fs-') ? (
                       service.title
