@@ -181,7 +181,7 @@
 /* Hero Section */
 .hero-section {
   min-height: 100vh;
-  background-color: var(--color-cream);
+  background-color: transparent;
   display: flex;
   align-items: center;
   padding-top: 140px;
