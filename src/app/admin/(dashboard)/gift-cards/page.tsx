@@ -1,11 +1,11 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { formatUSD } from '@/lib/format';
 import type { GiftCard } from '@/lib/types';
 import GiftCardsTable, { type Redemption } from './GiftCardsTable';
 import TestEmailForm from './TestEmailForm';
 
 export default async function AdminGiftCardsPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data: cardsData } = await supabase
     .from('gift_cards')
     .select('*')

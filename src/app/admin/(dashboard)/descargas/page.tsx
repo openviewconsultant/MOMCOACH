@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import DescargasTable, { type DownloadRow } from './DescargasTable';
 
 interface DownloadEvent {
@@ -10,7 +10,7 @@ interface DownloadEvent {
 }
 
 export default async function AdminDescargasPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: eventsData } = await supabase
     .from('analytics_events')

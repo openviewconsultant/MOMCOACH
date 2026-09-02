@@ -380,9 +380,10 @@ export async function sendTestGiftCardEmailAction(
   } catch (err) {
     console.error('Error enviando correo de prueba de gift card', err);
     revalidatePath('/admin/gift-cards');
+    const detail = err instanceof Error ? err.message : String(err);
     return {
       ok: false,
-      message: `Gift card ${code} creada pero el correo falló (revisa GMAIL_USER / GMAIL_APP_PASSWORD)`,
+      message: `Gift card ${code} creada, pero el correo falló: ${detail}`,
     };
   }
 }
