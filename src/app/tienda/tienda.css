@@ -56,6 +56,47 @@
   gap: 12px;
 }
 
+/* Filtros: pastillas en escritorio, menús desplegables en móvil */
+.tienda-filters-selects {
+  display: none;
+}
+
+.tienda-filter-select-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-blue-gray);
+}
+
+.tienda-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 11px 34px 11px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234C577C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  color: var(--color-blue-gray);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.tienda-filter-select:focus {
+  outline: none;
+  border-color: var(--color-turquoise);
+}
+
 .tienda-category-btn {
   padding: 10px 20px;
   border-radius: var(--radius-full);
@@ -229,30 +270,14 @@
     margin-bottom: 14px;
   }
 
-  /* Filtros: cada grupo en una fila horizontal deslizable en vez de
-     apilarse en varias filas y ocupar media pantalla. */
-  .tienda-categories {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 8px;
-    padding-bottom: 2px;
-    /* sangra el scroll hasta el borde de la pantalla */
-    margin-left: -6%;
-    margin-right: -6%;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
-
-  .tienda-categories::-webkit-scrollbar {
+  /* Filtros: menús desplegables en vez de pastillas */
+  .tienda-filters-pills {
     display: none;
   }
 
-  .tienda-category-btn {
-    flex: 0 0 auto;
-    padding: 7px 14px;
-    font-size: 0.8rem;
+  .tienda-filters-selects {
+    display: flex;
+    gap: 12px;
   }
 
   .tienda-grid {

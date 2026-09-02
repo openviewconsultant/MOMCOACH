@@ -159,27 +159,58 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
       </div>
 
       <div className="tienda-filters-sticky">
-        <div className="tienda-categories">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`tienda-category-btn font-inter ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Escritorio: pastillas */}
+        <div className="tienda-filters-pills">
+          <div className="tienda-categories">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`tienda-category-btn font-inter ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="tienda-categories" style={{ marginTop: '10px' }}>
+            {subcategories.map((sub) => (
+              <button
+                key={sub}
+                className={`tienda-category-btn font-inter ${activeSubcategory === sub ? 'active' : ''}`}
+                onClick={() => setActiveSubcategory(sub)}
+              >
+                {sub}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="tienda-categories" style={{ marginTop: '10px' }}>
-          {subcategories.map((sub) => (
-            <button
-              key={sub}
-              className={`tienda-category-btn font-inter ${activeSubcategory === sub ? 'active' : ''}`}
-              onClick={() => setActiveSubcategory(sub)}
+
+        {/* Móvil: menús desplegables */}
+        <div className="tienda-filters-selects">
+          <label className="tienda-filter-select-wrap font-inter">
+            <span>Categoría</span>
+            <select
+              value={activeCategory}
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="tienda-filter-select font-inter"
             >
-              {sub}
-            </button>
-          ))}
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </label>
+          <label className="tienda-filter-select-wrap font-inter">
+            <span>Tipo</span>
+            <select
+              value={activeSubcategory}
+              onChange={(e) => setActiveSubcategory(e.target.value as Subcategory)}
+              className="tienda-filter-select font-inter"
+            >
+              {subcategories.map((sub) => (
+                <option key={sub} value={sub}>{sub}</option>
+              ))}
+            </select>
+          </label>
         </div>
       </div>
 
