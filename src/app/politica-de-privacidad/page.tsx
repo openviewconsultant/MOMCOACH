@@ -9,7 +9,7 @@ export const metadata = buildMetadata({
 
 export default function PoliticaDePrivacidad() {
   return (
-    <div style={{ paddingTop: "120px", paddingBottom: "80px", backgroundColor: "var(--color-cream)", minHeight: "100vh" }}>
+    <div style={{ paddingTop: "120px", paddingBottom: "80px", backgroundColor: "transparent", minHeight: "100vh" }}>
       <div style={{ padding: "0 5%" }}>
         <Link
           href="/"

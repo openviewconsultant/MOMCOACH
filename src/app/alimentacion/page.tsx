@@ -17,6 +17,19 @@ export const metadata = buildMetadata({
   image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
 });
 
+const childOutcomes = [
+  'Explore nuevos alimentos con confianza y sin presión.',
+  'Reconozca sus señales de hambre y saciedad.',
+  'Se siente a la mesa con calma y disfrute el momento de comer.',
+  'Construya una relación positiva y duradera con la comida.',
+];
+
+const parentOutcomes = [
+  'Ofrecer comidas balanceadas sin pelear ni negociar.',
+  'Saber qué esperar según la edad y la etapa de tu hijo.',
+  'Manejar la selectividad y el rechazo con estrategias claras.',
+];
+
 const fallbackServices = [
   {
     id: 'f-1',
@@ -118,7 +131,7 @@ export default async function AlimentacionPage() {
   })) : fallbackServices;
 
   return (
-    <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
+    <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'transparent', minHeight: '100vh' }}>
       <div style={{ padding: '0 5%' }}>
 
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
@@ -133,8 +146,25 @@ export default async function AlimentacionPage() {
           <h1 className="font-fraunces" style={{ fontSize: '3rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '16px' }}>
             Alimentación Sin Estrés
           </h1>
-          <p className="font-inter" style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--foreground)', opacity: 0.85 }}>
-            Te acompaño a construir, desde el primer bocado, una relación tranquila y positiva con la comida — para que las horas de comer se conviertan en un espacio de disfrute para toda la familia.
+        </Reveal>
+
+        {/* Intro banner */}
+        <Reveal as="div" className="aliment-intro">
+          <h2 className="font-fraunces aliment-intro-title">
+            Te ayudo con la alimentación de tu bebé.
+          </h2>
+          <p className="font-inter aliment-intro-text">
+            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
+            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
+            distintos factores alrededor de la hora de comer y de los alimentos.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Te acompaño en la alimentación de tu hijo de 0 a 5 años — el programa que elijas dependerá de
+            la edad y las necesidades de tu hijo.
+          </p>
+          <p className="font-inter aliment-intro-text">
+            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
+            largo de toda la vida.
           </p>
         </Reveal>
 
@@ -165,7 +195,7 @@ export default async function AlimentacionPage() {
             >
               {service.popular && (
                 <span style={{ position: 'absolute', top: '-14px', right: '24px', background: 'var(--color-turquoise)', color: 'white', fontSize: '0.75rem', fontWeight: 600, padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase', zIndex: 2 }} className="font-inter">
-                  Recomendado
+                  Más popular
                 </span>
               )}
               {service.image && (
@@ -237,24 +267,25 @@ export default async function AlimentacionPage() {
           ))}
         </div>
 
-        {/* Intro banner */}
-        <Reveal as="div" className="aliment-intro">
-          <span className="aliment-intro-eyebrow font-inter">Te ayudo con la alimentación de tu bebé</span>
-          <h2 className="font-fraunces aliment-intro-title">Una relación sana con la comida empieza desde casa</h2>
-          <p className="font-inter aliment-intro-text">
-            La relación con la comida inicia desde que nacemos. Generamos vínculos y asociaciones, tanto
-            positivas como negativas, a partir de nuestras experiencias y de cómo se manejen en casa los
-            distintos factores alrededor de la hora de comer y de los alimentos.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Te acompaño en la alimentación de tu hijo de 0 a 5 años — el programa que elijas dependerá de
-            la edad y las necesidades de tu hijo.
-          </p>
-          <p className="font-inter aliment-intro-text">
-            Fomentar hábitos saludables en torno a la comida promueve el bienestar físico y emocional a lo
-            largo de toda la vida.
-          </p>
-        </Reveal>
+        {/* Benefits */}
+        <div className="aliment-benefits">
+          <Reveal as="div" className="aliment-benefit-card child">
+            <h3 className="font-fraunces">Con el acompañamiento, tu hijo logrará:</h3>
+            <ul>
+              {childOutcomes.map((item) => (
+                <li key={item} className="font-inter">{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal as="div" delay={120} className="aliment-benefit-card parent">
+            <h3 className="font-fraunces">Con el acompañamiento, tú lograrás:</h3>
+            <ul>
+              {parentOutcomes.map((item) => (
+                <li key={item} className="font-inter">{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
 
         {/* Recipe books, guides (de pago) + Free downloads (gratis) */}
         <CategoryDigitalShop

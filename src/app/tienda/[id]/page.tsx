@@ -1,8 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { formatUSD } from '@/lib/format';
+import BackLink from '@/components/ui/BackLink';
 import ProductDetailCTA from '@/components/tienda/ProductDetailCTA';
 import VideoPlayer from '@/components/tienda/VideoPlayer';
 import type { Product } from '@/lib/types';
@@ -33,12 +33,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     <div className="producto-main">
       <div className="producto-topbar">
         <div className="producto-topbar-inner">
-          <Link href="/tienda" className="producto-back font-inter">
+          <BackLink fallbackHref="/tienda" className="producto-back font-inter">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            Volver a la tienda
-          </Link>
+            Volver
+          </BackLink>
           {p.category && <span className="producto-breadcrumb font-inter">{p.category}{p.subcategory ? ` · ${p.subcategory}` : ''}</span>}
         </div>
       </div>

@@ -1,17 +1,14 @@
 .producto-main {
   min-height: 100vh;
-  background-color: var(--color-cream);
+  background-color: transparent;
   padding-bottom: 96px;
 }
 
 .producto-topbar {
   padding: 112px 5% 20px;
-  background: linear-gradient(180deg, var(--color-peach) 0%, var(--color-cream) 100%);
 }
 
 .producto-topbar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,8 +44,7 @@
 }
 
 .producto-layout {
-  max-width: 1100px;
-  margin: 32px auto 0;
+  margin: 32px 0 0;
   padding: 0 5%;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;

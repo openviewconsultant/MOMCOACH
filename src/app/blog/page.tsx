@@ -27,7 +27,7 @@ export default async function BlogPage() {
   const posts = (rawPosts ?? []) as BlogPost[];
 
   return (
-    <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
+    <div style={{ paddingTop: '120px', paddingBottom: '80px', backgroundColor: 'transparent', minHeight: '100vh' }}>
       <div style={{ padding: '0 5%' }}>
 
         <Link href="/" className="font-inter" style={{ color: 'var(--color-blue-gray)', fontSize: '0.9rem', display: 'inline-block', marginBottom: '24px' }}>
