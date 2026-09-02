@@ -13,42 +13,42 @@ const fallbackProducts = [
   {
     title: 'Guía: Cómo Solucionar las Siestas Cortas',
     price: 'USD $16',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/siestascortas.webp',
+    img: '/wp-content/uploads/2021/03/siestascortas.webp',
   },
   {
     title: 'Gift Card',
     price: 'USD $25–USD $200',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Tarjeta-de-regalo-TMC-PRODUCT-600x600.jpg',
+    img: '/wp-content/uploads/2024/01/Tarjeta-de-regalo-TMC-PRODUCT-600x600.jpg',
   },
   {
     title: 'Guía: Todo lo que debes saber sobre los Picky Eaters',
     price: 'USD $32',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/10/Captura-de-pantalla-2024-10-08-a-las-11.25.56%E2%80%AFa.-m-600x600.png',
+    img: '/wp-content/uploads/2024/10/picky-eaters-guia-portada-600x600.png',
   },
   {
     title: 'Recetario Booster Calórico',
     price: 'USD $16',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/03/Portada-recetario-Booster-600x600.png',
+    img: '/wp-content/uploads/2024/03/Portada-recetario-Booster-600x600.png',
   },
   {
     title: 'Guía: Cómo manejar las Regresiones de Sueño',
     price: 'USD $16',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/regresionessueno.webp',
+    img: '/wp-content/uploads/2024/01/regresionessueno.webp',
   },
   {
     title: 'Recetario - The Mom Coach',
     price: 'USD $18',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Imagen-principal-recetario--600x600.jpg',
+    img: '/wp-content/uploads/2024/01/Imagen-principal-recetario--600x600.jpg',
   },
   {
     title: 'Guía: Transición de Siestas',
     price: 'USD $16',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/transicionsiestas.webp',
+    img: '/wp-content/uploads/2024/01/transicionsiestas.webp',
   },
   {
     title: 'Recetario: Postres Saludables',
     price: 'USD $10',
-    img: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Captura-de-Pantalla-2024-01-25-a-las-8.39.56-p.-m-600x600.png',
+    img: '/wp-content/uploads/2024/01/Captura-de-Pantalla-2024-01-25-a-las-8.39.56-p.-m-600x600.png',
   },
 ];
 

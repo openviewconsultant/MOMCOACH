@@ -7,7 +7,7 @@ export const metadata = buildMetadata({
   title: 'Contacto | The Mom Coach',
   description: 'Escríbenos para agendar tu asesoría de sueño o consultar información de nuestros programas.',
   path: '/contacto',
-  image: 'https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp',
+  image: '/wp-content/uploads/2023/12/DENIS-05.webp',
 });
 
 const faqs = [
@@ -83,7 +83,7 @@ export default function ContactoPage() {
           }}
         >
           <img
-            src="https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp"
+            src="/wp-content/uploads/2023/12/DENIS-05.webp"
             alt="Denisse, fundadora de The Mom Coach"
             style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: '50%', objectFit: 'cover', boxShadow: 'var(--shadow-sm)' }}
           />

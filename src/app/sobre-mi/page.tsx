@@ -8,7 +8,7 @@ export const metadata = buildMetadata({
   title: 'Sobre mí | The Mom Coach',
   description: 'Conoce la historia, certificaciones y filosofía detrás de The Mom Coach.',
   path: '/sobre-mi',
-  image: 'https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp',
+  image: '/wp-content/uploads/2023/12/DENIS-05.webp',
 });
 
 export default function SobreMiPage() {
@@ -80,13 +80,11 @@ export default function SobreMiPage() {
           <h2 className="font-fraunces" style={{ fontSize: '2.4rem', color: 'var(--color-blue-gray)', marginTop: '8px', marginBottom: '32px' }}>
             Certificaciones
           </h2>
-          {/* TODO: agregar insignia "Educadora de Padres Certificada en Disciplina
-              Positiva" (Positive Discipline Association) cuando el cliente
-              entregue el archivo — pendiente, checklist items 9 y 23. */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', maxWidth: '600px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', maxWidth: '920px', margin: '0 auto' }}>
             {[
               { title: 'Consultora de Sueño Infantil Certificada', org: 'Academia Consultoría de Sueño (ACS)', badge: '/badge-acs.png' },
               { title: 'Coach en Hábitos de Alimentación', org: 'Institute for Integrative Nutrition (IIN)', badge: '/badge-iin.png' },
+              { title: 'Educadora de Padres en Disciplina Positiva', org: 'Positive Discipline Association (PDA)', badge: '/badge-pda.png' },
             ].map((c, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)', border: '1px solid rgba(113, 176, 180, 0.3)', borderRadius: '16px', padding: '24px' }}>
                 <div style={{ position: 'relative', width: '64px', height: '64px', margin: '0 auto 12px' }}>

@@ -9,7 +9,7 @@ export const SITE_NAME = 'The Mom Coach';
 
 // Denisse's portrait, already hosted and reused across /sobre-mi and /contacto —
 // serves as the default social-share image for pages without a more specific one.
-export const DEFAULT_OG_IMAGE = 'https://www.themomcoaching.com/wp-content/uploads/2023/12/DENIS-05.webp';
+export const DEFAULT_OG_IMAGE = '/wp-content/uploads/2023/12/DENIS-05.webp';
 
 interface PageMetaOptions {
   title: string;

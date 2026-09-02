@@ -253,8 +253,8 @@ export default function TerminosYCondiciones() {
           <p style={pStyle}>
             Si tiene alguna pregunta o inquietud acerca de estos Términos y Condiciones, le
             recomendamos comunicarse con nosotros antes de utilizar nuestros servicios escribiendo a{" "}
-            <a href="mailto:hola@themomcoaching.com" style={{ color: "var(--color-coral)" }}>
-              hola@themomcoaching.com
+            <a href="mailto:denisselafaurie00@gmail.com" style={{ color: "var(--color-coral)" }}>
+              denisselafaurie00@gmail.com
             </a>
             .
           </p>

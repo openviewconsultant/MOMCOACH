@@ -14,7 +14,7 @@ export const metadata = buildMetadata({
   title: 'Alimentación Infantil & BLW | The Mom Coach',
   description: 'Asesorías de alimentación complementaria, manejo de picky eaters y recetarios saludables.',
   path: '/alimentacion',
-  image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
+  image: '/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
 });
 
 const childOutcomes = [
@@ -47,7 +47,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero información del Programa de Alimentación Complementaria',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: true,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
+    image: '/wp-content/uploads/2024/01/Bebe-comiendo-feliz-2-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,
@@ -67,7 +67,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero agendar una Llamada de consulta de alimentación',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/infant-baby-eating-finger-food-2023-11-27-04-54-34-utc-scaled-e1705513415708-600x600.jpg',
+    image: '/wp-content/uploads/2024/01/infant-baby-eating-finger-food-2023-11-27-04-54-34-utc-scaled-e1705513415708-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,
@@ -88,7 +88,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero reservar el Programa de Selectividad Alimentaria',
     calLink: 'open-view-consultant-7ng550/alimentacion',
     popular: false,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
+    image: '/wp-content/uploads/2024/01/nathan-dumlao-ns1xhGumyH8-unsplash_edited.webp',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,

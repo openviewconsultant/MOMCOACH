@@ -76,8 +76,8 @@ export default function PoliticaDePrivacidad() {
           <h2 className="font-fraunces" style={sectionTitleStyle}>5. Cómo ejercer tus derechos</h2>
           <p style={pStyle}>
             Puedes escribirnos a{" "}
-            <a href="mailto:hola@themomcoaching.com" style={{ color: "var(--color-coral)" }}>
-              hola@themomcoaching.com
+            <a href="mailto:denisselafaurie00@gmail.com" style={{ color: "var(--color-coral)" }}>
+              denisselafaurie00@gmail.com
             </a>{" "}
             para conocer, actualizar, rectificar o solicitar la eliminación de tus datos
             personales. Atenderemos tu solicitud dentro de los plazos establecidos por la ley.

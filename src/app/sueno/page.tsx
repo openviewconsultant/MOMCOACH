@@ -14,7 +14,7 @@ export const metadata = buildMetadata({
   title: 'Asesorías de Sueño Infantil | The Mom Coach',
   description: 'Programas y planes de sueño infantil personalizados para bebés de 0 meses a 6 años.',
   path: '/sueno',
-  image: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
+  image: '/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
 });
 
 const fallbackServices = [
@@ -55,7 +55,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero reservar el Plan de Sueño Infantil (4m a 6 años)',
     calLink: 'open-view-consultant-7ng550/30min',
     popular: true,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
+    image: '/wp-content/uploads/2021/03/DSC08615-scaled-e1705349424305-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,
@@ -75,7 +75,7 @@ const fallbackServices = [
     whatsappText: 'Hola! Quiero agendar una Llamada de consulta de sueño',
     calLink: 'open-view-consultant-7ng550/30min',
     popular: false,
-    image: 'https://www.themomcoaching.com/wp-content/uploads/2024/01/DSC00073-scaled-e1705350168224-600x600.jpg',
+    image: '/wp-content/uploads/2024/01/DSC00073-scaled-e1705350168224-600x600.jpg',
     paymentProvider: 'mercadopago' as const,
     hotmartUrl: null as string | null,
     calendarId: null as string | null,
