@@ -36,7 +36,7 @@ export default function About() {
     <section id="about" className="section about-section">
       <div className="about-grid">
         <div className="about-content animate-fade-in">
-          <h2 className="about-title font-fraunces">¡Tu coach de sueño elegida!</h2>
+          <h2 className="about-title font-fraunces">Tu coach de sueño elegida</h2>
           <p className="about-text font-inter">
             Soy mamá, consultora de sueño pediátrico certificada, coach en hábitos de alimentación certificada por el Institute for Integrative Nutrition y educadora de padres certificada en Disciplina Positiva y miembro de The Positive Discipline Association.
           </p>
