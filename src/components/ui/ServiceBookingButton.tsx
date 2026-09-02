@@ -62,6 +62,7 @@ export default function ServiceBookingButton({
         <BookingModal
           productId={productId}
           productTitle={title}
+          price={price}
           priceLabel={formatUSD(price)}
           calendarId={resolvedCalendarId}
           onClose={() => setOpen(false)}

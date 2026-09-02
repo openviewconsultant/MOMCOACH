@@ -15,7 +15,7 @@ interface AppliedGiftCard {
 }
 
 export default function CartDrawer() {
-  const { items, removeItem, updateQuantity, totalPrice, isCartOpen, closeCart } = useCart();
+  const { items, removeItem, updateQuantity, totalPrice, isCartOpen, closeCart, checkoutEmail } = useCart();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +35,9 @@ export default function CartDrawer() {
   }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isCartOpen) return null;
+
+  // Si al agendar una asesoría ya se ingresó el correo, se usa aquí por defecto.
+  const effectiveEmail = email || checkoutEmail;
 
   async function handleApplyGiftCard() {
     setGiftError(null);
@@ -77,8 +80,8 @@ export default function CartDrawer() {
 
   async function handleCheckout() {
     setError(null);
-    if (!EMAIL_REGEX.test(email)) {
-      setError('Ingresa un correo electrónico válido para recibir tus libros.');
+    if (!EMAIL_REGEX.test(effectiveEmail)) {
+      setError('Ingresa un correo electrónico válido.');
       return;
     }
     setLoading(true);
@@ -87,8 +90,14 @@ export default function CartDrawer() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email,
-          items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
+          email: effectiveEmail,
+          items: items.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+            ...(item.booking
+              ? { booking: { start: item.booking.start, end: item.booking.end, name: item.booking.buyerName } }
+              : {}),
+          })),
           ...(applied ? { giftCardCode: applied.code } : {}),
         }),
       });
@@ -122,7 +131,7 @@ export default function CartDrawer() {
               <h2 className="font-inter">Tu carrito</h2>
               {itemCount > 0 && (
                 <span className="cart-drawer-header-count font-inter">
-                  {itemCount} {itemCount === 1 ? 'libro' : 'libros'}
+                  {itemCount} {itemCount === 1 ? 'artículo' : 'artículos'}
                 </span>
               )}
             </div>
@@ -136,7 +145,7 @@ export default function CartDrawer() {
           {items.length === 0 ? (
             <div className="cart-drawer-empty">
               <span className="cart-drawer-empty-icon" aria-hidden="true">📚</span>
-              <p className="font-inter">Aún no has añadido libros.</p>
+              <p className="font-inter">Aún no has añadido nada.</p>
               <span className="cart-drawer-empty-hint font-inter">Explora la tienda y agrega tus favoritos</span>
             </div>
           ) : (
@@ -147,16 +156,23 @@ export default function CartDrawer() {
                     <p className="font-inter">{item.title}</p>
                     <span className="font-inter">{formatUSD(item.price)}</span>
                   </div>
+                  {item.booking && (
+                    <p className="cart-drawer-item-booking font-inter">📅 {item.booking.label}</p>
+                  )}
                   <div className="cart-drawer-item-controls">
-                    <div className="cart-drawer-stepper">
-                      <button type="button" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label="Disminuir cantidad">
-                        −
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button type="button" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Aumentar cantidad">
-                        +
-                      </button>
-                    </div>
+                    {item.booking ? (
+                      <span className="cart-drawer-item-qty-fixed font-inter">Cita · 1</span>
+                    ) : (
+                      <div className="cart-drawer-stepper">
+                        <button type="button" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label="Disminuir cantidad">
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button type="button" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Aumentar cantidad">
+                          +
+                        </button>
+                      </div>
+                    )}
                     <button
                       type="button"
                       className="cart-drawer-remove"
@@ -228,10 +244,10 @@ export default function CartDrawer() {
             )}
 
             <label className="cart-drawer-email font-inter">
-              Correo para recibir tus libros
+              Correo para recibir tu compra y la confirmación de tu cita
               <input
                 type="email"
-                value={email}
+                value={effectiveEmail}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tucorreo@ejemplo.com"
                 required

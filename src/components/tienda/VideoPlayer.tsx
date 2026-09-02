@@ -10,6 +10,16 @@ export default function VideoPlayer({ videoUrl, title }: { videoUrl: string; tit
 
   if (!embed) return null;
 
+  function requestHd() {
+    const iframe = iframeRef.current;
+    if (embed?.provider !== 'youtube' || !iframe?.contentWindow) return;
+    // Pide la mejor calidad disponible en cuanto el reproductor está listo.
+    for (const func of ['setPlaybackQualityRange', 'setPlaybackQuality'] as const) {
+      const args = func === 'setPlaybackQualityRange' ? ['hd1080', 'highres'] : ['hd1080'];
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+    }
+  }
+
   function toggleMute() {
     const iframe = iframeRef.current;
     if (!iframe?.contentWindow) return;
@@ -24,6 +34,10 @@ export default function VideoPlayer({ videoUrl, title }: { videoUrl: string; tit
         ref={iframeRef}
         src={embed.url}
         title={title}
+        onLoad={() => {
+          requestHd();
+          setTimeout(requestHd, 1500);
+        }}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />

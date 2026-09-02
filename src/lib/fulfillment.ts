@@ -57,7 +57,8 @@ export async function fulfillDigitalOrder(
   }
 
   if (downloadItems.length === 0) {
-    console.error('Orden aprobada sin archivos descargables', { orderId: order.id });
+    // Normal en órdenes de solo asesoría/cita: no hay nada que descargar,
+    // la confirmación la envía el flujo de citas.
     return;
   }
 

@@ -2,17 +2,15 @@ import { NextResponse } from 'next/server';
 import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
 import { getMercadoPagoClient } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendBookingConfirmationEmail, sendGiftCardEmail } from '@/lib/email';
-import { createCalendarEvent } from '@/lib/google-calendar';
-import { getCalendarById, DEFAULT_CALENDAR_ID } from '@/lib/booking-config';
+import { sendGiftCardEmail } from '@/lib/email';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
+import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
 import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
 import { GIFT_CARD_PROGRAM_LABEL } from '@/lib/gift-cards';
-import type { Booking, GiftCard } from '@/lib/types';
+import type { GiftCard } from '@/lib/types';
 
 interface PaymentMetadata {
   order_id?: string;
-  booking_id?: string;
   gift_card_id?: string;
   gift_card_code?: string;
   gift_card_discount?: number | string;
@@ -90,21 +88,16 @@ export async function POST(request: Request) {
       .update({ status: mappedStatus, status_detail: statusDetail, mp_payment_id: dataId })
       .eq('id', orderId);
 
-    // Si el pago es de una cita (metadata.booking_id), el flujo termina
-    // aquí: no hay archivos que descargar, sino un evento de Google Calendar
-    // que crear cuando el pago quede aprobado.
-    const bookingId = metadata.booking_id;
-    if (bookingId) {
-      await handleBookingPayment(supabase, bookingId, mappedStatus);
-      return NextResponse.json({ received: true });
-    }
-
     // Compra de una gift card: al aprobarse se activa y se le envía el
     // código al destinatario; si se rechaza, se cancela.
     if (metadata.gift_card_id) {
       await handleGiftCardPurchase(supabase, metadata.gift_card_id, mappedStatus);
       return NextResponse.json({ received: true });
     }
+
+    // Citas de la orden (si las hay): se confirman o cancelan según el pago.
+    // Una orden mixta (libros + asesoría) pasa también por la entrega digital.
+    await fulfillOrderBookings(supabase, orderId, mappedStatus);
 
     if (mappedStatus !== 'approved') {
       return NextResponse.json({ received: true });
@@ -123,80 +116,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error procesando webhook de Mercado Pago', error);
     return NextResponse.json({ error: 'Error interno' }, { status: 500 });
-  }
-}
-
-async function handleBookingPayment(
-  supabase: ReturnType<typeof createAdminClient>,
-  bookingId: string,
-  mappedStatus: 'approved' | 'rejected' | 'pending'
-) {
-  const { data: booking, error: bookingFetchError } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('id', bookingId)
-    .single();
-
-  if (bookingFetchError || !booking) {
-    console.error('No se encontró la reserva asociada al pago', { bookingId, bookingFetchError });
-    return;
-  }
-  const typedBooking = booking as Booking;
-
-  if (mappedStatus === 'rejected') {
-    if (typedBooking.status !== 'cancelled') {
-      await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId);
-    }
-    return;
-  }
-
-  if (mappedStatus !== 'approved' || typedBooking.status === 'confirmed' || typedBooking.notified_at) {
-    return;
-  }
-
-  try {
-    let calendarId = DEFAULT_CALENDAR_ID;
-    if (typedBooking.product_id) {
-      const { data: product } = await supabase
-        .from('products')
-        .select('booking_calendar_id')
-        .eq('id', typedBooking.product_id)
-        .maybeSingle();
-      calendarId = (product as { booking_calendar_id?: string | null } | null)?.booking_calendar_id || DEFAULT_CALENDAR_ID;
-    }
-    const cal = await getCalendarById(calendarId);
-
-    const event = await createCalendarEvent({
-      calendarId: cal.googleCalendarId,
-      summary: `Cita con ${typedBooking.buyer_name}`,
-      description: `Cita pagada, agendada desde el sitio web de The Mom Coach.\nCorreo: ${typedBooking.buyer_email}`,
-      start: new Date(typedBooking.start_time),
-      end: new Date(typedBooking.end_time),
-      timeZone: cal.timeZone,
-      attendeeEmail: typedBooking.buyer_email,
-      attendeeName: typedBooking.buyer_name,
-    });
-
-    await supabase
-      .from('bookings')
-      .update({
-        status: 'confirmed',
-        calendar_event_id: event.eventId,
-        meet_link: event.meetLink,
-        notified_at: new Date().toISOString(),
-      })
-      .eq('id', bookingId);
-
-    await sendBookingConfirmationEmail({
-      to: typedBooking.buyer_email,
-      name: typedBooking.buyer_name,
-      start: typedBooking.start_time,
-      timeZone: cal.timeZone,
-      meetLink: event.meetLink,
-      title: 'Tu cita en The Mom Coach',
-    });
-  } catch (error) {
-    console.error('Error creando el evento de Google Calendar para la cita pagada', { bookingId, error });
   }
 }
 

@@ -34,6 +34,8 @@ export function getVideoEmbed(url: string, options?: EmbedOptions): VideoEmbed |
         cc_load_policy: '0', // don't force captions on
         playsinline: '1',
         enablejsapi: '1',
+        vq: 'hd1080', // sugerencia de calidad (YouTube decide según el tamaño del reproductor y el ancho de banda)
+        hd: '1',
       });
       if (autoplay) {
         params.set('autoplay', '1');

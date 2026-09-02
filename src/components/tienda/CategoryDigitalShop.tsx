@@ -163,6 +163,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <BookingModal
           productId={bookingTarget.id}
           productTitle={bookingTarget.title}
+          price={bookingTarget.price}
           priceLabel={formatUSD(bookingTarget.price)}
           calendarId={bookingTarget.booking_calendar_id}
           onClose={() => setBookingTarget(null)}

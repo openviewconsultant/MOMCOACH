@@ -4,11 +4,26 @@ import { getMercadoPagoClient, getSiteUrl, resolveCheckoutUrl } from '@/lib/merc
 import { createAdminClient } from '@/lib/supabase/admin';
 import { evaluateGiftCard, applyGiftCardRedemption } from '@/lib/gift-card-redemption';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
+import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
+import { isSlotStillAvailable, DEFAULT_CALENDAR_ID } from '@/lib/booking-config';
 import type { Product } from '@/lib/types';
+
+interface RequestedBooking {
+  start?: unknown;
+  end?: unknown;
+  name?: unknown;
+}
 
 interface RequestedItem {
   id?: unknown;
   quantity?: unknown;
+  booking?: RequestedBooking;
+}
+
+interface ParsedBooking {
+  start: string;
+  end: string;
+  name: string;
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,6 +47,7 @@ export async function POST(request: Request) {
   }
 
   const requestedQuantities = new Map<string, number>();
+  const requestedBookings = new Map<string, ParsedBooking>();
   for (const entry of payload.items) {
     const id = typeof entry?.id === 'string' ? entry.id : undefined;
     const quantity = Number(entry?.quantity);
@@ -39,6 +55,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'El carrito contiene datos inválidos' }, { status: 400 });
     }
     requestedQuantities.set(id, quantity);
+
+    if (entry?.booking) {
+      const start = typeof entry.booking.start === 'string' ? entry.booking.start : '';
+      const end = typeof entry.booking.end === 'string' ? entry.booking.end : '';
+      const name = typeof entry.booking.name === 'string' ? entry.booking.name.trim() : '';
+      if (
+        !start ||
+        !end ||
+        Number.isNaN(new Date(start).getTime()) ||
+        Number.isNaN(new Date(end).getTime()) ||
+        !name ||
+        quantity !== 1
+      ) {
+        return NextResponse.json({ error: 'La cita seleccionada no es válida' }, { status: 400 });
+      }
+      requestedBookings.set(id, { start, end, name });
+    }
   }
 
   let supabase: ReturnType<typeof createAdminClient>;
@@ -79,6 +112,23 @@ export async function POST(request: Request) {
       { error: 'Los productos gratuitos no pasan por el checkout de pago' },
       { status: 400 }
     );
+  }
+
+  // Revalida la disponibilidad de cada cita antes de crear la orden.
+  const productById = new Map(foundProducts.map((p) => [p.id, p]));
+  for (const [productId, booking] of requestedBookings) {
+    const product = productById.get(productId);
+    if (!product) {
+      return NextResponse.json({ error: 'La asesoría seleccionada ya no está disponible' }, { status: 400 });
+    }
+    const calendarId = product.booking_calendar_id || DEFAULT_CALENDAR_ID;
+    const available = await isSlotStillAvailable(calendarId, booking.start, booking.end).catch(() => true);
+    if (!available) {
+      return NextResponse.json(
+        { error: `El horario elegido para "${product.title}" ya no está disponible. Vuelve a agendarlo.` },
+        { status: 409 }
+      );
+    }
   }
 
   const orderItems = foundProducts.map((product) => ({
@@ -129,6 +179,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No se pudo crear la orden' }, { status: 500 });
   }
 
+  // Crea una reserva (pendiente) por cada asesoría con cita del carrito.
+  if (requestedBookings.size > 0) {
+    const bookingRows = Array.from(requestedBookings).map(([productId, booking]) => {
+      const product = productById.get(productId)!;
+      return {
+        product_id: productId,
+        order_id: order.id,
+        calendar_id: product.booking_calendar_id || DEFAULT_CALENDAR_ID,
+        buyer_name: booking.name,
+        buyer_email: email,
+        start_time: booking.start,
+        end_time: booking.end,
+        status: 'pending' as const,
+      };
+    });
+    const { error: bookingsError } = await supabase.from('bookings').insert(bookingRows);
+    if (bookingsError) {
+      console.error('Error creando las reservas de la orden en Supabase', bookingsError);
+      return NextResponse.json({ error: 'No se pudo agendar la cita' }, { status: 500 });
+    }
+  }
+
   // La gift card cubre el 100%: no hay pago que hacer, se aprueba y entrega ya.
   if (normalizedGiftCode && finalTotal === 0) {
     const applied = await applyGiftCardRedemption(supabase, normalizedGiftCode, order.id, discount);
@@ -140,6 +212,7 @@ export async function POST(request: Request) {
       .update({ status: 'approved', status_detail: 'Pagado 100% con gift card' })
       .eq('id', order.id);
     await fulfillDigitalOrder(supabase, { id: order.id, buyer_email: email, notified_at: null });
+    await fulfillOrderBookings(supabase, order.id, 'approved');
     return NextResponse.json({ initPoint: `${siteUrl}/tienda/confirmacion?status=approved`, fullyCovered: true });
   }
 
