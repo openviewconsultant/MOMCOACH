@@ -59,10 +59,10 @@ export default function SiteFooter() {
           </h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              { label: 'Sobre mí', href: '/#about' },
+              { label: 'Sobre mí', href: '/sobre-mi' },
               { label: 'Alimentación', href: '/alimentacion' },
-              { label: 'Blog', href: '/#blog' },
-              { label: 'Contacto', href: '/#contact' },
+              { label: 'Blog', href: '/blog' },
+              { label: 'Contacto', href: '/contacto' },
             ].map(link => (
               <li key={link.label}>
                 <a href={link.href} className="footer-link">{link.label}</a>
