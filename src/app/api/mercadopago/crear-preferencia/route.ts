@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { getMercadoPagoClient, getSiteUrl, resolveCheckoutUrl } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { evaluateGiftCard, applyGiftCardRedemption } from '@/lib/gift-card-redemption';
+import { fulfillDigitalOrder } from '@/lib/fulfillment';
 import type { Product } from '@/lib/types';
 
 interface RequestedItem {
@@ -12,7 +14,7 @@ interface RequestedItem {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
-  let payload: { items?: RequestedItem[]; email?: string };
+  let payload: { items?: RequestedItem[]; email?: string; giftCardCode?: string };
   try {
     payload = await request.json();
   } catch {
@@ -23,6 +25,7 @@ export async function POST(request: Request) {
   if (!EMAIL_REGEX.test(email)) {
     return NextResponse.json({ error: 'Ingresa un correo electrónico válido' }, { status: 400 });
   }
+  const giftCardCode = typeof payload.giftCardCode === 'string' ? payload.giftCardCode.trim() : '';
 
   if (!Array.isArray(payload.items) || payload.items.length === 0) {
     return NextResponse.json({ error: 'El carrito está vacío' }, { status: 400 });
@@ -38,11 +41,6 @@ export async function POST(request: Request) {
     requestedQuantities.set(id, quantity);
   }
 
-  // La configuración del servidor (claves de Supabase/Mercado Pago, URL del
-  // sitio) se valida aquí, antes de tocar la base de datos, para que un env
-  // var faltante en producción devuelva un JSON de error legible en vez de
-  // tumbar la función sin respuesta (lo que el cliente ve como "Unexpected
-  // end of JSON input") o dejar una orden huérfana a medio crear.
   let supabase: ReturnType<typeof createAdminClient>;
   let siteUrl: string;
   try {
@@ -89,11 +87,31 @@ export async function POST(request: Request) {
     price: product.price,
     quantity: requestedQuantities.get(product.id)!,
   }));
-  const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const grossTotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // ── Gift card ───────────────────────────────────────────────────────────
+  let discount = 0;
+  let normalizedGiftCode: string | null = null;
+  if (giftCardCode) {
+    const cartItems = foundProducts.map((p) => ({
+      productId: p.id,
+      quantity: requestedQuantities.get(p.id)!,
+      price: p.price,
+      category: p.category,
+    }));
+    const gc = await evaluateGiftCard(supabase, giftCardCode, cartItems);
+    if (!gc.ok) {
+      return NextResponse.json({ error: gc.error }, { status: gc.status });
+    }
+    discount = gc.discount;
+    normalizedGiftCode = gc.giftCard.code;
+  }
+
+  const finalTotal = Math.max(0, grossTotal - discount);
 
   const { data: order, error: orderError } = await supabase
     .from('orders')
-    .insert({ buyer_email: email, status: 'pending', total })
+    .insert({ buyer_email: email, status: 'pending', total: finalTotal })
     .select('id')
     .single();
 
@@ -111,24 +129,58 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No se pudo crear la orden' }, { status: 500 });
   }
 
+  // La gift card cubre el 100%: no hay pago que hacer, se aprueba y entrega ya.
+  if (normalizedGiftCode && finalTotal === 0) {
+    const applied = await applyGiftCardRedemption(supabase, normalizedGiftCode, order.id, discount);
+    if (!applied) {
+      return NextResponse.json({ error: 'No se pudo aplicar la gift card. Intenta de nuevo.' }, { status: 500 });
+    }
+    await supabase
+      .from('orders')
+      .update({ status: 'approved', status_detail: 'Pagado 100% con gift card' })
+      .eq('id', order.id);
+    await fulfillDigitalOrder(supabase, { id: order.id, buyer_email: email, notified_at: null });
+    return NextResponse.json({ initPoint: `${siteUrl}/tienda/confirmacion?status=approved`, fullyCovered: true });
+  }
+
   const confirmationUrl = `${siteUrl}/tienda/confirmacion`;
 
   try {
     const client = getMercadoPagoClient();
     const preference = new Preference(client);
-    const result = await preference.create({
-      body: {
-        items: foundProducts.map((product) => ({
+
+    // Sin gift card: se envían los items reales. Con gift card parcial: se
+    // colapsa en un único item por el total ya descontado (Mercado Pago no
+    // admite descuentos ni precios negativos por línea).
+    const mpItems = normalizedGiftCode
+      ? [
+          {
+            id: order.id,
+            title: 'Compra en The Mom Coach',
+            quantity: 1,
+            currency_id: 'USD',
+            unit_price: finalTotal,
+            type: 'digital' as const,
+          },
+        ]
+      : foundProducts.map((product) => ({
           id: product.id,
           title: product.title,
           quantity: requestedQuantities.get(product.id)!,
           currency_id: product.currency,
           unit_price: product.price,
-          type: 'digital',
+          type: 'digital' as const,
           picture_url: product.cover_image_url ?? undefined,
-        })),
+        }));
+
+    const result = await preference.create({
+      body: {
+        items: mpItems,
         payer: { email },
-        metadata: { order_id: order.id },
+        metadata: {
+          order_id: order.id,
+          ...(normalizedGiftCode ? { gift_card_code: normalizedGiftCode, gift_card_discount: discount } : {}),
+        },
         external_reference: order.id,
         back_urls: {
           success: confirmationUrl,

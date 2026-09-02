@@ -253,3 +253,34 @@ export async function deleteAllBookingsAction() {
   }
   revalidatePath('/admin/calendario');
 }
+
+/** Elimina pedidos (y sus items/redenciones/citas asociados). */
+export async function deleteOrdersAction(ids: string[]) {
+  if (!ids || ids.length === 0) return;
+  const supabase = createAdminClient();
+  await supabase.from('order_items').delete().in('order_id', ids);
+  await supabase.from('gift_card_redemptions').delete().in('order_id', ids);
+  await supabase.from('bookings').delete().in('order_id', ids);
+  await supabase.from('gift_cards').update({ order_id: null }).in('order_id', ids);
+  const { error } = await supabase.from('orders').delete().in('id', ids);
+  if (error) {
+    console.error('Error eliminando pedidos', error);
+    return;
+  }
+  revalidatePath('/admin/pedidos');
+}
+
+/** Elimina TODO el historial de pedidos. */
+export async function deleteAllOrdersAction() {
+  const supabase = createAdminClient();
+  await supabase.from('order_items').delete().not('id', 'is', null);
+  await supabase.from('gift_card_redemptions').delete().not('id', 'is', null);
+  await supabase.from('bookings').delete().not('order_id', 'is', null);
+  await supabase.from('gift_cards').update({ order_id: null }).not('order_id', 'is', null);
+  const { error } = await supabase.from('orders').delete().not('id', 'is', null);
+  if (error) {
+    console.error('Error eliminando todos los pedidos', error);
+    return;
+  }
+  revalidatePath('/admin/pedidos');
+}

@@ -1,0 +1,114 @@
+.gift-card-modal {
+  max-width: 420px;
+  max-height: 92vh;
+  overflow-y: auto;
+  text-align: left;
+  padding: 26px 24px 24px;
+}
+
+.gift-card-modal .download-modal-icon {
+  font-size: 1.9rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.gift-card-modal .download-modal-title {
+  font-size: 1.35rem;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.gift-card-modal .download-modal-desc {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+.gift-card-form {
+  gap: 11px;
+}
+
+.gift-card-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-blue-gray);
+}
+
+.gift-card-modal .download-modal-input {
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.gift-card-modal .download-modal-btn-primary {
+  padding: 13px;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.gift-card-field textarea.download-modal-input {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.gift-card-amount {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #fdfbf7;
+  padding: 0 14px;
+}
+
+.gift-card-amount span {
+  font-size: 1.1rem;
+  color: var(--color-blue-gray);
+  opacity: 0.6;
+}
+
+.gift-card-amount input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 11px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-blue-gray);
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.gift-card-amount input::-webkit-outer-spin-button,
+.gift-card-amount input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.gift-card-presets {
+  display: flex;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.gift-card-presets button {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(113, 176, 180, 0.4);
+  background: rgba(113, 176, 180, 0.1);
+  color: var(--color-turquoise);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gift-card-presets button:hover {
+  background: var(--color-turquoise);
+  color: #fff;
+}

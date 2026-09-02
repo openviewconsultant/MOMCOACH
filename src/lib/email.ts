@@ -256,3 +256,58 @@ export async function sendBookingConfirmationEmail(params: {
     attachments: getLogoAttachment(),
   });
 }
+
+export async function sendGiftCardEmail(params: {
+  to: string;
+  recipientName: string | null;
+  purchaserEmail: string;
+  code: string;
+  amount: number;
+  programLabel: string;
+  message: string | null;
+}): Promise<void> {
+  const { transporter, from } = getTransporter();
+
+  const greeting = params.recipientName ? `Hola <strong>${escapeHtml(params.recipientName)}</strong>,` : 'Hola,';
+
+  const bodyHtml = `
+    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+      ${greeting} te han regalado una <strong>Gift Card de The Mom Coach</strong> para el ${escapeHtml(params.programLabel)}.
+    </p>
+    ${
+      params.message
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px; margin-bottom:16px;">
+             <tr><td style="padding:16px 20px;">
+               <p style="margin:0 0 4px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:#7A6A62;">Mensaje de ${escapeHtml(params.purchaserEmail)}</p>
+               <p class="force-text-dark" style="margin:0; font-size:14px; line-height:1.6; color:#2d2a26; font-style:italic;">"${escapeHtml(params.message)}"</p>
+             </td></tr>
+           </table>`
+        : ''
+    }
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C" style="background:#4C577C; border-radius:16px; margin-bottom:20px;">
+      <tr><td style="padding:26px 24px; text-align:center;">
+        <p style="margin:0 0 6px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Saldo de tu Gift Card</p>
+        <p style="margin:0 0 16px; font-family:Georgia,'Times New Roman',serif; font-size:34px; color:#ffffff;">USD $${params.amount}</p>
+        <p style="margin:0 0 6px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Código</p>
+        <p style="margin:0; font-family:'Courier New',monospace; font-size:22px; font-weight:bold; letter-spacing:0.12em; color:#EFC6A1;">${escapeHtml(params.code)}</p>
+      </td></tr>
+    </table>
+    <p class="force-text-dark" style="margin:0 0 8px 0; font-size:14px; line-height:1.6; color:#2d2a26;">
+      <strong>¿Cómo canjearla?</strong>
+    </p>
+    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:14px; line-height:1.6; color:#2d2a26;">
+      Entra a la tienda, agrega al carrito los recursos que quieras del ${escapeHtml(params.programLabel)} y, en el carrito, escribe tu código en el campo <em>"¿Tienes una Gift Card?"</em>. Se descontará automáticamente del total y el saldo restante queda disponible para tu próxima compra.
+    </p>
+    <p style="margin:0; font-size:13px; color:#999;">
+      Esta Gift Card es válida solo para productos del ${escapeHtml(params.programLabel)}. Si tienes dudas, responde a este correo.
+    </p>
+  `;
+
+  await transporter.sendMail({
+    from,
+    to: params.to,
+    subject: `🎁 Te regalaron una Gift Card de The Mom Coach`,
+    html: emailShell({ headerEmoji: '🎁', headerTitle: '¡Tienes un regalo!', bodyHtml }),
+    attachments: getLogoAttachment(),
+  });
+}

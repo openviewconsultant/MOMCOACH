@@ -968,6 +968,61 @@
   color: white;
 }
 
+/* ── Barra de acciones masivas (selección / eliminar) ─────────────────── */
+.admin-bulk-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0 16px;
+  font-size: 0.85rem;
+  color: var(--color-blue-gray);
+}
+
+.admin-danger-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid #d9534f;
+  background: #d9534f;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-danger-btn:hover:not(:disabled) {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+.admin-danger-btn.ghost {
+  background: transparent;
+  color: #c0392b;
+  border-color: rgba(192, 57, 43, 0.4);
+}
+
+.admin-danger-btn.ghost:hover:not(:disabled) {
+  background: rgba(192, 57, 43, 0.08);
+  color: #c0392b;
+}
+
+.admin-danger-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.admin-table tr.is-selected td {
+  background: rgba(113, 176, 180, 0.08);
+}
+
+.admin-table input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: var(--color-turquoise);
+}
+
 .admin-table-subtext {
   display: block;
   font-size: 0.72rem;

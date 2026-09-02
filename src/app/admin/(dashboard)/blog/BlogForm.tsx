@@ -2,6 +2,7 @@
 
 import React, { useActionState, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { safeStorageName } from '@/lib/storage';
 import { saveBlogPostAction, type BlogPostFormState } from '../../actions';
 import type { BlogPost } from '@/lib/types';
 
@@ -20,7 +21,7 @@ export default function BlogForm({ post }: { post?: BlogPost }) {
     setUploadError(null);
     try {
       const supabase = createClient();
-      const path = `${crypto.randomUUID()}-${file.name}`;
+      const path = `${crypto.randomUUID()}-${safeStorageName(file.name)}`;
       const { error } = await supabase.storage.from('portadas').upload(path, file, { upsert: true });
       if (error) throw error;
       const { data } = supabase.storage.from('portadas').getPublicUrl(path);

@@ -2,16 +2,20 @@ import { NextResponse } from 'next/server';
 import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
 import { getMercadoPagoClient } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendPurchaseEmail, sendBookingConfirmationEmail } from '@/lib/email';
+import { sendBookingConfirmationEmail, sendGiftCardEmail } from '@/lib/email';
 import { createCalendarEvent } from '@/lib/google-calendar';
 import { getCalendarById, DEFAULT_CALENDAR_ID } from '@/lib/booking-config';
-import type { OrderItem, Booking } from '@/lib/types';
-
-const DOWNLOAD_LINK_TTL_SECONDS = 60 * 60 * 48; // 48 horas
+import { fulfillDigitalOrder } from '@/lib/fulfillment';
+import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
+import { GIFT_CARD_PROGRAM_LABEL } from '@/lib/gift-cards';
+import type { Booking, GiftCard } from '@/lib/types';
 
 interface PaymentMetadata {
   order_id?: string;
   booking_id?: string;
+  gift_card_id?: string;
+  gift_card_code?: string;
+  gift_card_discount?: number | string;
 }
 
 export async function POST(request: Request) {
@@ -95,59 +99,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
+    // Compra de una gift card: al aprobarse se activa y se le envía el
+    // código al destinatario; si se rechaza, se cancela.
+    if (metadata.gift_card_id) {
+      await handleGiftCardPurchase(supabase, metadata.gift_card_id, mappedStatus);
+      return NextResponse.json({ received: true });
+    }
+
     if (mappedStatus !== 'approved') {
       return NextResponse.json({ received: true });
     }
 
-    if (order.notified_at) {
-      return NextResponse.json({ received: true });
-    }
-
-    const { data: items, error: itemsError } = await supabase
-      .from('order_items')
-      .select('*')
-      .eq('order_id', orderId);
-
-    if (itemsError || !items || items.length === 0) {
-      console.error('No se encontraron items para la orden', { orderId, itemsError });
-      return NextResponse.json({ received: true });
-    }
-
-    const productIds = (items as OrderItem[])
-      .map((item) => item.product_id)
-      .filter((id): id is string => Boolean(id));
-
-    const { data: products } = await supabase
-      .from('products')
-      .select('id, file_path')
-      .in('id', productIds);
-
-    const filePathByProductId = new Map(
-      (products ?? []).map((p: { id: string; file_path: string | null }) => [p.id, p.file_path])
-    );
-
-    const downloadItems: { title: string; downloadUrl: string }[] = [];
-    for (const item of items as OrderItem[]) {
-      const filePath = item.product_id ? filePathByProductId.get(item.product_id) : null;
-      if (!filePath) continue;
-      const { data: signed, error: signError } = await supabase.storage
-        .from('productos')
-        .createSignedUrl(filePath, DOWNLOAD_LINK_TTL_SECONDS);
-      if (signError || !signed) {
-        console.error('Error generando enlace firmado', { filePath, signError });
-        continue;
+    // Compra de tienda con gift card parcial: descuenta el saldo usado.
+    if (metadata.gift_card_code) {
+      const usedAmount = Math.round(Number(metadata.gift_card_discount) || 0);
+      if (usedAmount > 0) {
+        await applyGiftCardRedemption(supabase, String(metadata.gift_card_code), orderId, usedAmount);
       }
-      downloadItems.push({ title: item.title, downloadUrl: signed.signedUrl });
     }
 
-    if (downloadItems.length === 0) {
-      console.error('Orden aprobada sin archivos descargables', { orderId });
-      return NextResponse.json({ received: true });
-    }
-
-    await sendPurchaseEmail({ to: order.buyer_email, items: downloadItems, orderId: order.id });
-    await supabase.from('orders').update({ notified_at: new Date().toISOString() }).eq('id', orderId);
-
+    await fulfillDigitalOrder(supabase, order);
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Error procesando webhook de Mercado Pago', error);
@@ -226,6 +197,49 @@ async function handleBookingPayment(
     });
   } catch (error) {
     console.error('Error creando el evento de Google Calendar para la cita pagada', { bookingId, error });
+  }
+}
+
+async function handleGiftCardPurchase(
+  supabase: ReturnType<typeof createAdminClient>,
+  giftCardId: string,
+  mappedStatus: 'approved' | 'rejected' | 'pending'
+) {
+  const { data, error } = await supabase.from('gift_cards').select('*').eq('id', giftCardId).single();
+  if (error || !data) {
+    console.error('No se encontró la gift card asociada al pago', { giftCardId, error });
+    return;
+  }
+  const card = data as GiftCard;
+
+  if (mappedStatus === 'rejected') {
+    if (card.status === 'pending') {
+      await supabase.from('gift_cards').update({ status: 'cancelled', updated_at: new Date().toISOString() }).eq('id', giftCardId);
+    }
+    return;
+  }
+
+  if (mappedStatus !== 'approved' || card.status !== 'pending') {
+    return; // ya activada o no aprobada aún
+  }
+
+  await supabase
+    .from('gift_cards')
+    .update({ status: 'active', balance: card.initial_amount, updated_at: new Date().toISOString() })
+    .eq('id', giftCardId);
+
+  try {
+    await sendGiftCardEmail({
+      to: card.recipient_email,
+      recipientName: card.recipient_name,
+      purchaserEmail: card.purchaser_email,
+      code: card.code,
+      amount: card.initial_amount,
+      programLabel: GIFT_CARD_PROGRAM_LABEL[card.program],
+      message: card.message,
+    });
+  } catch (err) {
+    console.error('Error enviando el correo de la gift card', { giftCardId, err });
   }
 }
 

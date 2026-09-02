@@ -56,9 +56,11 @@
   gap: 12px;
 }
 
-/* Filtros: pastillas en escritorio, menús desplegables en móvil */
+/* Filtros como menús desplegables (escritorio y móvil) */
 .tienda-filters-selects {
-  display: none;
+  display: flex;
+  gap: 16px;
+  max-width: 520px;
 }
 
 .tienda-filter-select-wrap {
@@ -270,13 +272,8 @@
     margin-bottom: 14px;
   }
 
-  /* Filtros: menús desplegables en vez de pastillas */
-  .tienda-filters-pills {
-    display: none;
-  }
-
   .tienda-filters-selects {
-    display: flex;
+    max-width: none;
     gap: 12px;
   }
 

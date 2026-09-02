@@ -5,8 +5,10 @@ import { createClient } from '@/lib/supabase/client';
 import { saveProductAction, type ProductFormState } from '../../actions';
 import type { Product } from '@/lib/types';
 import type { CalendarOption } from '@/lib/calendarOptions';
+import { safeStorageName } from '@/lib/storage';
 
 const initialState: ProductFormState = { error: null };
+
 
 export default function ProductForm({ product, calendarOptions = [] }: { product?: Product; calendarOptions?: CalendarOption[] }) {
   const [state, formAction, isSubmitting] = useActionState(saveProductAction, initialState);
@@ -16,7 +18,9 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
-  const [productType, setProductType] = useState<'digital' | 'service'>(product?.product_type ?? 'digital');
+  const [productType, setProductType] = useState<'digital' | 'service'>(
+    product?.product_type === 'service' ? 'service' : 'digital'
+  );
   const [paymentProvider, setPaymentProvider] = useState<'mercadopago' | 'hotmart' | 'calendar'>(
     product?.product_type === 'service' ? 'mercadopago' : (product?.payment_provider ?? 'mercadopago')
   );
@@ -37,7 +41,7 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
     setUploadError(null);
     try {
       const supabase = createClient();
-      const path = `${crypto.randomUUID()}-${file.name}`;
+      const path = `${crypto.randomUUID()}-${safeStorageName(file.name)}`;
       const { error } = await supabase.storage.from('portadas').upload(path, file, { upsert: true });
       if (error) throw error;
       const { data } = supabase.storage.from('portadas').getPublicUrl(path);
@@ -56,7 +60,7 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
     setUploadError(null);
     try {
       const supabase = createClient();
-      const path = `${crypto.randomUUID()}-${file.name}`;
+      const path = `${crypto.randomUUID()}-${safeStorageName(file.name)}`;
       const { error } = await supabase.storage.from('productos').upload(path, file, { upsert: true });
       if (error) throw error;
       setFilePath(path);

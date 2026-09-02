@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Order } from '@/lib/types';
 import { formatUSD, formatDateTimeCO } from '@/lib/format';
 import { friendlyStatusDetail } from './status-detail';
+import { deleteOrdersAction, deleteAllOrdersAction } from '../../actions';
 
 export interface OrderRow extends Order {
   productTitles: string;
@@ -29,8 +31,11 @@ const STATUS_LABEL: Record<Order['status'], string> = {
 };
 
 export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | Order['status']>('all');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [pending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -44,6 +49,46 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
       );
     });
   }, [orders, search, statusFilter]);
+
+  const allFilteredSelected = filtered.length > 0 && filtered.every((o) => selected.has(o.id));
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAllFiltered() {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allFilteredSelected) filtered.forEach((o) => next.delete(o.id));
+      else filtered.forEach((o) => next.add(o.id));
+      return next;
+    });
+  }
+
+  function runDeleteSelected() {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    if (!window.confirm(`¿Eliminar ${ids.length} pedido(s)? Esta acción no se puede deshacer.`)) return;
+    startTransition(async () => {
+      await deleteOrdersAction(ids);
+      setSelected(new Set());
+      router.refresh();
+    });
+  }
+
+  function runDeleteAll() {
+    if (!window.confirm('¿Eliminar TODO el historial de pedidos? Esta acción no se puede deshacer.')) return;
+    startTransition(async () => {
+      await deleteAllOrdersAction();
+      setSelected(new Set());
+      router.refresh();
+    });
+  }
 
   return (
     <>
@@ -67,6 +112,26 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
         ))}
       </div>
 
+      {(selected.size > 0 || orders.length > 0) && (
+        <div className="admin-bulk-bar">
+          {selected.size > 0 ? (
+            <>
+              <span>{selected.size} seleccionado(s)</span>
+              <button type="button" className="admin-danger-btn" onClick={runDeleteSelected} disabled={pending}>
+                {pending ? 'Eliminando…' : 'Eliminar seleccionados'}
+              </button>
+              <button type="button" className="admin-toolbar-pill" onClick={() => setSelected(new Set())}>
+                Limpiar selección
+              </button>
+            </>
+          ) : (
+            <button type="button" className="admin-danger-btn ghost" onClick={runDeleteAll} disabled={pending}>
+              {pending ? 'Eliminando…' : 'Eliminar todo el historial'}
+            </button>
+          )}
+        </div>
+      )}
+
       {filtered.length === 0 ? (
         <p className="admin-empty">No hay pedidos que coincidan con el filtro.</p>
       ) : (
@@ -74,6 +139,15 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
           <table className="admin-table">
             <thead>
               <tr>
+                <th style={{ width: 36 }}>
+                  <input
+                    type="checkbox"
+                    checked={allFilteredSelected}
+                    onChange={toggleAllFiltered}
+                    aria-label="Seleccionar todos"
+                  />
+                </th>
+                <th>ID</th>
                 <th>Fecha</th>
                 <th>Comprador</th>
                 <th>Producto(s)</th>
@@ -86,7 +160,23 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
               {filtered.map((order) => {
                 const detail = friendlyStatusDetail(order.status_detail);
                 return (
-                  <tr key={order.id}>
+                  <tr key={order.id} className={selected.has(order.id) ? 'is-selected' : undefined}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selected.has(order.id)}
+                        onChange={() => toggleOne(order.id)}
+                        aria-label={`Seleccionar pedido ${order.id}`}
+                      />
+                    </td>
+                    <td>
+                      <code
+                        title={order.id}
+                        style={{ fontSize: '0.72rem', color: 'var(--foreground)', opacity: 0.6, cursor: 'help' }}
+                      >
+                        {order.id.slice(0, 8)}
+                      </code>
+                    </td>
                     <td>{formatDateTimeCO(order.created_at)}</td>
                     <td>{order.buyer_email}</td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>

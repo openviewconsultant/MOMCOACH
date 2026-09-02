@@ -6,7 +6,8 @@ export interface Product {
   currency: string;
   category: string;
   subcategory?: string | null;
-  product_type?: 'digital' | 'service';
+  product_type?: 'digital' | 'service' | 'gift_card';
+  gift_card_program?: 'sueno' | 'alimentacion' | null;
   subtitle?: string | null;
   features?: string[] | null;
   price_note?: string | null;
@@ -74,6 +75,25 @@ export interface Booking {
   calendar_event_id: string | null;
   meet_link: string | null;
   notified_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type GiftCardProgram = 'sueno' | 'alimentacion';
+
+export interface GiftCard {
+  id: string;
+  code: string;
+  program: GiftCardProgram;
+  initial_amount: number;
+  balance: number;
+  currency: string;
+  purchaser_email: string;
+  recipient_name: string | null;
+  recipient_email: string;
+  message: string | null;
+  order_id: string | null;
+  status: 'pending' | 'active' | 'depleted' | 'cancelled';
   created_at: string;
   updated_at: string;
 }

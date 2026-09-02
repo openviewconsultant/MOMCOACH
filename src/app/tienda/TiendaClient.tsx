@@ -6,30 +6,34 @@ import './tienda.css';
 import { useCart } from '@/lib/cart-context';
 import DownloadModal from '@/components/tienda/DownloadModal';
 import PdfPreviewModal from '@/components/tienda/PdfPreviewModal';
+import GiftCardModal from '@/components/tienda/GiftCardModal';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatUSD } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
-type Subcategory = 'Todas' | 'Curso' | 'Ebook' | 'Recetario' | 'Asesoría' | 'Tarjeta de regalo' | 'Gratuitos';
+type Subcategory = 'Todas' | 'Ebook' | 'Recetario' | 'Asesoría' | 'Tarjeta de regalo' | 'Gratuitos';
 
 const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Regalo'];
-const subcategories: Subcategory[] = ['Todas', 'Curso', 'Ebook', 'Recetario', 'Asesoría', 'Tarjeta de regalo', 'Gratuitos'];
+const subcategories: Subcategory[] = ['Todas', 'Ebook', 'Recetario', 'Asesoría', 'Tarjeta de regalo', 'Gratuitos'];
 
 function SupabaseProductCard({
   product,
   onDownloadClick,
   onPreviewClick,
+  onGiftCardClick,
 }: {
   product: SupabaseProduct;
   onDownloadClick: (p: SupabaseProduct) => void;
   onPreviewClick: (p: SupabaseProduct, rect: DOMRect) => void;
+  onGiftCardClick: (p: SupabaseProduct) => void;
 }) {
   const { addBook, items } = useCart();
   const inCart = items.some((item) => item.id === product.id);
-  const isFree = product.price === 0;
+  const isGiftCard = Boolean(product.gift_card_program);
+  const isFree = product.price === 0 && !isGiftCard;
   const isService = product.product_type === 'service';
-  const isPreviewable = Boolean(product.file_path);
+  const isPreviewable = Boolean(product.file_path) && !isGiftCard;
 
   return (
     <div
@@ -51,7 +55,9 @@ function SupabaseProductCard({
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onClick={(e) => e.stopPropagation()}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
-        <p className="tienda-card-price font-inter">{isFree ? 'Gratis' : formatUSD(product.price)}</p>
+        <p className="tienda-card-price font-inter">
+          {isGiftCard ? 'Monto a elección' : isFree ? 'Gratis' : formatUSD(product.price)}
+        </p>
         {isPreviewable && (
           <button
             type="button"
@@ -65,7 +71,11 @@ function SupabaseProductCard({
             Vista previa
           </button>
         )}
-        {isFree ? (
+        {isGiftCard ? (
+          <button type="button" className="tienda-card-btn font-inter" onClick={() => onGiftCardClick(product)}>
+            Regalar
+          </button>
+        ) : isFree ? (
           <button
             type="button"
             onClick={() => onDownloadClick(product)}
@@ -124,6 +134,7 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
 
   const [downloadingProduct, setDownloadingProduct] = useState<SupabaseProduct | null>(null);
   const [previewTarget, setPreviewTarget] = useState<{ item: SupabaseProduct; rect: DOMRect | null } | null>(null);
+  const [giftCardProduct, setGiftCardProduct] = useState<SupabaseProduct | null>(null);
 
   function previewCta(item: SupabaseProduct): { label: string; onClick: () => void } {
     const inCart = items.some((cartItem) => cartItem.id === item.id);
@@ -159,33 +170,6 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
       </div>
 
       <div className="tienda-filters-sticky">
-        {/* Escritorio: pastillas */}
-        <div className="tienda-filters-pills">
-          <div className="tienda-categories">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`tienda-category-btn font-inter ${activeCategory === cat ? 'active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="tienda-categories" style={{ marginTop: '10px' }}>
-            {subcategories.map((sub) => (
-              <button
-                key={sub}
-                className={`tienda-category-btn font-inter ${activeSubcategory === sub ? 'active' : ''}`}
-                onClick={() => setActiveSubcategory(sub)}
-              >
-                {sub}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Móvil: menús desplegables */}
         <div className="tienda-filters-selects">
           <label className="tienda-filter-select-wrap font-inter">
             <span>Categoría</span>
@@ -222,6 +206,7 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
               product={product}
               onDownloadClick={(p) => setDownloadingProduct(p)}
               onPreviewClick={(p, rect) => setPreviewTarget({ item: p, rect })}
+              onGiftCardClick={(p) => setGiftCardProduct(p)}
             />
           ))}
         </div>
@@ -248,6 +233,10 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
           productTitle={downloadingProduct.title}
           onClose={() => setDownloadingProduct(null)}
         />
+      )}
+
+      {giftCardProduct && (
+        <GiftCardModal product={giftCardProduct} onClose={() => setGiftCardProduct(null)} />
       )}
     </div>
   );
