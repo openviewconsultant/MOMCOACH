@@ -10,40 +10,23 @@
 .tienda-back-section {
   /* Mismo offset superior que el resto de páginas interiores
      (Contacto, Sobre mí, Términos…): 120px desde el borde. */
-  padding: 120px 5% 22px;
+  padding: 120px 5% 0;
   position: relative;
   z-index: 50;
-  /* El degradado peach→cream global queda tapado por las cabeceras sticky
-     (opacas) de más abajo; lo replicamos aquí para que se vea en la parte
-     superior y llegue a cream justo antes del bloque de cabecera. */
-  background: linear-gradient(180deg, var(--color-peach) 0%, var(--color-cream) 100%);
 }
 
 .tienda-header-sticky {
-  position: sticky;
-  top: 0;
-  padding: 118px 5% 0; /* Top padding covers navbar transparent gap */
-  margin-top: -118px; /* Prevent padding from pushing layout down */
-  z-index: 41;
-  background-color: var(--color-cream);
-  height: 178px; /* 118px padding + 60px title content */
+  padding: 24px 5% 0;
   display: flex;
   align-items: center;
 }
 
 .tienda-subtitle-section {
-  padding: 0 5%;
-  position: relative;
-  z-index: 40;
-  background-color: var(--color-cream);
+  padding: 4px 5% 0;
 }
 
 .tienda-filters-sticky {
-  position: sticky;
-  top: 178px;
-  padding: 0 5% 20px;
-  z-index: 42;
-  background-color: var(--color-cream);
+  padding: 20px 5%;
 }
 
 .tienda-back {
