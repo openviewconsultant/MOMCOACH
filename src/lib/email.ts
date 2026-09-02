@@ -7,7 +7,7 @@ interface PurchasedItem {
   downloadUrl: string;
 }
 
-const LOGO_FILENAME = 'PHOTO-2026-07-14-08-47-02.jpg';
+const LOGO_FILENAME = 'logo-black.png';
 const LOGO_CID = 'momcoach-logo';
 
 function escapeHtml(value: string): string {
@@ -68,6 +68,7 @@ function getLogoAttachment(): nodemailer.SendMailOptions['attachments'] {
 // hide images. This keeps the email looking the same regardless of the
 // recipient's device theme.
 function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml: string }): string {
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://themomcoaching.com').replace(/\/$/, '');
   return `<!doctype html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -81,10 +82,11 @@ function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml
     <style>table, td { font-family: Arial, sans-serif !important; }</style>
     <![endif]-->
     <style>
-      body { margin:0; padding:0; background-color:#F8F2DA; }
+      body { margin:0; padding:0; background-color:#EFE7CE; }
       /* Force our own palette even when the client tries to auto-darken. */
       :root { color-scheme: light; supported-color-scheme: light; }
       [data-ogsc] .force-bg-cream { background-color:#F8F2DA !important; }
+      [data-ogsc] .force-bg-page { background-color:#EFE7CE !important; }
       [data-ogsc] .force-bg-white { background-color:#ffffff !important; }
       [data-ogsc] .force-bg-dark { background-color:#2d2a26 !important; }
       [data-ogsc] .force-text-dark { color:#2d2a26 !important; }
@@ -92,6 +94,7 @@ function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml
       [data-ogsc] .force-text-cream { color:#F8F2DA !important; }
       @media (prefers-color-scheme: dark) {
         .force-bg-cream { background-color:#F8F2DA !important; }
+        .force-bg-page { background-color:#EFE7CE !important; }
         .force-bg-white { background-color:#ffffff !important; }
         .force-bg-dark { background-color:#2d2a26 !important; }
         .force-text-dark { color:#2d2a26 !important; }
@@ -100,33 +103,53 @@ function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml
       }
     </style>
   </head>
-  <body style="margin:0; padding:0; background-color:#F8F2DA;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; padding:32px 16px; font-family:Arial, sans-serif;">
+  <body style="margin:0; padding:0; background-color:#EFE7CE;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#EFE7CE" class="force-bg-page" style="background:#EFE7CE; padding:36px 16px; font-family:Arial, sans-serif;">
       <tr>
         <td align="center">
-          <table role="presentation" width="560" cellpadding="0" cellspacing="0" bgcolor="#ffffff" class="force-bg-white" style="max-width:560px; width:100%; background:#ffffff; border-radius:20px; overflow:hidden;">
+          <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px; width:100%;">
+            <!-- Logo -->
             <tr>
-              <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:24px 32px 8px; text-align:center;">
-                <img src="cid:${LOGO_CID}" alt="The Mom Coach" width="160" height="160" style="display:inline-block; width:160px; max-width:60%; height:auto; border-radius:16px; border:0; outline:none;" />
+              <td align="center" style="padding:0 0 20px 0;">
+                <img src="cid:${LOGO_CID}" alt="The Mom Coach" width="128" height="128" style="display:block; width:128px; height:auto; border:0; outline:none;" />
+              </td>
+            </tr>
+            <!-- Card -->
+            <tr>
+              <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; border-radius:22px; overflow:hidden; box-shadow:0 8px 30px rgba(76,87,124,0.10);">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td height="5" bgcolor="#71B0B4" style="background:#71B0B4; line-height:5px; font-size:5px;">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:34px 34px 6px; text-align:center;">
+                      <p style="margin:0 0 10px 0; font-size:38px; line-height:1;">${params.headerEmoji}</p>
+                      <h1 class="force-text-blue" style="margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:27px; line-height:1.25; color:#4C577C;">
+                        ${params.headerTitle}
+                      </h1>
+                      <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:16px auto 0;">
+                        <tr><td width="48" height="3" bgcolor="#CD807B" style="background:#CD807B; line-height:3px; font-size:3px; border-radius:3px;">&nbsp;</td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:26px 34px 34px;">
+                      ${params.bodyHtml}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#2d2a26" class="force-bg-dark" style="background:#2d2a26; padding:24px 32px; text-align:center;">
+                      <p class="force-text-cream" style="margin:0 0 5px; font-family:Georgia, 'Times New Roman', serif; font-size:16px; color:#F8F2DA; letter-spacing:0.02em;">The Mom Coach</p>
+                      <p style="margin:0 0 10px; font-family:Arial, sans-serif; font-size:11px; color:rgba(248,242,218,0.55); letter-spacing:0.08em; text-transform:uppercase;">Sueño infantil &amp; alimentación complementaria</p>
+                      <a href="${siteUrl}" style="font-family:Arial, sans-serif; font-size:12px; color:#EFC6A1; text-decoration:none;">themomcoaching.com</a>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
-              <td bgcolor="#71B0B4" style="background:linear-gradient(135deg, #71B0B4, #CD807B); background-color:#71B0B4; padding:28px 32px 28px; text-align:center;">
-                <p style="margin:0 0 6px 0; font-size:34px;">${params.headerEmoji}</p>
-                <h1 style="margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:26px; color:#ffffff;">
-                  ${params.headerTitle}
-                </h1>
-              </td>
-            </tr>
-            <tr>
-              <td bgcolor="#ffffff" class="force-bg-white" style="background:#ffffff; padding:32px;">
-                ${params.bodyHtml}
-              </td>
-            </tr>
-            <tr>
-              <td bgcolor="#2d2a26" class="force-bg-dark" style="background:#2d2a26; padding:26px 32px; text-align:center;">
-                <p class="force-text-cream" style="margin:0 0 4px; font-family:Georgia, 'Times New Roman', serif; font-size:16px; color:#F8F2DA; letter-spacing:0.02em;">The Mom Coach</p>
-                <p style="margin:0; font-family:Arial, sans-serif; font-size:11px; color:rgba(248,242,218,0.55); letter-spacing:0.08em; text-transform:uppercase;">Coach de sueño infantil y alimentación complementaria</p>
+              <td align="center" style="padding:18px 12px 0; font-family:Arial, sans-serif; font-size:11px; line-height:1.5; color:#9A8C7E;">
+                Recibiste este correo porque hiciste una compra o reserva en The Mom Coach.
               </td>
             </tr>
           </table>
@@ -137,27 +160,22 @@ function emailShell(params: { headerEmoji: string; headerTitle: string; bodyHtml
 </html>`;
 }
 
-export async function sendPurchaseEmail(params: {
-  to: string;
-  items: PurchasedItem[];
-  orderId: string;
-}): Promise<void> {
-  const { transporter, from } = getTransporter();
-
+/** HTML del correo de compra (sin enviarlo). Útil para previsualizar. */
+export function purchaseEmailHtml(params: { items: PurchasedItem[]; orderId: string }): string {
   const itemsHtml = params.items
     .map(
       (item) => `
         <tr>
-          <td style="padding:0 0 16px 0;">
+          <td style="padding:0 0 14px 0;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px;">
               <tr>
                 <td style="padding:18px 20px;">
-                  <p class="force-text-blue" style="margin:0 0 12px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
+                  <p class="force-text-blue" style="margin:0 0 14px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; line-height:1.4; color:#4C577C;">
                     ${escapeHtml(item.title)}
                   </p>
                   <a href="${item.downloadUrl}"
-                     style="display:inline-block; background:#CD807B; color:#ffffff; text-decoration:none; font-family:Arial, sans-serif; font-size:14px; font-weight:bold; padding:10px 22px; border-radius:999px;">
-                    Descargar mi libro
+                     style="display:inline-block; background:#CD807B; color:#ffffff; text-decoration:none; font-family:Arial, sans-serif; font-size:14px; font-weight:bold; padding:11px 26px; border-radius:999px;">
+                    Descargar &rarr;
                   </a>
                 </td>
               </tr>
@@ -168,48 +186,52 @@ export async function sendPurchaseEmail(params: {
     .join('');
 
   const bodyHtml = `
-    <p class="force-text-dark" style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
-      Ya puedes descargar tu(s) libro(s). Toca el botón debajo de cada título para acceder a tu archivo.
+    <p class="force-text-dark" style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+      ¡Tu compra está lista! Toca el botón debajo de cada título para descargar tu archivo.
     </p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       ${itemsHtml}
     </table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:6px;">
       <tr>
-        <td bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:12px; padding:14px 18px;">
-          <p class="force-text-blue" style="margin:0; font-size:13px; line-height:1.5; color:#4C577C;">
-            📩 <strong>Cada enlace es válido solo por 48 horas</strong> desde que recibiste este correo. Después de ese tiempo dejará de funcionar por seguridad.
+        <td bgcolor="#F1EAD3" class="force-bg-cream" style="background:#F1EAD3; border-radius:12px; padding:14px 18px;">
+          <p class="force-text-blue" style="margin:0; font-size:13px; line-height:1.55; color:#4C577C;">
+            📩 <strong>Cada enlace vence a las 48&nbsp;horas</strong> de recibir este correo. Descarga y guarda tus archivos cuanto antes.
           </p>
         </td>
       </tr>
     </table>
-    <p style="margin:24px 0 0 0; font-size:13px; color:#999;">
-      Número de orden: ${escapeHtml(params.orderId)}
-    </p>
-    <p style="margin:8px 0 0 0; font-size:13px; color:#999;">
-      ¿El enlace expiró o tienes algún problema? Responde a este correo y te ayudamos.
+    <p style="margin:22px 0 0 0; font-size:13px; line-height:1.5; color:#9A8C7E;">
+      Orden <strong style="color:#7A6A62;">${escapeHtml(params.orderId)}</strong> &nbsp;·&nbsp; ¿El enlace expiró o tienes algún problema? Responde a este correo y te ayudamos.
     </p>
   `;
 
+  return emailShell({ headerEmoji: '🎉', headerTitle: '¡Gracias por tu compra!', bodyHtml });
+}
+
+export async function sendPurchaseEmail(params: {
+  to: string;
+  items: PurchasedItem[];
+  orderId: string;
+}): Promise<void> {
+  const { transporter, from } = getTransporter();
   await transporter.sendMail({
     from,
     to: params.to,
     subject: '🎉 Tu compra en The Mom Coach — enlaces de descarga',
-    html: emailShell({ headerEmoji: '🎉', headerTitle: '¡Gracias por tu compra!', bodyHtml }),
+    html: purchaseEmailHtml({ items: params.items, orderId: params.orderId }),
     attachments: getLogoAttachment(),
   });
 }
 
-export async function sendBookingConfirmationEmail(params: {
-  to: string;
+/** HTML del correo de confirmación de cita (sin enviarlo). Útil para previsualizar. */
+export function bookingConfirmationEmailHtml(params: {
   name: string;
   start: string;
   timeZone: string;
   meetLink: string | null;
   title: string;
-}): Promise<void> {
-  const { transporter, from } = getTransporter();
-
+}): string {
   const formattedDate = new Date(params.start)
     .toLocaleString('es-CO', {
       timeZone: params.timeZone,
@@ -224,15 +246,16 @@ export async function sendBookingConfirmationEmail(params: {
 
   const bodyHtml = `
     <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
-      Hola <strong>${escapeHtml(params.name)}</strong>, tu cita quedó confirmada. Aquí tienes los detalles:
+      Hola <strong>${escapeHtml(params.name)}</strong>, tu cita quedó <strong>confirmada</strong>. Aquí tienes los detalles:
     </p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px; margin-bottom:16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C" style="background:#4C577C; border-radius:16px; margin-bottom:18px;">
       <tr>
-        <td style="padding:18px 20px;">
-          <p class="force-text-blue" style="margin:0 0 6px 0; font-family:Georgia, 'Times New Roman', serif; font-size:17px; color:#4C577C;">
+        <td style="padding:22px 24px;">
+          <p style="margin:0 0 10px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Tu cita</p>
+          <p style="margin:0 0 10px; font-family:Georgia, 'Times New Roman', serif; font-size:19px; line-height:1.35; color:#ffffff;">
             ${escapeHtml(params.title)}
           </p>
-          <p class="force-text-dark" style="margin:0; font-size:14px; color:#2d2a26; text-transform:capitalize;">
+          <p style="margin:0; font-size:15px; color:#EFC6A1; text-transform:capitalize;">
             📅 ${formattedDate}
           </p>
         </td>
@@ -240,19 +263,39 @@ export async function sendBookingConfirmationEmail(params: {
     </table>
     ${
       params.meetLink
-        ? `<a href="${params.meetLink}" style="display:inline-block; background:#CD807B; color:#ffffff; text-decoration:none; font-family:Arial, sans-serif; font-size:14px; font-weight:bold; padding:10px 22px; border-radius:999px;">Unirme a la videollamada</a>`
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 4px;"><tr><td align="center">
+             <a href="${params.meetLink}" style="display:inline-block; background:#CD807B; color:#ffffff; text-decoration:none; font-family:Arial, sans-serif; font-size:15px; font-weight:bold; padding:13px 36px; border-radius:999px;">Unirme a la videollamada</a>
+           </td></tr></table>`
         : ''
     }
-    <p style="margin:24px 0 0 0; font-size:13px; color:#999;">
-      Te enviamos también una invitación de Google Calendar para que quede guardada en tu calendario. Si necesitas reprogramar o cancelar, responde a este correo.
-    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;">
+      <tr>
+        <td bgcolor="#F1EAD3" class="force-bg-cream" style="background:#F1EAD3; border-radius:12px; padding:14px 18px;">
+          <p class="force-text-blue" style="margin:0; font-size:13px; line-height:1.55; color:#4C577C;">
+            🗓️ Te enviamos también una invitación de Google Calendar. ¿Necesitas reprogramar o cancelar? Responde a este correo.
+          </p>
+        </td>
+      </tr>
+    </table>
   `;
 
+  return emailShell({ headerEmoji: '✅', headerTitle: '¡Cita confirmada!', bodyHtml });
+}
+
+export async function sendBookingConfirmationEmail(params: {
+  to: string;
+  name: string;
+  start: string;
+  timeZone: string;
+  meetLink: string | null;
+  title: string;
+}): Promise<void> {
+  const { transporter, from } = getTransporter();
   await transporter.sendMail({
     from,
     to: params.to,
     subject: `✅ Tu cita "${params.title}" quedó confirmada`,
-    html: emailShell({ headerEmoji: '✅', headerTitle: '¡Cita confirmada!', bodyHtml }),
+    html: bookingConfirmationEmailHtml(params),
     attachments: getLogoAttachment(),
   });
 }
