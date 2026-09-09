@@ -44,6 +44,7 @@ export default function BookingModal({ productId, productTitle, price, priceLabe
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [dayIso, setDayIso] = useState<string | null>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +59,10 @@ export default function BookingModal({ productId, productTitle, price, priceLabe
     }
     if (!EMAIL_REGEX.test(email)) {
       setError('Ingresa un correo electrónico válido.');
+      return;
+    }
+    if (phone.replace(/\D/g, '').length < 7) {
+      setError('Ingresa un número de celular válido.');
       return;
     }
     setStep(2);
@@ -87,7 +92,7 @@ export default function BookingModal({ productId, productTitle, price, priceLabe
     setCheckoutEmail(email);
     addBooking(
       { id: productId, title: productTitle, price },
-      { start: slot.start, end: slot.end, label, buyerName: name.trim(), calendarId: resolvedCalendarId }
+      { start: slot.start, end: slot.end, label, buyerName: name.trim(), buyerPhone: phone.trim(), calendarId: resolvedCalendarId }
     );
     onClose();
   }
@@ -122,6 +127,16 @@ export default function BookingModal({ productId, productTitle, price, priceLabe
               placeholder="Correo electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+              className="booking-modal-input font-inter"
+            />
+            <input
+              type="tel"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              placeholder="Celular"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/[^\d+\s]/g, ''))}
               required
               className="booking-modal-input font-inter"
             />

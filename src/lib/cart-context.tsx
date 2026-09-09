@@ -8,6 +8,7 @@ export interface BookingSelection {
   end: string;
   label: string;
   buyerName: string;
+  buyerPhone: string;
   calendarId: string | null;
 }
 

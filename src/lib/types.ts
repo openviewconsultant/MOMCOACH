@@ -69,6 +69,7 @@ export interface Booking {
   calendar_id: string | null;
   buyer_name: string;
   buyer_email: string;
+  buyer_phone: string | null;
   start_time: string;
   end_time: string;
   status: 'pending' | 'confirmed' | 'cancelled';

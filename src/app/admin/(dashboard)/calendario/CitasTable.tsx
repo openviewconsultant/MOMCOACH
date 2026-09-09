@@ -38,7 +38,8 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
       if (!term) return true;
       return (
         cita.buyer_name.toLowerCase().includes(term) ||
-        cita.buyer_email.toLowerCase().includes(term)
+        cita.buyer_email.toLowerCase().includes(term) ||
+        (cita.buyer_phone?.toLowerCase().includes(term) ?? false)
       );
     });
   }, [citas, search, calendarFilter]);
@@ -191,6 +192,9 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                   <td className="admin-cell-wrap">
                     {cita.buyer_name}
                     <span className="admin-table-subtext">{cita.buyer_email}</span>
+                    {cita.buyer_phone && (
+                      <span className="admin-table-subtext">{cita.buyer_phone}</span>
+                    )}
                   </td>
                   <td>
                     <span className={`admin-badge ${BADGE_CLASS[cita.status]}`}>{STATUS_LABEL[cita.status]}</span>

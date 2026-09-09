@@ -12,6 +12,7 @@ interface RequestedBooking {
   start?: unknown;
   end?: unknown;
   name?: unknown;
+  phone?: unknown;
 }
 
 interface RequestedItem {
@@ -24,6 +25,7 @@ interface ParsedBooking {
   start: string;
   end: string;
   name: string;
+  phone: string;
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -60,17 +62,19 @@ export async function POST(request: Request) {
       const start = typeof entry.booking.start === 'string' ? entry.booking.start : '';
       const end = typeof entry.booking.end === 'string' ? entry.booking.end : '';
       const name = typeof entry.booking.name === 'string' ? entry.booking.name.trim() : '';
+      const phone = typeof entry.booking.phone === 'string' ? entry.booking.phone.trim() : '';
       if (
         !start ||
         !end ||
         Number.isNaN(new Date(start).getTime()) ||
         Number.isNaN(new Date(end).getTime()) ||
         !name ||
+        phone.replace(/\D/g, '').length < 7 ||
         quantity !== 1
       ) {
         return NextResponse.json({ error: 'La cita seleccionada no es válida' }, { status: 400 });
       }
-      requestedBookings.set(id, { start, end, name });
+      requestedBookings.set(id, { start, end, name, phone });
     }
   }
 
@@ -189,6 +193,7 @@ export async function POST(request: Request) {
         calendar_id: product.booking_calendar_id || DEFAULT_CALENDAR_ID,
         buyer_name: booking.name,
         buyer_email: email,
+        buyer_phone: booking.phone,
         start_time: booking.start,
         end_time: booking.end,
         status: 'pending' as const,

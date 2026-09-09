@@ -95,7 +95,7 @@ export default function CartDrawer() {
             id: item.id,
             quantity: item.quantity,
             ...(item.booking
-              ? { booking: { start: item.booking.start, end: item.booking.end, name: item.booking.buyerName } }
+              ? { booking: { start: item.booking.start, end: item.booking.end, name: item.booking.buyerName, phone: item.booking.buyerPhone } }
               : {}),
           })),
           ...(applied ? { giftCardCode: applied.code } : {}),

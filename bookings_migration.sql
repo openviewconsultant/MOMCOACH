@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   order_id uuid REFERENCES orders(id) ON DELETE SET NULL,
   buyer_name text NOT NULL,
   buyer_email text NOT NULL,
+  buyer_phone text,
   start_time timestamptz NOT NULL,
   end_time timestamptz NOT NULL,
   status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
@@ -20,6 +21,9 @@ CREATE TABLE IF NOT EXISTS bookings (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Si la tabla ya existía sin la columna del celular:
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS buyer_phone text;
 
 CREATE INDEX IF NOT EXISTS bookings_start_time_idx ON bookings (start_time);
 CREATE INDEX IF NOT EXISTS bookings_order_id_idx ON bookings (order_id);

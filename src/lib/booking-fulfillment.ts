@@ -65,7 +65,7 @@ async function fulfillOneBooking(
     const event = await createCalendarEvent({
       calendarId: cal.googleCalendarId,
       summary: `Cita con ${booking.buyer_name}`,
-      description: `Cita pagada, agendada desde el sitio web de The Mom Coach.\nCorreo: ${booking.buyer_email}`,
+      description: `Cita pagada, agendada desde el sitio web de The Mom Coach.\nCorreo: ${booking.buyer_email}${booking.buyer_phone ? `\nCelular: ${booking.buyer_phone}` : ''}`,
       start: new Date(booking.start_time),
       end: new Date(booking.end_time),
       timeZone: cal.timeZone,
