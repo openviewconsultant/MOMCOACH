@@ -152,6 +152,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                 <th>ID</th>
                 <th>Fecha</th>
                 <th>Comprador</th>
+                <th>Celular</th>
                 <th>Producto(s)</th>
                 <th>Total</th>
                 <th>Estado</th>
@@ -180,12 +181,8 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                       </code>
                     </td>
                     <td>{formatDateTimeCO(order.created_at)}</td>
-                    <td className="admin-cell-wrap">
-                      {order.buyer_email}
-                      {order.buyerPhone && (
-                        <span className="admin-table-subtext">{order.buyerPhone}</span>
-                      )}
-                    </td>
+                    <td>{order.buyer_email}</td>
+                    <td>{order.buyerPhone || '—'}</td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
                     <td>{formatUSD(order.total)}</td>
                     <td className="admin-cell-wrap">

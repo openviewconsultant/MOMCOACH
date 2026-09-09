@@ -172,6 +172,7 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                 <th>Fecha de la cita</th>
                 <th>Calendario</th>
                 <th>Cliente</th>
+                <th>Celular</th>
                 <th>Estado</th>
                 <th>Videollamada</th>
               </tr>
@@ -192,10 +193,8 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                   <td className="admin-cell-wrap">
                     {cita.buyer_name}
                     <span className="admin-table-subtext">{cita.buyer_email}</span>
-                    {cita.buyer_phone && (
-                      <span className="admin-table-subtext">{cita.buyer_phone}</span>
-                    )}
                   </td>
+                  <td>{cita.buyer_phone || '—'}</td>
                   <td>
                     <span className={`admin-badge ${BADGE_CLASS[cita.status]}`}>{STATUS_LABEL[cita.status]}</span>
                   </td>
