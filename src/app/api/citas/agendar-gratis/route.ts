@@ -7,7 +7,7 @@ import { sendBookingConfirmationEmail } from '@/lib/email';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
-  let payload: { name?: string; email?: string; start?: string; end?: string; calendarId?: string; productId?: string };
+  let payload: { name?: string; email?: string; phone?: string; start?: string; end?: string; calendarId?: string; productId?: string };
   try {
     payload = await request.json();
   } catch {
@@ -16,6 +16,7 @@ export async function POST(request: Request) {
 
   const name = typeof payload.name === 'string' ? payload.name.trim() : '';
   const email = typeof payload.email === 'string' ? payload.email.trim() : '';
+  const phone = typeof payload.phone === 'string' ? payload.phone.trim() : '';
   const start = typeof payload.start === 'string' ? payload.start : '';
   const end = typeof payload.end === 'string' ? payload.end : '';
   const calendarId = typeof payload.calendarId === 'string' && payload.calendarId ? payload.calendarId : DEFAULT_CALENDAR_ID;
@@ -26,6 +27,9 @@ export async function POST(request: Request) {
   }
   if (!EMAIL_REGEX.test(email)) {
     return NextResponse.json({ error: 'Ingresa un correo electrónico válido' }, { status: 400 });
+  }
+  if (phone.replace(/\D/g, '').length < 7) {
+    return NextResponse.json({ error: 'Ingresa un número de celular válido' }, { status: 400 });
   }
   if (!start || !end || Number.isNaN(new Date(start).getTime()) || Number.isNaN(new Date(end).getTime())) {
     return NextResponse.json({ error: 'Selecciona un horario válido' }, { status: 400 });
@@ -49,6 +53,7 @@ export async function POST(request: Request) {
         calendar_id: calendarId,
         buyer_name: name,
         buyer_email: email,
+        buyer_phone: phone,
         start_time: start,
         end_time: end,
         status: 'confirmed',
@@ -64,7 +69,7 @@ export async function POST(request: Request) {
     const event = await createCalendarEvent({
       calendarId: cal.googleCalendarId,
       summary: `Llamada de descubrimiento con ${name}`,
-      description: `Llamada gratuita de descubrimiento agendada desde el sitio web de The Mom Coach.\nCorreo: ${email}`,
+      description: `Llamada gratuita de descubrimiento agendada desde el sitio web de The Mom Coach.\nCorreo: ${email}${phone ? `\nCelular: ${phone}` : ''}`,
       start: new Date(start),
       end: new Date(end),
       timeZone: cal.timeZone,

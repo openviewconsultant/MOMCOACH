@@ -41,6 +41,7 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [dayIso, setDayIso] = useState<string | null>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
@@ -56,6 +57,10 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
     }
     if (!EMAIL_REGEX.test(email)) {
       setError('Ingresa un correo electrónico válido.');
+      return;
+    }
+    if (phone.replace(/\D/g, '').length < 7) {
+      setError('Ingresa un número de celular válido.');
       return;
     }
     setStep(2);
@@ -78,7 +83,7 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
       const res = await fetch('/api/citas/agendar-gratis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, start: slot.start, end: slot.end, calendarId: resolvedCalendarId, productId }),
+        body: JSON.stringify({ name, email, phone, start: slot.start, end: slot.end, calendarId: resolvedCalendarId, productId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'No se pudo agendar la cita');
@@ -130,6 +135,18 @@ export default function FreeCallModal({ title, subtitle, calendarId, productId, 
                   placeholder="Correo electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="booking-modal-input font-inter"
+                />
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="tel"
+                  aria-label="Celular"
+                  placeholder="Celular"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/[^\d+\s]/g, ''))}
                   required
                   className="booking-modal-input font-inter"
                 />
