@@ -134,6 +134,8 @@ export default function BookingModal({ productId, productTitle, price, priceLabe
               type="tel"
               inputMode="numeric"
               pattern="[0-9]*"
+              autoComplete="tel"
+              aria-label="Celular"
               placeholder="Celular"
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^\d+\s]/g, ''))}
