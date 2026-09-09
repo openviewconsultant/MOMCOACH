@@ -42,7 +42,7 @@ export default async function CalendarioPage() {
     <CalendarioTabs
       calendarios={<CalendarSettingsForm initialSettings={settings} />}
       citas={
-        <div style={{ maxWidth: 680 }}>
+        <div style={{ maxWidth: 1100 }}>
           <CitasTable citas={citas} calendarNames={calendarNames} />
         </div>
       }
