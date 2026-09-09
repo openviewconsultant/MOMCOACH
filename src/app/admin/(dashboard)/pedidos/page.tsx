@@ -26,9 +26,21 @@ export default async function AdminPedidosPage() {
     titlesByOrder.set(item.order_id, list);
   }
 
+  type BookingPhoneRow = { order_id: string | null; buyer_phone: string | null };
+  const { data: bookingsData } =
+    orderIds.length > 0
+      ? await supabase.from('bookings').select('order_id, buyer_phone').in('order_id', orderIds)
+      : { data: [] as BookingPhoneRow[] };
+
+  const phoneByOrder = new Map<string, string>();
+  for (const b of (bookingsData ?? []) as BookingPhoneRow[]) {
+    if (b.order_id && b.buyer_phone) phoneByOrder.set(b.order_id, b.buyer_phone);
+  }
+
   const rows: OrderRow[] = orderList.map((order) => ({
     ...order,
     productTitles: (titlesByOrder.get(order.id) ?? []).join(', '),
+    buyerPhone: phoneByOrder.get(order.id) ?? null,
   }));
 
   const approved = orderList.filter((o) => o.status === 'approved');

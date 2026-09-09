@@ -9,6 +9,7 @@ import { deleteOrdersAction, deleteAllOrdersAction } from '../../actions';
 
 export interface OrderRow extends Order {
   productTitles: string;
+  buyerPhone: string | null;
 }
 
 const STATUS_FILTERS: { value: 'all' | Order['status']; label: string }[] = [
@@ -44,6 +45,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
       if (!term) return true;
       return (
         order.buyer_email.toLowerCase().includes(term) ||
+        (order.buyerPhone?.toLowerCase().includes(term) ?? false) ||
         order.productTitles.toLowerCase().includes(term) ||
         order.id.toLowerCase().includes(term)
       );
@@ -178,7 +180,12 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                       </code>
                     </td>
                     <td>{formatDateTimeCO(order.created_at)}</td>
-                    <td>{order.buyer_email}</td>
+                    <td className="admin-cell-wrap">
+                      {order.buyer_email}
+                      {order.buyerPhone && (
+                        <span className="admin-table-subtext">{order.buyerPhone}</span>
+                      )}
+                    </td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
                     <td>{formatUSD(order.total)}</td>
                     <td className="admin-cell-wrap">
