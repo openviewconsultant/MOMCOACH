@@ -1,20 +1,15 @@
-import { NextResponse } from 'next/server';
-import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
+import { NextResponse, after } from 'next/server';
+import { InvalidWebhookSignatureError, MerchantOrder, Payment, WebhookSignatureValidator } from 'mercadopago';
 import { getMercadoPagoClient, mapMercadoPagoStatus, formatMercadoPagoStatusDetail } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendGiftCardEmail } from '@/lib/email';
-import { fulfillDigitalOrder } from '@/lib/fulfillment';
-import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
-import { notifyOrderPaid } from '@/lib/order-notification';
-import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
+import { syncOrderWithMercadoPago } from '@/lib/order-sync';
 import { GIFT_CARD_PROGRAM_LABEL } from '@/lib/gift-cards';
 import type { GiftCard } from '@/lib/types';
 
 interface PaymentMetadata {
   order_id?: string;
   gift_card_id?: string;
-  gift_card_code?: string;
-  gift_card_discount?: number | string;
 }
 
 interface WebhookBody {
@@ -76,81 +71,69 @@ export async function POST(request: Request) {
     }
   }
 
-  if (rawType !== 'payment' || !dataId) {
+  // Mercado Pago envía dos tipos de aviso por la misma compra: `payment` y
+  // `merchant_order`. Se procesan ambos (idempotentes) para no depender de
+  // que llegue uno en concreto.
+  if ((rawType !== 'payment' && rawType !== 'merchant_order') || !dataId) {
     return NextResponse.json({ received: true });
   }
 
-  try {
-    const mpClient = getMercadoPagoClient();
-    const payment = new Payment(mpClient);
-    const paymentInfo = await payment.get({ id: dataId });
+  // Se responde 200 de inmediato y el trabajo pesado (consultar el pago,
+  // agendar en Google Calendar, enviar correos) corre después de la
+  // respuesta. Así Mercado Pago nunca ve el endpoint como lento o caído.
+  after(async () => {
+    try {
+      await processNotification(rawType, dataId);
+    } catch (error) {
+      console.error('Error procesando webhook de Mercado Pago', { rawType, dataId, error });
+    }
+  });
 
-    const metadata = (paymentInfo.metadata ?? {}) as PaymentMetadata;
-    const orderId = metadata.order_id ?? paymentInfo.external_reference;
+  return NextResponse.json({ received: true });
+}
+
+async function processNotification(rawType: string, dataId: string): Promise<void> {
+  const mpClient = getMercadoPagoClient();
+  const supabase = createAdminClient();
+
+  let orderId: string | undefined;
+
+  if (rawType === 'merchant_order') {
+    const mo = await new MerchantOrder(mpClient).get({ merchantOrderId: dataId });
+    orderId = mo.external_reference ?? undefined;
     if (!orderId) {
-      console.error('Notificación de pago sin order_id en los metadatos', { dataId });
-      return NextResponse.json({ received: true });
+      console.error('Merchant order sin external_reference', { dataId });
+      return;
     }
+    await syncOrderWithMercadoPago(supabase, orderId);
+    return;
+  }
 
-    const supabase = createAdminClient();
-    const { data: order, error: orderFetchError } = await supabase
-      .from('orders')
-      .select('id, buyer_email, status, notified_at')
-      .eq('id', orderId)
-      .single();
+  // rawType === 'payment'
+  const paymentInfo = await new Payment(mpClient).get({ id: dataId });
+  const metadata = (paymentInfo.metadata ?? {}) as PaymentMetadata;
+  orderId = metadata.order_id ?? paymentInfo.external_reference ?? undefined;
+  if (!orderId) {
+    console.error('Notificación de pago sin order_id', { dataId });
+    return;
+  }
 
-    if (orderFetchError || !order) {
-      console.error('No se encontró la orden asociada al pago', { orderId, orderFetchError });
-      return NextResponse.json({ received: true });
-    }
-
-    // El estado real de Mercado Pago se mapea al estado que maneja la orden
-    // (ver mapMercadoPagoStatus). El detalle crudo se guarda en status_detail
-    // para poder mostrarlo en el panel de administración.
+  // Compra de una gift card: al aprobarse se activa y se envía el código;
+  // si se rechaza, se cancela. (No pasa por el flujo de citas).
+  if (metadata.gift_card_id) {
     const mappedStatus = mapMercadoPagoStatus(paymentInfo.status);
     const statusDetail = formatMercadoPagoStatusDetail(paymentInfo.status, paymentInfo.status_detail);
-
     await supabase
       .from('orders')
       .update({ status: mappedStatus, status_detail: statusDetail, mp_payment_id: dataId })
       .eq('id', orderId);
-
-    // Compra de una gift card: al aprobarse se activa y se le envía el
-    // código al destinatario; si se rechaza, se cancela.
-    if (metadata.gift_card_id) {
-      await handleGiftCardPurchase(supabase, metadata.gift_card_id, mappedStatus);
-      return NextResponse.json({ received: true });
-    }
-
-    // Citas de la orden (si las hay): se confirman o cancelan según el pago.
-    // Una orden mixta (libros + asesoría) pasa también por la entrega digital.
-    await fulfillOrderBookings(supabase, orderId, mappedStatus);
-
-    if (mappedStatus !== 'approved') {
-      return NextResponse.json({ received: true });
-    }
-
-    // Compra de tienda con gift card parcial: descuenta el saldo usado.
-    if (metadata.gift_card_code) {
-      const usedAmount = Math.round(Number(metadata.gift_card_discount) || 0);
-      if (usedAmount > 0) {
-        await applyGiftCardRedemption(supabase, String(metadata.gift_card_code), orderId, usedAmount);
-      }
-    }
-
-    await fulfillDigitalOrder(supabase, order);
-
-    // Aviso a Denisse (y a la clienta) solo en la transición a "aprobado",
-    // para no repetir el correo si Mercado Pago reenvía la notificación.
-    if (order.status !== 'approved') {
-      await notifyOrderPaid(supabase, orderId);
-    }
-
-    return NextResponse.json({ received: true });
-  } catch (error) {
-    console.error('Error procesando webhook de Mercado Pago', error);
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
+    await handleGiftCardPurchase(supabase, metadata.gift_card_id, mappedStatus);
+    return;
   }
+
+  // Guarda el id de pago para que la sincronización consulte el pago exacto.
+  await supabase.from('orders').update({ mp_payment_id: dataId }).eq('id', orderId);
+  await syncOrderWithMercadoPago(supabase, orderId);
 }
 
 async function handleGiftCardPurchase(

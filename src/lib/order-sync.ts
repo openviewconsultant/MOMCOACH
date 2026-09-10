@@ -8,6 +8,12 @@ import type { createAdminClient } from '@/lib/supabase/admin';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
 import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
 import { notifyOrderPaid } from '@/lib/order-notification';
+import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
+
+interface PaymentMetadata {
+  gift_card_code?: string;
+  gift_card_discount?: number | string;
+}
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -46,12 +52,14 @@ export async function syncOrderWithMercadoPago(
   let mpStatus: string | undefined;
   let mpStatusDetail: string | undefined;
   let mpPaymentId: string | undefined = order.mp_payment_id ?? undefined;
+  let metadata: PaymentMetadata = {};
 
   try {
     if (mpPaymentId) {
       const info = await payment.get({ id: mpPaymentId });
       mpStatus = info.status ?? undefined;
       mpStatusDetail = info.status_detail ?? undefined;
+      metadata = (info.metadata ?? {}) as PaymentMetadata;
     } else {
       const search = await payment.search({
         options: { external_reference: orderId, sort: 'date_created', criteria: 'desc' },
@@ -103,6 +111,14 @@ export async function syncOrderWithMercadoPago(
         statusDetail ? ` (${statusDetail})` : ''
       }. No se agendó ninguna cita.`,
     };
+  }
+
+  // Compra con gift card parcial: descuenta el saldo usado (idempotente).
+  if (metadata.gift_card_code) {
+    const usedAmount = Math.round(Number(metadata.gift_card_discount) || 0);
+    if (usedAmount > 0) {
+      await applyGiftCardRedemption(supabase, String(metadata.gift_card_code), orderId, usedAmount);
+    }
   }
 
   await fulfillDigitalOrder(supabase, {
