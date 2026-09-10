@@ -118,6 +118,18 @@ async function processNotification(rawType: string, dataId: string): Promise<voi
     return;
   }
 
+  // Si la orden ya está aprobada y llega el aviso de un intento de pago
+  // anterior que fue rechazado/pendiente (reintentos, avisos fuera de orden),
+  // no se degrada el estado ni se cancela la cita ya confirmada.
+  const { data: currentOrder } = await supabase
+    .from('orders')
+    .select('status')
+    .eq('id', orderId)
+    .maybeSingle();
+  if (currentOrder?.status === 'approved' && mapMercadoPagoStatus(paymentInfo.status) !== 'approved') {
+    return;
+  }
+
   // Compra de una gift card: al aprobarse se activa y se envía el código;
   // si se rechaza, se cancela. (No pasa por el flujo de citas).
   if (metadata.gift_card_id) {

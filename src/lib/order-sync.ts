@@ -91,6 +91,16 @@ export async function syncOrderWithMercadoPago(
   const statusDetail = formatMercadoPagoStatusDetail(mpStatus, mpStatusDetail);
   const wasApproved = order.status === 'approved';
 
+  // Una orden ya aprobada no se degrada por un pago posterior no aprobado
+  // (reintentos del comprador, avisos que llegan fuera de orden).
+  if (wasApproved && mapped !== 'approved') {
+    return {
+      ok: true,
+      status: 'approved',
+      message: 'El pedido ya está aprobado; se ignora un aviso de pago posterior no aprobado.',
+    };
+  }
+
   await supabase
     .from('orders')
     .update({
