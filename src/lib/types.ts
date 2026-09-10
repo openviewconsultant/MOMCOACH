@@ -12,6 +12,7 @@ export interface Product {
   features?: string[] | null;
   price_note?: string | null;
   details?: { heading: string; items: string[] } | null;
+  process_steps?: string[] | null;
   is_popular?: boolean;
   whatsapp_text?: string | null;
   cal_link?: string | null;

@@ -118,6 +118,16 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
             defaultValue={Array.isArray(product?.features) ? product.features.join('\n') : ''}
           />
         </label>
+
+        <label>
+          El proceso paso a paso (un paso por línea — se muestra numerado en la página del producto)
+          <textarea
+            name="process_steps"
+            rows={6}
+            placeholder={`Diligencia el cuestionario de inicio con toda la información.\nRealiza el pago; recibes tu plan escrito en máximo 3 días.\nLee el plan y agenda la llamada de inicio.\nEn la llamada resolvemos dudas y fijamos fecha de inicio.\nSeguimiento diario durante 2 semanas.\nEmail de cierre con guías para mantener los hábitos.`}
+            defaultValue={Array.isArray(product?.process_steps) ? product.process_steps.join('\n') : ''}
+          />
+        </label>
       </section>
 
       <section className="admin-form-section">

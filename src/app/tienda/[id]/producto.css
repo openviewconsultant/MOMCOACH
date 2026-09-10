@@ -238,9 +238,112 @@
   margin-top: 1px;
 }
 
+/* ---------- Proceso paso a paso ---------- */
+
+.producto-proceso {
+  margin: 64px auto 0;
+  padding: 0 5%;
+  max-width: 780px;
+}
+
+.producto-proceso-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-turquoise);
+  background: rgba(113, 176, 180, 0.14);
+  padding: 5px 14px;
+  border-radius: 999px;
+}
+
+.producto-proceso-title {
+  margin: 14px 0 32px;
+  font-size: 1.8rem;
+  line-height: 1.25;
+  color: var(--color-blue-gray);
+}
+
+.producto-proceso-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.producto-proceso-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 20px;
+  padding-bottom: 28px;
+}
+
+.producto-proceso-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: 46px;
+  bottom: 0;
+  width: 2px;
+  background: rgba(113, 176, 180, 0.35);
+}
+
+.producto-proceso-num {
+  position: relative;
+  z-index: 1;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--color-turquoise);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.producto-proceso-step p {
+  margin: 0;
+  padding-top: 9px;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--foreground);
+}
+
 @media (max-width: 860px) {
   .producto-topbar {
     padding-top: 96px;
+  }
+
+  .producto-proceso {
+    margin-top: 44px;
+  }
+
+  .producto-proceso-title {
+    font-size: 1.5rem;
+  }
+
+  .producto-proceso-step {
+    grid-template-columns: 38px 1fr;
+    gap: 14px;
+  }
+
+  .producto-proceso-step:not(:last-child)::before {
+    left: 18px;
+    top: 38px;
+  }
+
+  .producto-proceso-num {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  .producto-proceso-step p {
+    padding-top: 6px;
+    font-size: 0.92rem;
   }
 
   .producto-layout {

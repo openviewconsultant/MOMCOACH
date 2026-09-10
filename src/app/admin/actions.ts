@@ -43,6 +43,10 @@ export async function saveProductAction(
   const features = featuresRaw
     ? featuresRaw.split('\n').map((line) => line.trim()).filter(Boolean)
     : [];
+  const processStepsRaw = (formData.get('process_steps') as string | null)?.trim() || '';
+  const processSteps = processStepsRaw
+    ? processStepsRaw.split('\n').map((line) => line.trim()).filter(Boolean)
+    : [];
   const isPopular = formData.get('is_popular') === 'on';
   const whatsappText = (formData.get('whatsapp_text') as string | null)?.trim() || null;
   const paymentProviderRaw = (formData.get('payment_provider') as string | null) || 'mercadopago';
@@ -73,6 +77,7 @@ export async function saveProductAction(
     product_type: productType,
     subtitle,
     features,
+    process_steps: processSteps,
     is_popular: isPopular,
     whatsapp_text: whatsappText,
     payment_provider: price > 0 ? paymentProvider : 'mercadopago',

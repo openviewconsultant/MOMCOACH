@@ -28,6 +28,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const isFree = p.price === 0;
   const paragraphs = (p.description || '').split(/\n{2,}/).map((s) => s.trim()).filter(Boolean);
   const details = p.details && Array.isArray(p.details.items) && p.details.items.length > 0 ? p.details : null;
+  const processSteps = Array.isArray(p.process_steps) ? p.process_steps.filter(Boolean) : [];
 
   return (
     <div className="producto-main">
@@ -103,6 +104,21 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
       </div>
+
+      {processSteps.length > 0 && (
+        <section className="producto-proceso">
+          <span className="producto-proceso-eyebrow font-inter">Proceso</span>
+          <h2 className="producto-proceso-title font-fraunces">Cómo funciona {p.title}</h2>
+          <ol className="producto-proceso-steps">
+            {processSteps.map((step, idx) => (
+              <li key={idx} className="producto-proceso-step">
+                <span className="producto-proceso-num font-fraunces" aria-hidden="true">{idx + 1}</span>
+                <p className="font-inter">{step}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
     </div>
   );
 }
