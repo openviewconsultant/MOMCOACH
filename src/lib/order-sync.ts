@@ -7,7 +7,7 @@ import {
 import type { createAdminClient } from '@/lib/supabase/admin';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
 import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
-import { notifyOrderPaid } from '@/lib/order-notification';
+import { notifyOrderPaid, notifyAdminOrderStatus } from '@/lib/order-notification';
 import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
 
 interface PaymentMetadata {
@@ -113,6 +113,10 @@ export async function syncOrderWithMercadoPago(
   await fulfillOrderBookings(supabase, orderId, mapped);
 
   if (mapped !== 'approved') {
+    // Aviso a Denisse (una vez por estado) de que la compra quedó pendiente
+    // o rechazada, para que pueda hacer seguimiento.
+    await notifyAdminOrderStatus(supabase, orderId, mapped, statusDetail);
+
     const label = mapped === 'rejected' ? 'rechazado / cancelado' : 'pendiente';
     return {
       ok: true,

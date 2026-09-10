@@ -49,6 +49,7 @@ export interface Order {
   mp_payment_id: string | null;
   total: number;
   notified_at: string | null;
+  admin_notified_status: string | null;
   created_at: string;
   updated_at: string;
 }

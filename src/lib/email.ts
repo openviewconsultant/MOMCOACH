@@ -525,3 +525,82 @@ export async function sendOrderPaidEmail(params: OrderPaidEmailParams & { to: st
     attachments: getLogoAttachment(),
   });
 }
+
+// ── Aviso interno de pago pendiente / rechazado ───────────────────────────
+// Solo para Denisse: le avisa cuando una compra queda pendiente o rechazada,
+// con los datos de contacto para que pueda hacer seguimiento manual.
+
+export interface OrderStatusEmailParams {
+  state: 'pending' | 'rejected';
+  reason: string | null;
+  buyerName: string | null;
+  buyerEmail: string;
+  buyerPhone: string | null;
+  productTitles: string[];
+  appointments: OrderPaidAppointment[];
+  orderId: string;
+  total: number;
+  currency: string;
+}
+
+export function orderStatusEmailHtml(params: OrderStatusEmailParams): string {
+  const isRejected = params.state === 'rejected';
+  const totalLabel = `${escapeHtml(params.currency || 'USD')} $${params.total.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  const productList = params.productTitles.length
+    ? params.productTitles.map((t) => escapeHtml(t)).join('<br />')
+    : '—';
+  const intento = params.appointments[0];
+
+  const bodyHtml = `
+    <p class="force-text-dark" style="margin:0 0 18px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+      ${
+        isRejected
+          ? 'Una compra tuvo el <strong>pago rechazado</strong>. No se agendó ninguna cita. Quizás quieras escribirle a la persona para ayudarla a completarlo.'
+          : 'Una compra quedó con el <strong>pago pendiente</strong>. Todavía no se agendó la cita — se hará sola en cuanto Mercado Pago confirme el pago.'
+      }
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${isRejected ? '#F6DEDA' : '#FBF0D9'}" style="background:${isRejected ? '#F6DEDA' : '#FBF0D9'}; border-radius:12px; margin:0 0 18px;">
+      <tr><td style="padding:14px 18px;">
+        <p style="margin:0; font-family:Arial,sans-serif; font-size:14px; line-height:1.5; color:${isRejected ? '#A6402F' : '#A6740B'};">
+          <strong>${isRejected ? 'Pago rechazado' : 'Pago pendiente'}</strong>${params.reason ? ` · ${escapeHtml(params.reason)}` : ''}
+        </p>
+      </td></tr>
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px;">
+      <tr><td style="padding:8px 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          ${dataRow('Clienta', escapeHtml(params.buyerName || '—'))}
+          ${dataRow('Correo', `<a href="mailto:${escapeHtml(params.buyerEmail)}" style="color:#4C577C;">${escapeHtml(params.buyerEmail)}</a>`)}
+          ${dataRow('Celular', params.buyerPhone ? `<a href="tel:${escapeHtml(params.buyerPhone)}" style="color:#4C577C;">${escapeHtml(params.buyerPhone)}</a>` : '—')}
+          ${dataRow('Programa', productList)}
+          ${intento ? dataRow('Horario elegido', `${escapeHtml(intento.fecha)} · ${escapeHtml(intento.calendario)}`) : ''}
+          ${dataRow('Total', totalLabel)}
+          ${dataRow('Orden', escapeHtml(params.orderId))}
+        </table>
+      </td></tr>
+    </table>
+  `;
+
+  return emailShell({
+    headerEmoji: isRejected ? '⚠️' : '⏳',
+    headerTitle: isRejected ? 'Pago rechazado' : 'Pago pendiente',
+    bodyHtml,
+  });
+}
+
+export async function sendAdminOrderStatusEmail(params: OrderStatusEmailParams & { to: string[] }): Promise<void> {
+  const recipients = Array.from(new Set(params.to.filter(Boolean)));
+  if (recipients.length === 0) return;
+  const { transporter, from } = getTransporter();
+  const emoji = params.state === 'rejected' ? '⚠️' : '⏳';
+  const label = params.state === 'rejected' ? 'Pago rechazado' : 'Pago pendiente';
+  await transporter.sendMail({
+    from,
+    to: recipients,
+    subject: `${emoji} ${label} — ${params.buyerName || params.buyerEmail}`,
+    html: orderStatusEmailHtml(params),
+    attachments: getLogoAttachment(),
+  });
+}
