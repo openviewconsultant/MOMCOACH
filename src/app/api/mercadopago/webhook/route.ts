@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendGiftCardEmail } from '@/lib/email';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
 import { fulfillOrderBookings } from '@/lib/booking-fulfillment';
+import { notifyOrderPaid } from '@/lib/order-notification';
 import { applyGiftCardRedemption } from '@/lib/gift-card-redemption';
 import { GIFT_CARD_PROGRAM_LABEL } from '@/lib/gift-cards';
 import type { GiftCard } from '@/lib/types';
@@ -112,6 +113,13 @@ export async function POST(request: Request) {
     }
 
     await fulfillDigitalOrder(supabase, order);
+
+    // Aviso a Denisse (y a la clienta) solo en la transición a "aprobado",
+    // para no repetir el correo si Mercado Pago reenvía la notificación.
+    if (order.status !== 'approved') {
+      await notifyOrderPaid(supabase, orderId);
+    }
+
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Error procesando webhook de Mercado Pago', error);

@@ -420,3 +420,108 @@ export async function sendGiftCardEmail(params: GiftCardEmailParams): Promise<vo
     attachments: getLogoAttachment(),
   });
 }
+
+// ── Aviso de pago recibido ────────────────────────────────────────────────
+// Correo que se envía a Denisse (y a la clienta) cuando un pago queda
+// confirmado. Reúne toda la información necesaria para saber qué se compró
+// y para agendar/ubicar la cita en Google Calendar.
+
+export interface OrderPaidAppointment {
+  programa: string;
+  fecha: string;
+  calendario: string;
+  meetLink: string | null;
+}
+
+export interface OrderPaidEmailParams {
+  buyerName: string | null;
+  buyerEmail: string;
+  buyerPhone: string | null;
+  productTitles: string[];
+  appointments: OrderPaidAppointment[];
+  orderId: string;
+  total: number;
+  currency: string;
+  confirmedManually: boolean;
+}
+
+function dataRow(label: string, value: string): string {
+  return `
+    <tr>
+      <td valign="top" style="padding:9px 14px 9px 0; font-family:Arial,sans-serif; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; color:#8A776C; white-space:nowrap;">${escapeHtml(label)}</td>
+      <td valign="top" class="force-text-dark" style="padding:9px 0; font-family:Arial,sans-serif; font-size:14px; line-height:1.5; color:#2d2a26;">${value}</td>
+    </tr>`;
+}
+
+export function orderPaidEmailHtml(params: OrderPaidEmailParams): string {
+  const totalLabel = `${escapeHtml(params.currency || 'USD')} $${params.total.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  const productList = params.productTitles.length
+    ? params.productTitles.map((t) => escapeHtml(t)).join('<br />')
+    : '—';
+
+  const appointmentsHtml = params.appointments.length
+    ? params.appointments
+        .map(
+          (a) => `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C" style="background:#4C577C; border-radius:16px; margin:0 0 14px;">
+        <tr>
+          <td style="padding:20px 22px;">
+            <p style="margin:0 0 8px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Cita agendada</p>
+            <p style="margin:0 0 8px; font-family:Georgia,'Times New Roman',serif; font-size:18px; line-height:1.35; color:#ffffff;">${escapeHtml(a.programa)}</p>
+            <p style="margin:0 0 4px; font-size:15px; color:#EFC6A1; text-transform:capitalize;">📅 ${escapeHtml(a.fecha)}</p>
+            <p style="margin:0; font-size:13px; color:rgba(255,255,255,0.8);">🗂️ ${escapeHtml(a.calendario)}${
+              a.meetLink
+                ? ` &nbsp;·&nbsp; <a href="${a.meetLink}" style="color:#EFC6A1;">Videollamada</a>`
+                : ''
+            }</p>
+          </td>
+        </tr>
+      </table>`
+        )
+        .join('')
+    : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 14px;">
+         <tr><td bgcolor="#F1EAD3" class="force-bg-cream" style="background:#F1EAD3; border-radius:12px; padding:14px 18px;">
+           <p class="force-text-blue" style="margin:0; font-size:13px; line-height:1.55; color:#4C577C;">Esta compra no tiene una cita asociada (producto digital / sin agenda).</p>
+         </td></tr>
+       </table>`;
+
+  const bodyHtml = `
+    <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
+      Se registró un <strong>pago confirmado</strong>${params.confirmedManually ? ' (confirmado manualmente desde el panel)' : ''}. Estos son los datos:
+    </p>
+
+    ${appointmentsHtml}
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F2DA" class="force-bg-cream" style="background:#F8F2DA; border-radius:14px; margin:4px 0 0;">
+      <tr><td style="padding:8px 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          ${dataRow('Clienta', escapeHtml(params.buyerName || '—'))}
+          ${dataRow('Correo', `<a href="mailto:${escapeHtml(params.buyerEmail)}" style="color:#4C577C;">${escapeHtml(params.buyerEmail)}</a>`)}
+          ${dataRow('Celular', params.buyerPhone ? `<a href="tel:${escapeHtml(params.buyerPhone)}" style="color:#4C577C;">${escapeHtml(params.buyerPhone)}</a>` : '—')}
+          ${dataRow('Programa', productList)}
+          ${dataRow('Total', totalLabel)}
+          ${dataRow('Orden', escapeHtml(params.orderId))}
+        </table>
+      </td></tr>
+    </table>
+
+    <p style="margin:20px 0 0 0; font-size:13px; line-height:1.5; color:#9A8C7E;">
+      Si la cita ya aparece arriba, quedó creada en Google Calendar con invitación para la clienta. Si no, agéndala manualmente con los datos de esta ficha.
+    </p>
+  `;
+
+  return emailShell({ headerEmoji: '💳', headerTitle: 'Pago recibido', bodyHtml });
+}
+
+export async function sendOrderPaidEmail(params: OrderPaidEmailParams & { to: string[] }): Promise<void> {
+  const recipients = Array.from(new Set(params.to.filter(Boolean)));
+  if (recipients.length === 0) return;
+  const { transporter, from } = getTransporter();
+  await transporter.sendMail({
+    from,
+    to: recipients,
+    subject: `💳 Pago recibido — ${params.buyerName || params.buyerEmail}${params.appointments[0] ? ` · ${params.appointments[0].fecha}` : ''}`,
+    html: orderPaidEmailHtml(params),
+    attachments: getLogoAttachment(),
+  });
+}

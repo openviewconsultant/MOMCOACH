@@ -50,22 +50,35 @@ async function fulfillOneBooking(
   if (booking.status === 'confirmed' || booking.notified_at) return;
 
   try {
-    let calendarId = DEFAULT_CALENDAR_ID;
+    let calendarId = booking.calendar_id || DEFAULT_CALENDAR_ID;
+    let programa: string | null = null;
     if (booking.product_id) {
       const { data: product } = await supabase
         .from('products')
-        .select('booking_calendar_id')
+        .select('booking_calendar_id, title')
         .eq('id', booking.product_id)
         .maybeSingle();
-      calendarId =
-        (product as { booking_calendar_id?: string | null } | null)?.booking_calendar_id || DEFAULT_CALENDAR_ID;
+      const typedProduct = product as { booking_calendar_id?: string | null; title?: string | null } | null;
+      if (!booking.calendar_id) {
+        calendarId = typedProduct?.booking_calendar_id || DEFAULT_CALENDAR_ID;
+      }
+      programa = typedProduct?.title ?? null;
     }
     const cal = await getCalendarById(calendarId);
+    const eventTitle = programa ? `${programa} — ${booking.buyer_name}` : `Cita con ${booking.buyer_name}`;
 
     const event = await createCalendarEvent({
       calendarId: cal.googleCalendarId,
-      summary: `Cita con ${booking.buyer_name}`,
-      description: `Cita pagada, agendada desde el sitio web de The Mom Coach.\nCorreo: ${booking.buyer_email}${booking.buyer_phone ? `\nCelular: ${booking.buyer_phone}` : ''}`,
+      summary: eventTitle,
+      description: [
+        'Cita pagada, agendada desde el sitio web de The Mom Coach.',
+        programa ? `Programa: ${programa}` : null,
+        `Clienta: ${booking.buyer_name}`,
+        `Correo: ${booking.buyer_email}`,
+        booking.buyer_phone ? `Celular: ${booking.buyer_phone}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n'),
       start: new Date(booking.start_time),
       end: new Date(booking.end_time),
       timeZone: cal.timeZone,
@@ -89,7 +102,7 @@ async function fulfillOneBooking(
       start: booking.start_time,
       timeZone: cal.timeZone,
       meetLink: event.meetLink,
-      title: 'Tu cita en The Mom Coach',
+      title: programa || 'Tu cita en The Mom Coach',
     });
   } catch (error) {
     console.error('Error confirmando la cita pagada', { bookingId: booking.id, error });

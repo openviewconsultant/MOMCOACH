@@ -26,21 +26,37 @@ export default async function AdminPedidosPage() {
     titlesByOrder.set(item.order_id, list);
   }
 
-  type BookingPhoneRow = { order_id: string | null; buyer_phone: string | null };
+  type BookingRow = {
+    order_id: string | null;
+    buyer_phone: string | null;
+    start_time: string | null;
+    status: string | null;
+  };
   const { data: bookingsData } =
     orderIds.length > 0
-      ? await supabase.from('bookings').select('order_id, buyer_phone').in('order_id', orderIds)
-      : { data: [] as BookingPhoneRow[] };
+      ? await supabase
+          .from('bookings')
+          .select('order_id, buyer_phone, start_time, status')
+          .in('order_id', orderIds)
+          .order('start_time', { ascending: true })
+      : { data: [] as BookingRow[] };
 
   const phoneByOrder = new Map<string, string>();
-  for (const b of (bookingsData ?? []) as BookingPhoneRow[]) {
-    if (b.order_id && b.buyer_phone) phoneByOrder.set(b.order_id, b.buyer_phone);
+  const bookingByOrder = new Map<string, { startTime: string; status: string }>();
+  for (const b of (bookingsData ?? []) as BookingRow[]) {
+    if (!b.order_id) continue;
+    if (b.buyer_phone && !phoneByOrder.has(b.order_id)) phoneByOrder.set(b.order_id, b.buyer_phone);
+    if (b.start_time && b.status !== 'cancelled' && !bookingByOrder.has(b.order_id)) {
+      bookingByOrder.set(b.order_id, { startTime: b.start_time, status: b.status ?? 'pending' });
+    }
   }
 
   const rows: OrderRow[] = orderList.map((order) => ({
     ...order,
     productTitles: (titlesByOrder.get(order.id) ?? []).join(', '),
     buyerPhone: phoneByOrder.get(order.id) ?? null,
+    bookingStart: bookingByOrder.get(order.id)?.startTime ?? null,
+    bookingStatus: bookingByOrder.get(order.id)?.status ?? null,
   }));
 
   const approved = orderList.filter((o) => o.status === 'approved');

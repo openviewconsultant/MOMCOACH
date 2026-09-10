@@ -22,18 +22,27 @@ export default async function CalendarioPage() {
   const nameById = new Map(calendarOptions.map((c) => [c.id, c.name]));
   const bookings = (bookingsData || []) as Booking[];
 
-  const productIds = Array.from(new Set(bookings.filter((b) => !b.calendar_id && b.product_id).map((b) => b.product_id as string)));
+  const productIds = Array.from(new Set(bookings.filter((b) => b.product_id).map((b) => b.product_id as string)));
   const calendarIdByProduct = new Map<string, string>();
+  const titleByProduct = new Map<string, string>();
   if (productIds.length > 0) {
-    const { data: products } = await supabase.from('products').select('id, booking_calendar_id').in('id', productIds);
-    (products || []).forEach((p: Pick<Product, 'id' | 'booking_calendar_id'>) => {
+    const { data: products } = await supabase
+      .from('products')
+      .select('id, booking_calendar_id, title')
+      .in('id', productIds);
+    (products || []).forEach((p: Pick<Product, 'id' | 'booking_calendar_id' | 'title'>) => {
       if (p.booking_calendar_id) calendarIdByProduct.set(p.id, p.booking_calendar_id);
+      if (p.title) titleByProduct.set(p.id, p.title);
     });
   }
 
   const citas: CitaRow[] = bookings.map((b) => {
     const calendarId = b.calendar_id || (b.product_id ? calendarIdByProduct.get(b.product_id) : undefined) || 'default';
-    return { ...b, calendarName: nameById.get(calendarId) ?? 'General' };
+    return {
+      ...b,
+      calendarName: nameById.get(calendarId) ?? 'General',
+      programa: (b.product_id ? titleByProduct.get(b.product_id) : undefined) ?? null,
+    };
   });
 
   const calendarNames = calendarOptions.map((c) => c.name);

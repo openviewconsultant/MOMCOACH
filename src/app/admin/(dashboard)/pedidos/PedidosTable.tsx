@@ -6,10 +6,13 @@ import type { Order } from '@/lib/types';
 import { formatUSD, formatDateTimeCO } from '@/lib/format';
 import { friendlyStatusDetail } from './status-detail';
 import { deleteOrdersAction, deleteAllOrdersAction } from '../../actions';
+import ConfirmPaymentButton from '../ConfirmPaymentButton';
 
 export interface OrderRow extends Order {
   productTitles: string;
   buyerPhone: string | null;
+  bookingStart: string | null;
+  bookingStatus: string | null;
 }
 
 const STATUS_FILTERS: { value: 'all' | Order['status']; label: string }[] = [
@@ -154,6 +157,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                 <th>Comprador</th>
                 <th>Celular</th>
                 <th>Producto(s)</th>
+                <th>Cita</th>
                 <th>Total</th>
                 <th>Estado</th>
                 <th>Correo enviado</th>
@@ -184,6 +188,15 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                     <td>{order.buyer_email}</td>
                     <td>{order.buyerPhone || '—'}</td>
                     <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
+                    <td className="admin-cell-wrap">
+                      {order.bookingStart
+                        ? formatDateTimeCO(order.bookingStart, {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                            timeZone: 'America/Bogota',
+                          })
+                        : '—'}
+                    </td>
                     <td>{formatUSD(order.total)}</td>
                     <td className="admin-cell-wrap">
                       <span className={`admin-badge ${BADGE_CLASS[order.status]}`}>
@@ -192,6 +205,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                       {order.status !== 'approved' && detail && (
                         <span className="admin-table-subtext">{detail}</span>
                       )}
+                      {order.status === 'pending' && <ConfirmPaymentButton orderId={order.id} />}
                     </td>
                     <td>{order.notified_at ? 'Sí' : 'No'}</td>
                   </tr>

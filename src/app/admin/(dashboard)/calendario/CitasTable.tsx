@@ -4,9 +4,11 @@ import { useMemo, useState, useTransition } from 'react';
 import type { Booking } from '@/lib/types';
 import { formatDateTimeCO } from '@/lib/format';
 import { deleteBookingsAction, deleteAllBookingsAction } from '../../actions';
+import ConfirmPaymentButton from '../ConfirmPaymentButton';
 
 export interface CitaRow extends Booking {
   calendarName: string;
+  programa: string | null;
 }
 
 const STATUS_LABEL: Record<Booking['status'], string> = {
@@ -39,7 +41,8 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
       return (
         cita.buyer_name.toLowerCase().includes(term) ||
         cita.buyer_email.toLowerCase().includes(term) ||
-        (cita.buyer_phone?.toLowerCase().includes(term) ?? false)
+        (cita.buyer_phone?.toLowerCase().includes(term) ?? false) ||
+        (cita.programa?.toLowerCase().includes(term) ?? false)
       );
     });
   }, [citas, search, calendarFilter]);
@@ -170,6 +173,7 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                   <input type="checkbox" checked={allVisibleSelected} onChange={toggleAllVisible} aria-label="Seleccionar todas las citas visibles" />
                 </th>
                 <th>Fecha de la cita</th>
+                <th>Programa</th>
                 <th>Calendario</th>
                 <th>Cliente</th>
                 <th>Celular</th>
@@ -189,14 +193,18 @@ export default function CitasTable({ citas, calendarNames }: { citas: CitaRow[];
                     />
                   </td>
                   <td>{formatCitaDate(cita.start_time)}</td>
+                  <td className="admin-cell-wrap">{cita.programa || '—'}</td>
                   <td>{cita.calendarName}</td>
                   <td className="admin-cell-wrap">
                     {cita.buyer_name}
                     <span className="admin-table-subtext">{cita.buyer_email}</span>
                   </td>
                   <td>{cita.buyer_phone || '—'}</td>
-                  <td>
+                  <td className="admin-cell-wrap">
                     <span className={`admin-badge ${BADGE_CLASS[cita.status]}`}>{STATUS_LABEL[cita.status]}</span>
+                    {cita.status === 'pending' && cita.order_id && (
+                      <ConfirmPaymentButton orderId={cita.order_id} />
+                    )}
                   </td>
                   <td>
                     {cita.meet_link ? (
