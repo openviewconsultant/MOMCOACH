@@ -265,6 +265,14 @@
   color: var(--color-blue-gray);
 }
 
+.producto-proceso-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 10px 34px rgba(76, 87, 124, 0.14);
+}
+
 .producto-proceso-steps {
   list-style: none;
   margin: 0;

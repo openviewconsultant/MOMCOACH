@@ -36,6 +36,7 @@ export async function saveProductAction(
   const isPublished = formData.get('is_published') === 'on';
   const coverImageUrl = (formData.get('cover_image_url') as string | null) || null;
   const filePath = (formData.get('file_path') as string | null) || null;
+  const processImageUrl = (formData.get('process_image_url') as string | null) || null;
 
   const productType = (formData.get('product_type') as string | null) || 'digital';
   const subtitle = (formData.get('subtitle') as string | null)?.trim() || null;
@@ -78,6 +79,7 @@ export async function saveProductAction(
     subtitle,
     features,
     process_steps: processSteps,
+    process_image_url: processImageUrl,
     is_popular: isPopular,
     whatsapp_text: whatsappText,
     payment_provider: price > 0 ? paymentProvider : 'mercadopago',

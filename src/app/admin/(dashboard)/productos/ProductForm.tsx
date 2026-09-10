@@ -14,7 +14,9 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
   const [state, formAction, isSubmitting] = useActionState(saveProductAction, initialState);
   const [coverUrl, setCoverUrl] = useState(product?.cover_image_url ?? '');
   const [filePath, setFilePath] = useState(product?.file_path ?? '');
+  const [processImageUrl, setProcessImageUrl] = useState(product?.process_image_url ?? '');
   const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingProcess, setUploadingProcess] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
@@ -53,6 +55,25 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
     }
   }
 
+  async function handleProcessImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingProcess(true);
+    setUploadError(null);
+    try {
+      const supabase = createClient();
+      const path = `proceso/${crypto.randomUUID()}-${safeStorageName(file.name)}`;
+      const { error } = await supabase.storage.from('portadas').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from('portadas').getPublicUrl(path);
+      setProcessImageUrl(data.publicUrl);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'No se pudo subir la imagen del proceso');
+    } finally {
+      setUploadingProcess(false);
+    }
+  }
+
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -71,13 +92,14 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
     }
   }
 
-  const busy = isSubmitting || uploadingCover || uploadingFile;
+  const busy = isSubmitting || uploadingCover || uploadingProcess || uploadingFile;
 
   return (
     <form action={formAction} className="admin-form admin-form-v2">
       {product && <input type="hidden" name="id" value={product.id} />}
       <input type="hidden" name="cover_image_url" value={coverUrl} />
       <input type="hidden" name="file_path" value={filePath} />
+      <input type="hidden" name="process_image_url" value={processImageUrl} />
 
       <section className="admin-form-section">
         <h3 className="admin-form-section-title">Información general</h3>
@@ -120,7 +142,29 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
         </label>
 
         <label>
-          El proceso paso a paso (un paso por línea — se muestra numerado en la página del producto)
+          Imagen del proceso (infografía — se muestra tal cual en la página del producto)
+          <div className="admin-file-upload">
+            <input type="file" accept="image/*" onChange={handleProcessImageChange} />
+            {uploadingProcess && <span className="admin-upload-status">Subiendo imagen…</span>}
+            {processImageUrl && (
+              <>
+                <img src={processImageUrl} alt="Proceso" className="admin-cover-preview" />
+                <button
+                  type="button"
+                  className="admin-toolbar-pill"
+                  style={{ marginTop: 8 }}
+                  onClick={() => setProcessImageUrl('')}
+                >
+                  Quitar imagen
+                </button>
+              </>
+            )}
+          </div>
+          <span className="admin-field-hint">Si subes una imagen se muestra esa. Si no, se usan los pasos de texto de abajo.</span>
+        </label>
+
+        <label>
+          El proceso paso a paso (un paso por línea — se muestra numerado si no hay imagen)
           <textarea
             name="process_steps"
             rows={6}
