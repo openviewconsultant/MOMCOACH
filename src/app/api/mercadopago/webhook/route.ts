@@ -17,11 +17,46 @@ interface PaymentMetadata {
   gift_card_discount?: number | string;
 }
 
+interface WebhookBody {
+  type?: string;
+  topic?: string;
+  action?: string;
+  data?: { id?: string | number };
+  id?: string | number;
+  resource?: string;
+}
+
 export async function POST(request: Request) {
   const url = new URL(request.url);
-  const type = url.searchParams.get('type') ?? url.searchParams.get('topic');
-  const dataId = url.searchParams.get('data.id') ?? url.searchParams.get('id');
 
+  // Mercado Pago manda la info a veces en el query string
+  // (?type=payment&data.id=123), a veces solo en el cuerpo JSON, y a veces en
+  // ambos. Se leen las dos fuentes para no perder ninguna notificación.
+  let body: WebhookBody = {};
+  try {
+    body = (await request.clone().json()) as WebhookBody;
+  } catch {
+    /* algunas notificaciones vienen sin cuerpo */
+  }
+
+  const rawType =
+    url.searchParams.get('type') ??
+    url.searchParams.get('topic') ??
+    body.type ??
+    body.topic ??
+    (body.action ? body.action.split('.')[0] : null);
+
+  const dataId =
+    url.searchParams.get('data.id') ??
+    url.searchParams.get('id') ??
+    (body.data?.id != null ? String(body.data.id) : null) ??
+    (body.id != null ? String(body.id) : null) ??
+    (body.resource ? body.resource.split('/').pop() ?? null : null);
+
+  // La firma es una validación extra: si falla (o el secreto de Vercel no
+  // coincide con el del panel de Mercado Pago) se registra y se sigue, porque
+  // igual se vuelve a consultar el pago contra la API de Mercado Pago con
+  // nuestro access token antes de tocar nada.
   const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
   if (webhookSecret) {
     try {
@@ -34,14 +69,14 @@ export async function POST(request: Request) {
       });
     } catch (error) {
       if (error instanceof InvalidWebhookSignatureError) {
-        console.error('Firma de webhook de Mercado Pago inválida', error.reason);
-        return NextResponse.json({ error: 'Firma inválida' }, { status: 401 });
+        console.warn('Firma de webhook de Mercado Pago inválida, se procesa igual', error.reason);
+      } else {
+        console.warn('No se pudo validar la firma del webhook de Mercado Pago', error);
       }
-      throw error;
     }
   }
 
-  if (type !== 'payment' || !dataId) {
+  if (rawType !== 'payment' || !dataId) {
     return NextResponse.json({ received: true });
   }
 

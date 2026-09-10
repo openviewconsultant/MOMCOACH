@@ -13,6 +13,7 @@ export interface OrderRow extends Order {
   buyerPhone: string | null;
   bookingStart: string | null;
   bookingStatus: string | null;
+  emailSent: boolean;
 }
 
 const STATUS_FILTERS: { value: 'all' | Order['status']; label: string }[] = [
@@ -207,7 +208,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                       )}
                       {order.status === 'pending' && <ConfirmPaymentButton orderId={order.id} />}
                     </td>
-                    <td>{order.notified_at ? 'Sí' : 'No'}</td>
+                    <td>{order.emailSent ? 'Sí' : 'No'}</td>
                   </tr>
                 );
               })}

@@ -39,6 +39,10 @@ const STATUS_COPY: Record<
   },
 };
 
+function firstStr(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export default async function ConfirmacionPage({
   searchParams,
 }: {
@@ -46,7 +50,24 @@ export default async function ConfirmacionPage({
 }) {
   const params = await searchParams;
   const rawStatus = params.status ?? params.collection_status;
-  const status = Array.isArray(rawStatus) ? rawStatus[0] : rawStatus;
+  let status = firstStr(rawStatus);
+
+  // Mercado Pago devuelve al comprador a esta página con el ID de la orden en
+  // `external_reference`. Aprovechamos ese regreso para sincronizar el pago
+  // contra la API de Mercado Pago aquí mismo — así la cita se agenda y los
+  // correos salen al instante, sin depender de que llegue el webhook.
+  const externalRef = firstStr(params.external_reference);
+  if (externalRef) {
+    try {
+      const { createAdminClient } = await import('@/lib/supabase/admin');
+      const { syncOrderWithMercadoPago } = await import('@/lib/order-sync');
+      const result = await syncOrderWithMercadoPago(createAdminClient(), externalRef);
+      if (!status && result.status !== 'not_found') status = result.status;
+    } catch (error) {
+      console.error('No se pudo sincronizar el pago en la página de confirmación', { externalRef, error });
+    }
+  }
+
   const copy = (status && STATUS_COPY[status]) || STATUS_COPY.approved;
 
   return (

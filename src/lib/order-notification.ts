@@ -94,6 +94,15 @@ export async function notifyOrderPaid(
       currency,
       confirmedManually: Boolean(options.confirmedManually),
     });
+
+    // El correo salió: marca la orden como notificada para que el panel
+    // muestre "Correo enviado: Sí" (fulfillDigitalOrder solo lo hace cuando
+    // hay archivos que descargar; una compra de solo cita no los tiene).
+    await supabase
+      .from('orders')
+      .update({ notified_at: new Date().toISOString() })
+      .eq('id', orderId)
+      .is('notified_at', null);
   } catch (error) {
     console.error('No se pudo enviar el aviso de pago recibido', { orderId, error });
   }
