@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ClearCartOnSuccess from "./ClearCartOnSuccess";
 import "./confirmacion.css";
 
 export const metadata: Metadata = {
@@ -72,6 +73,7 @@ export default async function ConfirmacionPage({
 
   return (
     <div className="tienda-main purchase-popup-wrap">
+      <ClearCartOnSuccess rejected={copy.variant === "rejected"} />
       <div className={`purchase-popup-card`}>
         <div className={`purchase-popup-icon purchase-popup-icon--${copy.variant}`}>{copy.icon}</div>
         <h1 className="purchase-popup-title font-fraunces">{copy.title}</h1>
