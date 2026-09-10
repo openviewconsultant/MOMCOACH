@@ -255,11 +255,11 @@ export async function deleteAllBookingsAction() {
 }
 
 /**
- * Confirma manualmente un pedido cuyo pago sí se recibió (ej. el depósito
- * aparece en Mercado Pago) pero el webhook nunca lo marcó como aprobado.
- * Marca la orden como aprobada, agenda la(s) cita(s) en Google Calendar,
+ * Vuelve a consultar el pago en Mercado Pago y sincroniza el estado del
+ * pedido con lo que MP responda (la confirmación siempre viene de Mercado
+ * Pago). Si MP dice "approved", agenda la(s) cita(s) en Google Calendar,
  * entrega los productos digitales y envía el correo de "Pago recibido" a
- * Denisse y a la clienta.
+ * Denisse y a la clienta. Red de seguridad para cuando el webhook no llegó.
  */
 export async function confirmOrderPaidAction(
   orderId: string
@@ -270,50 +270,23 @@ export async function confirmOrderPaidAction(
   } = await auth.auth.getUser();
   if (!user) return { ok: false, message: 'Sesión expirada. Vuelve a iniciar sesión.' };
 
+  const { syncOrderWithMercadoPago } = await import('@/lib/order-sync');
   const supabase = createAdminClient();
-  const { data: order, error } = await supabase
-    .from('orders')
-    .select('id, buyer_email, status, notified_at')
-    .eq('id', orderId)
-    .single();
-  if (error || !order) return { ok: false, message: 'No se encontró el pedido.' };
-  if (order.status === 'approved') {
-    return { ok: false, message: 'Este pedido ya estaba confirmado.' };
-  }
 
-  await supabase
-    .from('orders')
-    .update({ status: 'approved', status_detail: 'Pago confirmado manualmente desde el panel' })
-    .eq('id', orderId);
-
-  const { fulfillOrderBookings } = await import('@/lib/booking-fulfillment');
-  const { fulfillDigitalOrder } = await import('@/lib/fulfillment');
-  const { notifyOrderPaid } = await import('@/lib/order-notification');
-
+  let result;
   try {
-    await fulfillOrderBookings(supabase, orderId, 'approved');
-    await fulfillDigitalOrder(supabase, {
-      id: order.id,
-      buyer_email: order.buyer_email,
-      notified_at: order.notified_at,
-    });
-    await notifyOrderPaid(supabase, orderId, { confirmedManually: true });
+    result = await syncOrderWithMercadoPago(supabase, orderId, { confirmedManually: true });
   } catch (err) {
-    console.error('Error confirmando el pago manualmente', { orderId, err });
-    revalidatePath('/admin/pedidos');
-    revalidatePath('/admin/calendario');
-    return {
+    console.error('Error sincronizando el pago con Mercado Pago', { orderId, err });
+    result = {
       ok: false,
-      message: 'La orden quedó como aprobada, pero algo falló al agendar o enviar el correo. Revisa el calendario.',
+      message: 'Algo falló al verificar el pago con Mercado Pago. Revisa el calendario y vuelve a intentar.',
     };
   }
 
   revalidatePath('/admin/pedidos');
   revalidatePath('/admin/calendario');
-  return {
-    ok: true,
-    message: 'Pago confirmado: cita agendada en Google Calendar y correos enviados a Denisse y la clienta.',
-  };
+  return { ok: result.ok, message: result.message };
 }
 
 /** Elimina pedidos (y sus items/redenciones/citas asociados). */

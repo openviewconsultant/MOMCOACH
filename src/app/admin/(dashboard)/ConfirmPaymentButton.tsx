@@ -13,7 +13,7 @@ export default function ConfirmPaymentButton({ orderId }: { orderId: string }) {
   function run() {
     if (
       !window.confirm(
-        '¿Confirmar que el pago de este pedido sí se recibió?\n\nSe marcará como aprobado, se agendará la cita en Google Calendar y se enviará el correo con toda la información a Denisse y a la clienta.'
+        'Se consultará el estado real del pago en Mercado Pago y se actualizará el pedido.\n\nSi Mercado Pago confirma el pago, se agenda la cita en Google Calendar y se envían los correos a Denisse y a la clienta.'
       )
     ) {
       return;
@@ -45,7 +45,7 @@ export default function ConfirmPaymentButton({ orderId }: { orderId: string }) {
           opacity: pending ? 0.7 : 1,
         }}
       >
-        {pending ? 'Confirmando…' : 'Confirmar pago y agendar'}
+        {pending ? 'Verificando…' : 'Verificar pago con Mercado Pago'}
       </button>
       {message && (
         <span

@@ -21,6 +21,20 @@ export function resolveCheckoutUrl(preference: { init_point?: string; sandbox_in
   return isSandboxMode() ? preference.sandbox_init_point || preference.init_point : preference.init_point;
 }
 
+// Estados terminales negativos de Mercado Pago. Todo lo demás que no sea
+// "approved" (pendiente, en proceso, autorizado, en mediación) se trata como
+// "pending" a la espera de la confirmación real.
+export const REJECTED_MP_STATUSES = new Set(['rejected', 'cancelled', 'refunded', 'charged_back']);
+
+export function mapMercadoPagoStatus(status?: string | null): 'approved' | 'rejected' | 'pending' {
+  if (status === 'approved') return 'approved';
+  return REJECTED_MP_STATUSES.has(status ?? '') ? 'rejected' : 'pending';
+}
+
+export function formatMercadoPagoStatusDetail(status?: string | null, detail?: string | null): string | null {
+  return [status, detail].filter(Boolean).join(' — ') || null;
+}
+
 export function getSiteUrl(): string {
   const url = process.env.NEXT_PUBLIC_SITE_URL;
   if (!url) {

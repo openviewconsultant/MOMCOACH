@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { InvalidWebhookSignatureError, Payment, WebhookSignatureValidator } from 'mercadopago';
-import { getMercadoPagoClient } from '@/lib/mercadopago';
+import { getMercadoPagoClient, mapMercadoPagoStatus, formatMercadoPagoStatusDetail } from '@/lib/mercadopago';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendGiftCardEmail } from '@/lib/email';
 import { fulfillDigitalOrder } from '@/lib/fulfillment';
@@ -69,20 +69,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
-    // Mapea el estado de Mercado Pago al estado que maneja la orden. Los
-    // estados terminales negativos (rechazado, cancelado, reembolsado,
-    // contracargo) se guardan como "rejected"; todo lo demás (pendiente,
-    // en proceso, autorizado, en mediación) se deja como "pending". El
-    // detalle real de Mercado Pago siempre se guarda en status_detail para
-    // poder mostrarlo en el panel de administración.
-    const REJECTED_MP_STATUSES = new Set(['rejected', 'cancelled', 'refunded', 'charged_back']);
-    const mappedStatus: 'approved' | 'rejected' | 'pending' =
-      paymentInfo.status === 'approved'
-        ? 'approved'
-        : REJECTED_MP_STATUSES.has(paymentInfo.status ?? '')
-          ? 'rejected'
-          : 'pending';
-    const statusDetail = [paymentInfo.status, paymentInfo.status_detail].filter(Boolean).join(' — ') || null;
+    // El estado real de Mercado Pago se mapea al estado que maneja la orden
+    // (ver mapMercadoPagoStatus). El detalle crudo se guarda en status_detail
+    // para poder mostrarlo en el panel de administración.
+    const mappedStatus = mapMercadoPagoStatus(paymentInfo.status);
+    const statusDetail = formatMercadoPagoStatusDetail(paymentInfo.status, paymentInfo.status_detail);
 
     await supabase
       .from('orders')
