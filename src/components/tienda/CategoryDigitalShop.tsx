@@ -12,6 +12,16 @@ import { formatUSD } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
 
+/**
+ * Un producto que se agenda con cita: las asesorías (`product_type: 'service'`)
+ * y los productos con proveedor de pago `calendar`. Estos NO se agregan al
+ * carrito con el botón normal — abren el modal de reserva para elegir horario
+ * y dejar el celular; si no, se paga sin que se cree la cita.
+ */
+function isBookingProduct(p: Product): boolean {
+  return p.product_type === 'service' || p.payment_provider === 'calendar';
+}
+
 interface CategoryDigitalShopProps {
   guides: Product[];
   freebies: Product[];
@@ -34,8 +44,8 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
     if (item.payment_provider === 'hotmart' && item.hotmart_url) {
       return { label: 'Comprar', onClick: () => window.open(item.hotmart_url!, '_blank', 'noopener,noreferrer') };
     }
-    if (item.payment_provider === 'calendar') {
-      return { label: 'Agendar cita', onClick: () => setBookingTarget(item) };
+    if (isBookingProduct(item)) {
+      return { label: item.product_type === 'service' ? 'Solicitar Asesoría' : 'Agendar cita', onClick: () => setBookingTarget(item) };
     }
     return {
       label: inCart ? 'Añadir otro' : 'Añadir al carrito',
@@ -93,13 +103,13 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                       >
                         Comprar
                       </a>
-                    ) : guide.payment_provider === 'calendar' ? (
+                    ) : isBookingProduct(guide) ? (
                       <ServiceBookingButton
                         productId={guide.id}
                         title={guide.title}
                         price={guide.price}
                         calendarId={guide.booking_calendar_id}
-                        buttonText="Agendar cita"
+                        buttonText={guide.product_type === 'service' ? 'Solicitar Asesoría' : 'Agendar cita'}
                         className="shop-mini-btn font-inter"
                       />
                     ) : (
