@@ -123,3 +123,44 @@ export async function syncOrderWithMercadoPago(
       : 'Pago confirmado por Mercado Pago: pedido aprobado, cita agendada en Google Calendar y correos enviados.',
   };
 }
+
+/**
+ * Recorre los pedidos que siguen en "pending" y los sincroniza con Mercado
+ * Pago. Lo usan el cron de Vercel y también la carga del panel de Pedidos,
+ * para que el cambio de estado sea automático sin que nadie tenga que estar
+ * pendiente de si la clienta pagó.
+ */
+export async function reconcilePendingOrders(
+  supabase: AdminClient,
+  opts: { lookbackDays?: number; limit?: number } = {}
+): Promise<{ checked: number; approved: number }> {
+  const lookbackDays = opts.lookbackDays ?? 10;
+  const limit = opts.limit ?? 50;
+  const since = new Date(Date.now() - lookbackDays * 24 * 60 * 60 * 1000).toISOString();
+
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select('id')
+    .eq('status', 'pending')
+    .gte('created_at', since)
+    .limit(limit);
+
+  if (error || !orders || orders.length === 0) {
+    if (error) console.error('No se pudieron leer los pedidos pendientes', error);
+    return { checked: 0, approved: 0 };
+  }
+
+  const results = await Promise.all(
+    orders.map((o) =>
+      syncOrderWithMercadoPago(supabase, o.id).catch((err) => {
+        console.error('Error reconciliando pedido pendiente', { orderId: o.id, err });
+        return { ok: false, status: 'pending' as const, message: '' };
+      })
+    )
+  );
+
+  return {
+    checked: results.length,
+    approved: results.filter((r) => r.status === 'approved').length,
+  };
+}

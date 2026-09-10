@@ -1,10 +1,24 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import type { Order, OrderItem } from '@/lib/types';
 import { formatUSD } from '@/lib/format';
+import { reconcilePendingOrders } from '@/lib/order-sync';
 import PedidosTable, { type OrderRow } from './PedidosTable';
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminPedidosPage() {
   const supabase = await createClient();
+
+  // Al abrir el panel, se revisan contra Mercado Pago los pedidos recientes
+  // que siguen pendientes: si ya se pagaron, quedan aprobados, agendados y
+  // con los correos enviados — sin que nadie tenga que estar pendiente.
+  try {
+    await reconcilePendingOrders(createAdminClient(), { lookbackDays: 3, limit: 10 });
+  } catch (error) {
+    console.error('No se pudieron reconciliar los pedidos pendientes al abrir el panel', error);
+  }
+
   const { data: orders } = await supabase
     .from('orders')
     .select('*')
