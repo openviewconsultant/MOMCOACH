@@ -2,6 +2,7 @@ import type { createAdminClient } from '@/lib/supabase/admin';
 import { sendOrderPaidEmail, sendAdminOrderStatusEmail, type OrderPaidAppointment } from '@/lib/email';
 import { getCalendarById } from '@/lib/booking-config';
 import { friendlyStatusDetail } from '@/lib/mp-status-detail';
+import { intakeFormForProducts } from '@/lib/product-forms';
 import type { Booking, Order, OrderItem } from '@/lib/types';
 
 type AdminClient = ReturnType<typeof createAdminClient>;
@@ -9,6 +10,7 @@ type AdminClient = ReturnType<typeof createAdminClient>;
 interface OrderSummary {
   order: Pick<Order, 'id' | 'buyer_email' | 'total'>;
   productTitles: string[];
+  productIds: string[];
   appointments: OrderPaidAppointment[];
   buyerName: string | null;
   buyerPhone: string | null;
@@ -57,6 +59,7 @@ async function gatherOrderSummary(supabase: AdminClient, orderId: string): Promi
   return {
     order,
     productTitles: items.map((it) => it.title),
+    productIds: items.map((it) => it.product_id).filter((id): id is string => Boolean(id)),
     appointments,
     buyerName: bookings[0]?.buyer_name || null,
     buyerPhone: bookings.find((b) => b.buyer_phone)?.buyer_phone || null,
@@ -109,6 +112,7 @@ export async function notifyOrderPaid(
       total: summary.order.total,
       currency: 'USD',
       confirmedManually: Boolean(options.confirmedManually),
+      intakeFormUrl: intakeFormForProducts(summary.productIds),
     });
 
     // El correo salió: marca la orden como notificada para que el panel

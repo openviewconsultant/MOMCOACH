@@ -443,6 +443,8 @@ export interface OrderPaidEmailParams {
   total: number;
   currency: string;
   confirmedManually: boolean;
+  /** Formulario de admisión que debe diligenciar la clienta (solo ciertos productos). */
+  intakeFormUrl?: string | null;
 }
 
 function dataRow(label: string, value: string): string {
@@ -485,10 +487,25 @@ export function orderPaidEmailHtml(params: OrderPaidEmailParams): string {
          </td></tr>
        </table>`;
 
+  const intakeFormHtml = params.intakeFormUrl
+    ? `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#4C577C" style="background:#4C577C; border-radius:14px; margin:0 0 18px;">
+      <tr><td style="padding:20px 22px;">
+        <p style="margin:0 0 6px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.7);">Siguiente paso</p>
+        <p style="margin:0 0 12px; font-size:14px; line-height:1.6; color:#ffffff;">
+          Para empezar, necesitamos que diligencies el formulario con la información de tu hijo/a y tu familia.
+        </p>
+        <a href="${params.intakeFormUrl}" style="display:inline-block; background:#EFC6A1; color:#2d2a26; font-family:Arial,sans-serif; font-size:14px; font-weight:bold; text-decoration:none; padding:11px 22px; border-radius:999px;">Haz clic aquí para diligenciar el formulario</a>
+      </td></tr>
+    </table>`
+    : '';
+
   const bodyHtml = `
     <p class="force-text-dark" style="margin:0 0 20px 0; font-size:15px; line-height:1.6; color:#2d2a26;">
       Se registró un <strong>pago confirmado</strong>${params.confirmedManually ? ' (confirmado manualmente desde el panel)' : ''}. Estos son los datos:
     </p>
+
+    ${intakeFormHtml}
 
     ${appointmentsHtml}
 
