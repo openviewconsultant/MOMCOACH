@@ -59,6 +59,25 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <span>{p.title}</span>
             </div>
           )}
+
+          {hasProceso && (
+            <section className="producto-proceso">
+              <span className="producto-proceso-eyebrow font-inter">Proceso</span>
+              <h2 className="producto-proceso-title font-fraunces">Cómo funciona {p.title}</h2>
+              {processImageUrl ? (
+                <img src={processImageUrl} alt={`Proceso de ${p.title}`} className="producto-proceso-img" />
+              ) : (
+                <ol className="producto-proceso-steps">
+                  {processSteps.map((step, idx) => (
+                    <li key={idx} className="producto-proceso-step">
+                      <span className="producto-proceso-num font-fraunces" aria-hidden="true">{idx + 1}</span>
+                      <p className="font-inter">{step}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          )}
         </div>
 
         <div className="producto-info-card">
@@ -106,25 +125,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
       </div>
-
-      {hasProceso && (
-        <section className="producto-proceso">
-          <span className="producto-proceso-eyebrow font-inter">Proceso</span>
-          <h2 className="producto-proceso-title font-fraunces">Cómo funciona {p.title}</h2>
-          {processImageUrl ? (
-            <img src={processImageUrl} alt={`Proceso de ${p.title}`} className="producto-proceso-img" />
-          ) : (
-            <ol className="producto-proceso-steps">
-              {processSteps.map((step, idx) => (
-                <li key={idx} className="producto-proceso-step">
-                  <span className="producto-proceso-num font-fraunces" aria-hidden="true">{idx + 1}</span>
-                  <p className="font-inter">{step}</p>
-                </li>
-              ))}
-            </ol>
-          )}
-        </section>
-      )}
     </div>
   );
 }

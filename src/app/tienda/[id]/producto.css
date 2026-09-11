@@ -53,8 +53,9 @@
 }
 
 .producto-media {
-  position: sticky;
-  top: 104px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .producto-video-wrap {
@@ -241,9 +242,8 @@
 /* ---------- Proceso paso a paso ---------- */
 
 .producto-proceso {
-  margin: 64px auto 0;
-  padding: 0 5%;
-  max-width: 780px;
+  margin: 4px 0 0;
+  padding: 0;
 }
 
 .producto-proceso-eyebrow {
@@ -326,7 +326,7 @@
   }
 
   .producto-proceso {
-    margin-top: 44px;
+    margin-top: 4px;
   }
 
   .producto-proceso-title {
