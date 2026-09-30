@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import '../admin.css';
 
@@ -31,35 +32,54 @@ export default function AdminLoginPage() {
 
   return (
     <div className="admin-login-main">
+      <div className="admin-login-decor" aria-hidden="true">
+        <span className="admin-login-blob admin-login-blob-1" />
+        <span className="admin-login-blob admin-login-blob-2" />
+        <span className="admin-login-blob admin-login-blob-3" />
+      </div>
+
       <form className="admin-login-card" onSubmit={handleSubmit}>
-        <div className="admin-login-icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-        </div>
+        <img
+          src="/PHOTO-2026-07-14-08-47-02.jpg"
+          alt="The Mom Coach"
+          className="admin-login-logo"
+        />
+
+        <span className="admin-login-eyebrow font-inter">Panel privado</span>
         <h1 className="admin-login-title font-fraunces">Administración</h1>
         <p className="admin-login-subtitle font-inter">Ingresa para gestionar los productos de la tienda.</p>
 
         <label className="admin-login-label">
           Correo
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-          />
+          <div className="admin-login-input-wrap">
+            <svg className="admin-login-input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="3" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
         </label>
 
         <label className="admin-login-label">
           Contraseña
-          <div className="admin-login-password-wrap">
+          <div className="admin-login-input-wrap admin-login-password-wrap">
+            <svg className="admin-login-input-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              placeholder="••••••••"
               required
             />
             <button
@@ -93,11 +113,24 @@ export default function AdminLoginPage() {
           Mantener sesión iniciada en este dispositivo
         </label>
 
-        {error && <p className="admin-error">{error}</p>}
+        {error && (
+          <p className="admin-login-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {error}
+          </p>
+        )}
 
-        <button type="submit" className="admin-submit-btn admin-login-submit" disabled={loading}>
+        <button type="submit" className="admin-login-submit" disabled={loading}>
           {loading ? 'Ingresando…' : 'Ingresar'}
         </button>
+
+        <Link href="/" className="admin-login-back font-inter">
+          ← Volver al sitio
+        </Link>
       </form>
     </div>
   );
