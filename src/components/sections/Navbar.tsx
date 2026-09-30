@@ -79,7 +79,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile slide-in menu */}
-      <div className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`} role="dialog" aria-modal="true">
+      <div className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Menú de navegación">
         {/* Top bar inside menu */}
         <div className="nav-mobile-header">
           <Logo variant="primary" />

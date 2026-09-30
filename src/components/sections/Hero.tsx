@@ -1,9 +1,22 @@
 import React from 'react';
+import { preload } from 'react-dom';
+import { optimizedSrc, optimizedSrcSet } from '@/lib/image-opt';
 import Button from '../ui/Button';
 import DisintegrateImage from '../ui/DisintegrateImage';
 import './sections.css';
 
+const HERO_MAIN_SIZES = '(max-width: 768px) 85vw, 480px';
+const HERO_SECONDARY_SIZES = '(max-width: 768px) 45vw, 300px';
+
 export default function Hero() {
+  // La foto principal es el LCP: se pide en cuanto llega el HTML, ya optimizada.
+  preload(optimizedSrc('/hero-main.jpg', 828), {
+    as: 'image',
+    imageSrcSet: optimizedSrcSet('/hero-main.jpg'),
+    imageSizes: HERO_MAIN_SIZES,
+    fetchPriority: 'high',
+  });
+
   return (
     <section className="section hero-section">
       <div className="hero-grid">
@@ -32,10 +45,10 @@ export default function Hero() {
 
         <div className="hero-images">
           <div className="hero-img-main" style={{ background: 'var(--color-turquoise)' }}>
-            <DisintegrateImage src="/hero-main.jpg" alt="Madre e hijo" radius={20} />
+            <DisintegrateImage src="/hero-main.jpg" alt="Madre e hijo" radius={20} sizes={HERO_MAIN_SIZES} priority />
           </div>
           <div className="hero-img-secondary" style={{ background: 'var(--color-peach)' }}>
-            <DisintegrateImage src="/hero-secondary.jpg" alt="Mamá con sus dos hijos" radius={20} />
+            <DisintegrateImage src="/hero-secondary.jpg" alt="Mamá con sus dos hijos" radius={20} sizes={HERO_SECONDARY_SIZES} />
           </div>
         </div>
       </div>

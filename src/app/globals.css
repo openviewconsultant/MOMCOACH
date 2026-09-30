@@ -226,7 +226,8 @@ a:hover {
 }
 
 .cookie-btn-secondary {
-  padding: 8px 14px;
+  min-height: 44px;
+  padding: 10px 16px;
   border-radius: var(--radius-full);
   background: transparent;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -241,9 +242,10 @@ a:hover {
 }
 
 .cookie-btn-primary {
-  padding: 8px 16px;
+  min-height: 44px;
+  padding: 10px 18px;
   border-radius: var(--radius-full);
-  background: var(--color-turquoise);
+  background: #3d7d82; /* turquesa oscurecido: contraste 4.5:1 con texto blanco */
   border: none;
   font-size: 0.85rem;
   color: white;

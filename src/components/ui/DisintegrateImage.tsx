@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { optimizedSrc, optimizedSrcSet } from '@/lib/image-opt';
 
 interface DisintegrateImageProps {
   src: string;
@@ -10,6 +11,10 @@ interface DisintegrateImageProps {
   radius?: number;
   /** How many pixels of scroll it takes to fully disintegrate, starting immediately at scrollY 0. */
   scrollDistance?: number;
+  /** Ancho aproximado (CSS) en el que se muestra la imagen; se usa para elegir el tamaño a descargar. */
+  sizes?: string;
+  /** Imagen principal de la página (LCP): se descarga con prioridad alta. */
+  priority?: boolean;
 }
 
 function seededRandom(seed: number) {
@@ -24,6 +29,8 @@ export default function DisintegrateImage({
   rows = 8,
   radius = 20,
   scrollDistance = 500,
+  sizes = '(max-width: 768px) 90vw, 560px',
+  priority = false,
 }: DisintegrateImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -117,7 +124,11 @@ export default function DisintegrateImage({
           >
             {/* Full-size cover-fitted image, shifted so only this tile's slice shows */}
             <img
-              src={src}
+              src={optimizedSrc(src, 828)}
+              srcSet={optimizedSrcSet(src)}
+              sizes={sizes}
+              fetchPriority={priority ? 'high' : 'auto'}
+              decoding="async"
               alt=""
               aria-hidden="true"
               style={{
