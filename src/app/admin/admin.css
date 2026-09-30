@@ -1,73 +1,70 @@
 /* ---------- Login ---------- */
 
 .admin-login-main {
-  position: relative;
   min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  background: var(--color-cream);
+}
+
+.admin-login-photo {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.admin-login-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 30%;
+}
+
+.admin-login-photo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 56px;
+  color: white;
+  background: linear-gradient(180deg, rgba(45, 42, 38, 0) 45%, rgba(45, 42, 38, 0.65) 100%);
+}
+
+.admin-login-photo-quote {
+  font-size: 2rem;
+  line-height: 1.2;
+  max-width: 420px;
+  margin: 0;
+}
+
+.admin-login-photo-brand {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.admin-login-panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  overflow: hidden;
-  background: radial-gradient(120% 100% at 15% 0%, var(--color-peach) 0%, var(--color-cream) 55%, var(--color-cream) 100%);
-}
-
-.admin-login-decor {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.admin-login-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(2px);
-  opacity: 0.5;
-}
-
-.admin-login-blob-1 {
-  width: 420px;
-  height: 420px;
-  top: -160px;
-  right: -140px;
-  background: radial-gradient(circle at 30% 30%, var(--color-turquoise), transparent 70%);
-  opacity: 0.35;
-}
-
-.admin-login-blob-2 {
-  width: 320px;
-  height: 320px;
-  bottom: -140px;
-  left: -100px;
-  background: radial-gradient(circle at 60% 40%, var(--color-coral), transparent 70%);
-  opacity: 0.28;
-}
-
-.admin-login-blob-3 {
-  width: 200px;
-  height: 200px;
-  bottom: 12%;
-  right: 8%;
-  background: radial-gradient(circle at 50% 50%, var(--color-olive-light), transparent 70%);
-  opacity: 0.25;
-  display: none;
+  padding: 40px 32px;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(239, 198, 161, 0.45), var(--color-cream) 60%);
 }
 
 .admin-login-card {
-  position: relative;
-  z-index: 1;
   width: 100%;
-  max-width: 396px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  padding: 44px 38px 36px;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 24px 60px rgba(76, 87, 124, 0.16), 0 2px 8px rgba(76, 87, 124, 0.06);
+  padding: 8px 0;
 }
 
 .admin-login-logo {
@@ -257,10 +254,26 @@
   text-decoration: underline;
 }
 
-@media (max-width: 420px) {
-  .admin-login-card {
-    padding: 36px 24px 28px;
-    border-radius: 22px;
+@media (max-width: 860px) {
+  .admin-login-main {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-login-photo {
+    min-height: 220px;
+    height: 220px;
+  }
+
+  .admin-login-photo-overlay {
+    padding: 24px;
+  }
+
+  .admin-login-photo-quote {
+    font-size: 1.3rem;
+  }
+
+  .admin-login-panel {
+    padding: 32px 24px 48px;
   }
 }
 

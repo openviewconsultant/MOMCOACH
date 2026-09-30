@@ -32,12 +32,15 @@ export default function AdminLoginPage() {
 
   return (
     <div className="admin-login-main">
-      <div className="admin-login-decor" aria-hidden="true">
-        <span className="admin-login-blob admin-login-blob-1" />
-        <span className="admin-login-blob admin-login-blob-2" />
-        <span className="admin-login-blob admin-login-blob-3" />
-      </div>
+      <aside className="admin-login-photo" aria-hidden="true">
+        <img src="/sobre-mi-foto.jpg" alt="" />
+        <div className="admin-login-photo-overlay">
+          <p className="admin-login-photo-quote font-fraunces">Acompañando a cada mamá, noche a noche.</p>
+          <span className="admin-login-photo-brand font-inter">The Mom Coach</span>
+        </div>
+      </aside>
 
+      <div className="admin-login-panel">
       <form className="admin-login-card" onSubmit={handleSubmit}>
         <img
           src="/PHOTO-2026-07-14-08-47-02.jpg"
@@ -132,6 +135,7 @@ export default function AdminLoginPage() {
           ← Volver al sitio
         </Link>
       </form>
+      </div>
     </div>
   );
 }
