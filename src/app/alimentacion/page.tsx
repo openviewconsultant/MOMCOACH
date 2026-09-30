@@ -12,6 +12,9 @@ import './alimentacion.css';
 import DiscountBadge from '@/components/ui/DiscountBadge';
 import { finalPrice, hasDiscount } from '@/lib/pricing';
 
+// Los servicios fijos de respaldo no traen descuento; los de la base de datos sí.
+const promoOf = (service: object) => service as { oldPrice?: string | null; discount?: Product | null };
+
 export const metadata = buildMetadata({
   title: 'Alimentación Infantil & BLW | The Mom Coach',
   description: 'Asesorías de alimentación complementaria, manejo de picky eaters y recetarios saludables.',
@@ -193,7 +196,7 @@ export default async function AlimentacionPage() {
                     loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
-                  {'discount' in service && service.discount && <DiscountBadge product={service.discount} />}
+                  {promoOf(service).discount && <DiscountBadge product={promoOf(service).discount!} />}
                 </div>
               )}
               <div style={{ padding: '32px 32px 36px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
@@ -208,7 +211,7 @@ export default async function AlimentacionPage() {
                     )}
                   </h3>
                   <p className="font-fraunces" style={{ fontSize: 'clamp(1.55rem, 5vw, 2.2rem)', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
-                    {'oldPrice' in service && service.oldPrice && <span className="dc-old-price" style={{ fontSize: '0.6em' }}>{service.oldPrice}</span>}
+                    {promoOf(service).oldPrice && <span className="dc-old-price" style={{ fontSize: '0.6em' }}>{promoOf(service).oldPrice}</span>}
                     {service.price}
                   </p>
                   {service.id.startsWith('f-') ? (

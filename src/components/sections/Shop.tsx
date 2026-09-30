@@ -11,7 +11,15 @@ interface ShopProps {
   products?: SupabaseProduct[];
 }
 
-const fallbackProducts = [
+interface ShopItem {
+  title: string;
+  price: string;
+  img: string;
+  oldPrice?: string | null;
+  discount?: SupabaseProduct | null;
+}
+
+const fallbackProducts: ShopItem[] = [
   {
     title: 'Guía: Cómo Solucionar las Siestas Cortas',
     price: 'USD $16',
@@ -55,7 +63,7 @@ const fallbackProducts = [
 ];
 
 export default function Shop({ products: featuredProducts }: ShopProps) {
-  const products = featuredProducts && featuredProducts.length > 0
+  const products: ShopItem[] = featuredProducts && featuredProducts.length > 0
     ? featuredProducts.map((p) => ({
         title: p.title,
         price: p.price === 0 ? 'Gratis' : `USD $${finalPrice(p)}`,
@@ -132,7 +140,7 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
                   {product.img ? (
                     <>
                       <img src={product.img} alt={product.title} loading="lazy" />
-                      {'discount' in product && product.discount && <DiscountBadge product={product.discount} />}
+                      {product.discount && <DiscountBadge product={product.discount} />}
                     </>
                   ) : (
                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
@@ -142,7 +150,7 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
                 </div>
                 <h3 className="shop-card-title font-inter">{product.title}</h3>
                 <p className="shop-card-price font-inter">
-                  {'oldPrice' in product && product.oldPrice && <span className="dc-old-price">{product.oldPrice}</span>}
+                  {product.oldPrice && <span className="dc-old-price">{product.oldPrice}</span>}
                   {product.price}
                 </p>
               </a>
