@@ -80,13 +80,13 @@ function Spider() {
  * tener `position: relative` y `overflow: hidden` (todas las tarjetas lo tienen).
  * Con estilo "halloween" agrega telaraña y una araña que sube por su hilo.
  */
-export default function DiscountBadge({ product }: { product: DiscountProduct }) {
+export default function DiscountBadge({ product, onCard = false }: { product: DiscountProduct; onCard?: boolean }) {
   if (!hasDiscount(product)) return null;
   const pct = discountPercentOf(product);
   const halloween = product.discount_style === 'halloween';
 
   return (
-    <div className={`dc-overlay ${halloween ? 'dc-halloween' : 'dc-default'}`} aria-hidden="true">
+    <div className={`dc-overlay ${halloween ? 'dc-halloween' : 'dc-default'} ${onCard ? 'dc-card' : ''}`} aria-hidden="true">
       {halloween && (
         <>
           <Cobweb />

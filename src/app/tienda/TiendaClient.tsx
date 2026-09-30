@@ -40,13 +40,14 @@ function SupabaseProductCard({
 
   return (
     <div
-      className={`tienda-card ${isPreviewable ? 'is-previewable' : ''}`}
+      className={`tienda-card dc-host ${isPreviewable ? 'is-previewable' : ''}`}
       onClick={
         isPreviewable
           ? (e) => onPreviewClick(product, e.currentTarget.getBoundingClientRect())
           : undefined
       }
     >
+      <DiscountBadge product={product} onCard />
       <div className="tienda-card-image">
         {product.cover_image_url ? (
           <img src={product.cover_image_url} alt={product.title} loading="lazy" />
@@ -55,7 +56,6 @@ function SupabaseProductCard({
             <span>{product.title}</span>
           </div>
         )}
-        <DiscountBadge product={product} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onClick={(e) => e.stopPropagation()}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
