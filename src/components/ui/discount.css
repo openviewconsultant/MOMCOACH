@@ -17,13 +17,13 @@
   border-radius: inherit;
 }
 
-/* ── Franja diagonal que cruza la esquina inferior derecha ───── */
+/* ── Franja diagonal que cruza la esquina superior izquierda ───── */
 .dc-strip {
   position: absolute;
   width: 92cqw;
   min-height: 11cqw;
-  right: -27cqw;
-  bottom: 13cqw;
+  left: -27cqw;
+  top: 13cqw;
   transform: rotate(-45deg);
   display: flex;
   align-items: center;
