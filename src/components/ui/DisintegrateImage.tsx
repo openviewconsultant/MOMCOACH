@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { optimizedSrc, optimizedSrcSet } from '@/lib/image-opt';
 
 interface DisintegrateImageProps {
@@ -34,8 +34,23 @@ export default function DisintegrateImage({
 }: DisintegrateImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // En reposo se muestra UNA sola imagen (rápido para el LCP y con poco DOM).
+  // Las 64 piezas del efecto solo se montan cuando la persona empieza a hacer scroll.
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
+    if (active) return;
+    if (window.scrollY > 0) {
+      setActive(true);
+      return;
+    }
+    const onFirstScroll = () => setActive(true);
+    window.addEventListener('scroll', onFirstScroll, { passive: true, once: true });
+    return () => window.removeEventListener('scroll', onFirstScroll);
+  }, [active]);
+
+  useEffect(() => {
+    if (!active) return;
     let scheduled = false;
 
     const update = () => {
@@ -90,9 +105,35 @@ export default function DisintegrateImage({
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [cols, rows, scrollDistance]);
+  }, [active, cols, rows, scrollDistance]);
 
   const tiles = Array.from({ length: cols * rows });
+  const imgProps = {
+    src: optimizedSrc(src, 828),
+    srcSet: optimizedSrcSet(src),
+    sizes,
+    fetchPriority: priority ? ('high' as const) : ('auto' as const),
+    decoding: 'async' as const,
+  };
+
+  if (!active) {
+    return (
+      <div ref={containerRef} style={{ position: 'relative', width: '100%', height: '100%', overflow: 'visible' }}>
+        <img
+          {...imgProps}
+          alt={alt}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            borderRadius: radius,
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%', height: '100%', overflow: 'visible' }}>
@@ -124,11 +165,7 @@ export default function DisintegrateImage({
           >
             {/* Full-size cover-fitted image, shifted so only this tile's slice shows */}
             <img
-              src={optimizedSrc(src, 828)}
-              srcSet={optimizedSrcSet(src)}
-              sizes={sizes}
-              fetchPriority={priority ? 'high' : 'auto'}
-              decoding="async"
+              {...imgProps}
               alt=""
               aria-hidden="true"
               style={{

@@ -51,7 +51,7 @@ export default function About() {
           </p>
         </div>
         <div className="about-image-wrapper animate-fade-in" style={{ animationDelay: '0.2s', background: 'var(--color-cream)' }}>
-           <img src="/wp-content/uploads/2023/12/historia-denisse-familia.jpg" alt="Denisse con su pareja y su bebé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+           <img src="/wp-content/uploads/2023/12/historia-denisse-familia.jpg" alt="Denisse con su pareja y su bebé" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
            <div className="about-badges">
              <div className="about-badges-stack">
@@ -67,7 +67,7 @@ export default function About() {
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
                >
-                 <img src="/badge-pda.png" alt="Miembro de The Positive Discipline Association 2026" className="about-badge" />
+                 <img loading="lazy" decoding="async" src="/badge-pda.png" alt="Miembro de The Positive Discipline Association 2026" className="about-badge" />
                </div>
                <div
                  className="about-badge-card about-badge-card--acs"
@@ -81,7 +81,7 @@ export default function About() {
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
                >
-                 <img src="/badge-acs.png" alt="Consultora de Sueño Infantil Certificada — Academia Consultoría de Sueño" className="about-badge" />
+                 <img loading="lazy" decoding="async" src="/badge-acs.png" alt="Consultora de Sueño Infantil Certificada — Academia Consultoría de Sueño" className="about-badge" />
                </div>
                <div
                  className="about-badge-card about-badge-card--iin"
@@ -95,7 +95,7 @@ export default function About() {
                    transition: 'transform 0.3s ease, z-index 0.3s ease'
                  }}
                >
-                 <img src="/badge-iin.png" alt="Graduada certificada por el Institute for Integrative Nutrition" className="about-badge" />
+                 <img loading="lazy" decoding="async" src="/badge-iin.png" alt="Graduada certificada por el Institute for Integrative Nutrition" className="about-badge" />
                </div>
              </div>
            </div>
