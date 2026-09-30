@@ -80,10 +80,10 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                     setPreviewTarget({ item: guide, rect: e.currentTarget.getBoundingClientRect() });
                   }}
                 >
+                  <DiscountBadge product={guide} onCard />
                   {guide.cover_image_url ? (
                     <span className="shop-mini-image">
                       <img src={guide.cover_image_url} alt={guide.title} loading="lazy" />
-                      <DiscountBadge product={guide} />
                     </span>
                   ) : (
                     <span className="shop-mini-icon" aria-hidden="true">
