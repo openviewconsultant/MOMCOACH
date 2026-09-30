@@ -110,18 +110,19 @@
 
 /* ── Versión sobre la tarjeta completa (más ancha que la imagen) ───── */
 .dc-card .dc-strip {
-  width: 68cqw;
-  min-height: 8cqw;
-  left: -19cqw;
-  top: 9.5cqw;
+  width: 80cqw;
+  min-height: 8.5cqw;
+  left: -20cqw;
+  top: 15.75cqw;
+  gap: 1.4cqw;
 }
 
 .dc-card .dc-strip-pct {
-  font-size: clamp(11px, 5.4cqw, 26px);
+  font-size: clamp(11px, 4.6cqw, 24px);
 }
 
 .dc-card .dc-strip-label {
-  font-size: clamp(7px, 2.3cqw, 12px);
+  font-size: clamp(8px, 2.3cqw, 12px);
 }
 
 .dc-card .dc-web {
