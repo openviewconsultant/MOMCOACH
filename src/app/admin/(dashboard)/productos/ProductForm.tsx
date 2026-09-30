@@ -6,6 +6,7 @@ import { saveProductAction, type ProductFormState } from '../../actions';
 import type { Product } from '@/lib/types';
 import type { CalendarOption } from '@/lib/calendarOptions';
 import { safeStorageName } from '@/lib/storage';
+import { PRODUCT_SUBCATEGORIES } from '@/lib/product-subcategories';
 
 const initialState: ProductFormState = { error: null };
 
@@ -297,11 +298,12 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
               Subcategoría (opcional)
               <select name="subcategory" defaultValue={product?.subcategory ?? ''}>
                 <option value="">Ninguna</option>
-                <option value="Curso">Curso</option>
-                <option value="Guía">Guía</option>
-                <option value="Tarjeta de regalo">Tarjeta de regalo</option>
-                <option value="Libro">Libro</option>
-                <option value="Gratuitos">Gratuitos</option>
+                {PRODUCT_SUBCATEGORIES.map((sub) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+                {product?.subcategory && !(PRODUCT_SUBCATEGORIES as readonly string[]).includes(product.subcategory) && (
+                  <option value={product.subcategory}>{product.subcategory}</option>
+                )}
               </select>
             </label>
           </div>

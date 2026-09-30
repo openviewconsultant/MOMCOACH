@@ -10,12 +10,13 @@ import GiftCardModal from '@/components/tienda/GiftCardModal';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatUSD } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
+import { PRODUCT_SUBCATEGORIES, type ProductSubcategory } from '@/lib/product-subcategories';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
-type Subcategory = 'Todas' | 'Ebook' | 'Recetario' | 'Asesoría' | 'Tarjeta de regalo' | 'Gratuitos';
+type Subcategory = 'Todas' | ProductSubcategory;
 
 const baseCategories: Category[] = ['Todos', 'Sueño infantil', 'Alimentación', 'Regalo'];
-const subcategories: Subcategory[] = ['Todas', 'Ebook', 'Recetario', 'Asesoría', 'Tarjeta de regalo', 'Gratuitos'];
+const subcategories: Subcategory[] = ['Todas', ...PRODUCT_SUBCATEGORIES];
 
 function SupabaseProductCard({
   product,

@@ -7,6 +7,7 @@ import type { Product } from '@/lib/types';
 import ProductRowActions from './ProductRowActions';
 import { formatUSD } from '@/lib/format';
 import { generateAndSaveCover } from '@/lib/render-pdf-cover';
+import { PRODUCT_SUBCATEGORIES } from '@/lib/product-subcategories';
 
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
@@ -14,7 +15,7 @@ const PREDEFINED_CATEGORIES = [
   'Regalo',
 ];
 
-const SUBCATEGORIES = ['Curso', 'Guía', 'Tarjeta de regalo', 'Libro', 'Gratuitos'];
+const SUBCATEGORIES: readonly string[] = PRODUCT_SUBCATEGORIES;
 
 interface AdminProductsListProps {
   products: Product[];
