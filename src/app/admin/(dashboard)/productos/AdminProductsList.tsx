@@ -8,6 +8,7 @@ import ProductRowActions from './ProductRowActions';
 import { formatUSD } from '@/lib/format';
 import { generateAndSaveCover } from '@/lib/render-pdf-cover';
 import { PRODUCT_SUBCATEGORIES } from '@/lib/product-subcategories';
+import DiscountBadge, { PriceLabel } from '@/components/ui/DiscountBadge';
 
 const PREDEFINED_CATEGORIES = [
   'Alimentación',
@@ -412,6 +413,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
                 ) : (
                   <span>{product.title}</span>
                 )}
+                <DiscountBadge product={product} />
               </div>
               <div className="admin-product-card-body">
                 <div className="admin-product-card-title">{product.title}</div>
@@ -420,7 +422,7 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
                   {product.price === 0 ? (
                     <span className="admin-badge free">Gratis</span>
                   ) : (
-                    <strong>{formatUSD(product.price)}</strong>
+                    <strong><PriceLabel product={product} /></strong>
                   )}
                 </div>
                 <ProductRowActions product={product} />

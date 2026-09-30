@@ -1,0 +1,106 @@
+/* Las tarjetas donde se muestra la franja necesitan ser el ancla del overlay. */
+.shop-card-image,
+.shop-mini-image,
+.producto-cover-wrap,
+.admin-product-card-image,
+.dc-host {
+  position: relative;
+}
+
+.dc-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: inline-size;
+  z-index: 3;
+  border-radius: inherit;
+}
+
+/* ── Franja inferior ─────────────────────────────── */
+.dc-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2.5cqw;
+  padding: 2.4cqw 3cqw 2.6cqw;
+  color: #fff;
+  font-family: var(--font-inter), Arial, sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dc-strip-pct {
+  font-size: clamp(15px, 10cqw, 34px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.dc-strip-label {
+  font-size: clamp(9px, 4.4cqw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dc-default .dc-strip {
+  background: linear-gradient(90deg, var(--color-coral), var(--color-terracotta));
+}
+
+.dc-halloween .dc-strip {
+  background: linear-gradient(90deg, #ff7a1a, #f25c05);
+  border-top: 0.9cqw solid #2a1438;
+}
+
+/* ── Telaraña ────────────────────────────────────── */
+.dc-web {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 52cqw;
+  height: 52cqw;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+}
+
+/* ── Araña que sube por su hilo ──────────────────── */
+.dc-spider {
+  position: absolute;
+  top: 0;
+  right: 27cqw;
+  width: 15cqw;
+  min-width: 26px;
+  height: auto;
+  overflow: visible;
+}
+
+.dc-spider-body {
+  animation: dc-spider-climb 6s infinite;
+}
+
+@keyframes dc-spider-climb {
+  0% { transform: translateY(46px); animation-timing-function: ease-in-out; }
+  62% { transform: translateY(2px); }
+  78% { transform: translateY(2px); animation-timing-function: ease-in; }
+  100% { transform: translateY(46px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-spider-body {
+    animation: none;
+    transform: translateY(20px);
+  }
+}
+
+/* ── Precio tachado ──────────────────────────────── */
+.dc-old-price {
+  text-decoration: line-through;
+  opacity: 0.55;
+  font-weight: 400;
+  margin-right: 4px;
+}

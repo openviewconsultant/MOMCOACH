@@ -1,3 +1,4 @@
+import { finalPrice } from '@/lib/pricing';
 import type { createAdminClient } from '@/lib/supabase/admin';
 import { normalizeGiftCardCode, GIFT_CARD_PROGRAM_CATEGORY, GIFT_CARD_PROGRAM_LABEL } from '@/lib/gift-cards';
 import type { GiftCard, Product } from '@/lib/types';
@@ -76,15 +77,15 @@ export async function loadCartItemsWithCategory(
   const ids = requested.map((r) => r.id);
   const { data: products } = await supabase
     .from('products')
-    .select('id, price, category, title')
+    .select('id, price, discount_percent, category, title')
     .in('id', ids)
     .eq('is_published', true);
-  const byId = new Map((products ?? []).map((p: Pick<Product, 'id' | 'price' | 'category' | 'title'>) => [p.id, p]));
+  const byId = new Map((products ?? []).map((p: Pick<Product, 'id' | 'price' | 'discount_percent' | 'category' | 'title'>) => [p.id, p]));
   return requested
     .map((r) => {
       const p = byId.get(r.id);
       if (!p) return null;
-      return { productId: r.id, quantity: r.quantity, price: p.price, category: p.category, title: p.title };
+      return { productId: r.id, quantity: r.quantity, price: finalPrice(p), category: p.category, title: p.title };
     })
     .filter((x): x is { productId: string; quantity: number; price: number; category: string; title: string } => x !== null);
 }

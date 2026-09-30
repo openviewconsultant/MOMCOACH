@@ -8,6 +8,7 @@ import VideoPlayer from '@/components/tienda/VideoPlayer';
 import type { Product } from '@/lib/types';
 import '../tienda.css';
 import './producto.css';
+import DiscountBadge, { PriceLabel } from '@/components/ui/DiscountBadge';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -53,6 +54,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           ) : p.cover_image_url ? (
             <div className="producto-cover-wrap">
               <img src={p.cover_image_url} alt={p.title} className="producto-cover" />
+              <DiscountBadge product={p} />
             </div>
           ) : (
             <div className="libro-cover-placeholder producto-cover-placeholder">
@@ -84,7 +86,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {p.subtitle && <span className="producto-subtitle font-inter">{p.subtitle}</span>}
           <h1 className="producto-title font-fraunces">{p.title}</h1>
           <p className={`producto-price font-fraunces ${isFree ? 'is-free' : ''}`}>
-            {isFree ? 'Gratis' : formatUSD(p.price)}
+            {isFree ? 'Gratis' : <PriceLabel product={p} />}
           </p>
           {p.price_note && <p className="producto-price-note font-inter">{p.price_note}</p>}
 

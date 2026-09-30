@@ -3,6 +3,9 @@ export interface Product {
   title: string;
   description: string;
   price: number;
+  /** Descuento en porcentaje (0–90). El precio que se cobra es finalPrice(), no `price`. */
+  discount_percent?: number | null;
+  discount_style?: 'default' | 'halloween' | null;
   currency: string;
   category: string;
   subcategory?: string | null;

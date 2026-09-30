@@ -7,6 +7,7 @@ import type { Product } from '@/lib/types';
 import type { CalendarOption } from '@/lib/calendarOptions';
 import { safeStorageName } from '@/lib/storage';
 import { PRODUCT_SUBCATEGORIES } from '@/lib/product-subcategories';
+import { MAX_DISCOUNT_PERCENT, discountPercentOf, finalPrice } from '@/lib/pricing';
 
 const initialState: ProductFormState = { error: null };
 
@@ -21,6 +22,14 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isFree, setIsFree] = useState(product ? product.price === 0 : false);
+  const [priceInput, setPriceInput] = useState(product?.price && product.price > 0 ? String(product.price) : '');
+  const [discountInput, setDiscountInput] = useState(product?.discount_percent ? String(product.discount_percent) : '');
+  const [discountStyle, setDiscountStyle] = useState<'default' | 'halloween'>(
+    product?.discount_style === 'halloween' ? 'halloween' : 'default'
+  );
+  const previewPrice = Number(priceInput) || 0;
+  const previewDiscount = discountPercentOf({ price: previewPrice, discount_percent: Number(discountInput) || 0 });
+  const previewFinal = finalPrice({ price: previewPrice, discount_percent: previewDiscount });
   const [productType, setProductType] = useState<'digital' | 'service'>(
     product?.product_type === 'service' ? 'service' : 'digital'
   );
@@ -223,10 +232,51 @@ export default function ProductForm({ product, calendarOptions = [] }: { product
             {isFree ? (
               <input type="hidden" name="price" value={0} />
             ) : (
-              <label className="admin-price-input">
-                Precio (USD)
-                <input type="number" name="price" min={0} step={0.01} defaultValue={product?.price && product.price > 0 ? product.price : ''} required />
-              </label>
+              <>
+                <label className="admin-price-input">
+                  Precio (USD)
+                  <input
+                    type="number"
+                    name="price"
+                    min={0}
+                    step={0.01}
+                    value={priceInput}
+                    onChange={(e) => setPriceInput(e.target.value)}
+                    required
+                  />
+                </label>
+
+                <div className="admin-discount-box">
+                  <span className="admin-inline-label">Descuento (opcional)</span>
+                  <div className="admin-discount-row">
+                    <label>
+                      Porcentaje (%)
+                      <input
+                        type="number"
+                        name="discount_percent"
+                        min={0}
+                        max={MAX_DISCOUNT_PERCENT}
+                        step={1}
+                        placeholder="0"
+                        value={discountInput}
+                        onChange={(e) => setDiscountInput(e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Estilo de la franja
+                      <select name="discount_style" value={discountStyle} onChange={(e) => setDiscountStyle(e.target.value as 'default' | 'halloween')}>
+                        <option value="default">Normal</option>
+                        <option value="halloween">Halloween 🎃 (telaraña y araña)</option>
+                      </select>
+                    </label>
+                  </div>
+                  <p className="admin-field-hint">
+                    {previewDiscount > 0
+                      ? `Se cobrará USD $${previewFinal} (antes USD $${previewPrice}). La franja "-${previewDiscount}%" aparece sobre la portada en la tienda.`
+                      : 'Déjalo en 0 para no aplicar descuento. Máximo 90%.'}
+                  </p>
+                </div>
+              </>
             )}
 
             {!isFree && productType === 'service' && (

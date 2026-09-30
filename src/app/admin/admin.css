@@ -2005,3 +2005,27 @@
   }
 }
 
+
+/* ---------- Descuento del producto ---------- */
+
+.admin-discount-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px dashed rgba(76, 87, 124, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(239, 198, 161, 0.12);
+}
+
+.admin-discount-row {
+  display: grid;
+  grid-template-columns: minmax(0, 140px) minmax(0, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 560px) {
+  .admin-discount-row {
+    grid-template-columns: 1fr;
+  }
+}

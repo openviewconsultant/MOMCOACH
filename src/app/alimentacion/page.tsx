@@ -9,6 +9,8 @@ import CategoryDigitalShop from '@/components/tienda/CategoryDigitalShop';
 import { buildMetadata } from '@/lib/seo';
 import '@/app/tienda/tienda.css';
 import './alimentacion.css';
+import DiscountBadge from '@/components/ui/DiscountBadge';
+import { finalPrice, hasDiscount } from '@/lib/pricing';
 
 export const metadata = buildMetadata({
   title: 'Alimentación Infantil & BLW | The Mom Coach',
@@ -116,8 +118,10 @@ export default async function AlimentacionPage() {
   const foodServices = dbServices.length > 0 ? dbServices.map((p) => ({
     id: p.id,
     title: p.title,
-    price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
-    priceNumber: p.price,
+    price: p.price === 0 ? 'Gratis' : `USD $${finalPrice(p)}`,
+    priceNumber: finalPrice(p),
+    oldPrice: hasDiscount(p) ? `USD $${p.price}` : null,
+    discount: p,
     calendarId: p.booking_calendar_id,
     tag: p.subtitle || 'Alimentación',
     desc: p.description,
@@ -182,13 +186,14 @@ export default async function AlimentacionPage() {
                 </span>
               )}
               {service.image && (
-                <div style={{ width: '100%', aspectRatio: '16 / 10', borderRadius: '24px 24px 0 0', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 10', borderRadius: '24px 24px 0 0', overflow: 'hidden' }}>
                   <img
                     src={service.image}
                     alt={service.title}
                     loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
+                  {'discount' in service && service.discount && <DiscountBadge product={service.discount} />}
                 </div>
               )}
               <div style={{ padding: '32px 32px 36px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
@@ -203,6 +208,7 @@ export default async function AlimentacionPage() {
                     )}
                   </h3>
                   <p className="font-fraunces" style={{ fontSize: 'clamp(1.55rem, 5vw, 2.2rem)', color: 'var(--color-turquoise)', marginBottom: '16px' }}>
+                    {'oldPrice' in service && service.oldPrice && <span className="dc-old-price" style={{ fontSize: '0.6em' }}>{service.oldPrice}</span>}
                     {service.price}
                   </p>
                   {service.id.startsWith('f-') ? (

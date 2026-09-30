@@ -1,3 +1,4 @@
+import { finalPrice } from '@/lib/pricing';
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { getMercadoPagoClient, getSiteUrl, resolveCheckoutUrl } from '@/lib/mercadopago';
@@ -138,7 +139,7 @@ export async function POST(request: Request) {
   const orderItems = foundProducts.map((product) => ({
     product_id: product.id,
     title: product.title,
-    price: product.price,
+    price: finalPrice(product),
     quantity: requestedQuantities.get(product.id)!,
   }));
   const grossTotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -150,7 +151,7 @@ export async function POST(request: Request) {
     const cartItems = foundProducts.map((p) => ({
       productId: p.id,
       quantity: requestedQuantities.get(p.id)!,
-      price: p.price,
+      price: finalPrice(p),
       category: p.category,
     }));
     const gc = await evaluateGiftCard(supabase, giftCardCode, cartItems);
@@ -246,7 +247,7 @@ export async function POST(request: Request) {
           title: product.title,
           quantity: requestedQuantities.get(product.id)!,
           currency_id: product.currency,
-          unit_price: product.price,
+          unit_price: finalPrice(product),
           type: 'digital' as const,
           picture_url: product.cover_image_url ?? undefined,
         }));

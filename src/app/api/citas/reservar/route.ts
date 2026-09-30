@@ -1,3 +1,4 @@
+import { finalPrice } from '@/lib/pricing';
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { getMercadoPagoClient, getSiteUrl, resolveCheckoutUrl } from '@/lib/mercadopago';
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
 
   const { data: order, error: orderError } = await supabase
     .from('orders')
-    .insert({ buyer_email: email, status: 'pending', total: typedProduct.price })
+    .insert({ buyer_email: email, status: 'pending', total: finalPrice(typedProduct) })
     .select('id')
     .single();
 
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
     order_id: order.id,
     product_id: typedProduct.id,
     title: typedProduct.title,
-    price: typedProduct.price,
+    price: finalPrice(typedProduct),
     quantity: 1,
   });
   if (itemError) {
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
             title: typedProduct.title,
             quantity: 1,
             currency_id: typedProduct.currency,
-            unit_price: typedProduct.price,
+            unit_price: finalPrice(typedProduct),
             type: 'digital',
           },
         ],

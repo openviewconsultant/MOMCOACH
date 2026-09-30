@@ -11,6 +11,8 @@ import BookingModal from '@/components/ui/BookingModal';
 import { formatUSD } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import './category-digital-shop.css';
+import DiscountBadge, { PriceLabel } from '@/components/ui/DiscountBadge';
+import { finalPrice } from '@/lib/pricing';
 
 /**
  * Un producto que se agenda con cita: las asesorías (`product_type: 'service'`)
@@ -81,6 +83,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                   {guide.cover_image_url ? (
                     <span className="shop-mini-image">
                       <img src={guide.cover_image_url} alt={guide.title} loading="lazy" />
+                      <DiscountBadge product={guide} />
                     </span>
                   ) : (
                     <span className="shop-mini-icon" aria-hidden="true">
@@ -93,7 +96,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                   )}
                   <h4 className="font-fraunces">{guide.title}</h4>
                   <div className="shop-mini-footer" onClick={(e) => e.stopPropagation()}>
-                    <span className="shop-mini-price font-inter">USD ${guide.price}</span>
+                    <span className="shop-mini-price font-inter"><PriceLabel product={guide} /></span>
                     {guide.payment_provider === 'hotmart' && guide.hotmart_url ? (
                       <a
                         href={guide.hotmart_url}
@@ -107,7 +110,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
                       <ServiceBookingButton
                         productId={guide.id}
                         title={guide.title}
-                        price={guide.price}
+                        price={finalPrice(guide)}
                         calendarId={guide.booking_calendar_id}
                         buttonText={guide.product_type === 'service' ? 'Solicitar Asesoría' : 'Agendar cita'}
                         className="shop-mini-btn font-inter"
@@ -150,7 +153,7 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <PdfPreviewModal
           productId={previewTarget.item.id}
           productTitle={previewTarget.item.title}
-          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(previewTarget.item.price)}
+          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(finalPrice(previewTarget.item))}
           originRect={previewTarget.rect}
           onClose={() => setPreviewTarget(null)}
           ctaLabel={previewCta(previewTarget.item).label}
@@ -173,8 +176,8 @@ export default function CategoryDigitalShop({ guides, freebies, guidesTitle, gui
         <BookingModal
           productId={bookingTarget.id}
           productTitle={bookingTarget.title}
-          price={bookingTarget.price}
-          priceLabel={formatUSD(bookingTarget.price)}
+          price={finalPrice(bookingTarget)}
+          priceLabel={formatUSD(finalPrice(bookingTarget))}
           calendarId={bookingTarget.booking_calendar_id}
           onClose={() => setBookingTarget(null)}
         />

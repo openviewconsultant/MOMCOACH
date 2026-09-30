@@ -4,6 +4,8 @@ import React, { useEffect, useRef } from 'react';
 import Button from '../ui/Button';
 import type { Product as SupabaseProduct } from '@/lib/types';
 import './sections.css';
+import DiscountBadge from '@/components/ui/DiscountBadge';
+import { finalPrice, hasDiscount } from '@/lib/pricing';
 
 interface ShopProps {
   products?: SupabaseProduct[];
@@ -56,7 +58,9 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
   const products = featuredProducts && featuredProducts.length > 0
     ? featuredProducts.map((p) => ({
         title: p.title,
-        price: p.price === 0 ? 'Gratis' : `USD $${p.price}`,
+        price: p.price === 0 ? 'Gratis' : `USD $${finalPrice(p)}`,
+        oldPrice: hasDiscount(p) ? `USD $${p.price}` : null,
+        discount: p,
         img: p.cover_image_url || '',
       }))
     : fallbackProducts;
@@ -126,7 +130,10 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
               <a href="/tienda" className="shop-card" key={idx}>
                 <div className="shop-card-image">
                   {product.img ? (
-                    <img src={product.img} alt={product.title} loading="lazy" />
+                    <>
+                      <img src={product.img} alt={product.title} loading="lazy" />
+                      {'discount' in product && product.discount && <DiscountBadge product={product.discount} />}
+                    </>
                   ) : (
                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
                       {product.title}
@@ -134,7 +141,10 @@ export default function Shop({ products: featuredProducts }: ShopProps) {
                   )}
                 </div>
                 <h3 className="shop-card-title font-inter">{product.title}</h3>
-                <p className="shop-card-price font-inter">{product.price}</p>
+                <p className="shop-card-price font-inter">
+                  {'oldPrice' in product && product.oldPrice && <span className="dc-old-price">{product.oldPrice}</span>}
+                  {product.price}
+                </p>
               </a>
             ))}
           </div>

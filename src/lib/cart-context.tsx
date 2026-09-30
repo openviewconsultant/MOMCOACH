@@ -1,5 +1,6 @@
 'use client';
 
+import { finalPrice } from '@/lib/pricing';
 import React, { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
 import type { Product } from './types';
 
@@ -100,7 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { id: product.id, title: product.title, price: product.price, quantity: 1 }];
+      return [...prev, { id: product.id, title: product.title, price: finalPrice(product), quantity: 1 }];
     });
     setIsCartOpen(true);
   }, []);

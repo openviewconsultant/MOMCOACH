@@ -34,6 +34,9 @@ export async function saveProductAction(
   const category = (formData.get('category') as string | null)?.trim() || 'Alimentación';
   const subcategory = (formData.get('subcategory') as string | null)?.trim() || null;
   const isPublished = formData.get('is_published') === 'on';
+  const discountRaw = Number(formData.get('discount_percent') || 0);
+  const discountPercent = Number.isFinite(discountRaw) ? Math.min(90, Math.max(0, Math.round(discountRaw))) : 0;
+  const discountStyle = formData.get('discount_style') === 'halloween' ? 'halloween' : 'default';
   const coverImageUrl = (formData.get('cover_image_url') as string | null) || null;
   const filePath = (formData.get('file_path') as string | null) || null;
   const processImageUrl = (formData.get('process_image_url') as string | null) || null;
@@ -73,6 +76,8 @@ export async function saveProductAction(
     title,
     description,
     price,
+    discount_percent: price > 0 ? discountPercent : 0,
+    discount_style: discountStyle,
     category,
     subcategory,
     product_type: productType,

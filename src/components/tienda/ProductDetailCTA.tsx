@@ -5,6 +5,7 @@ import { useCart } from '@/lib/cart-context';
 import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import DownloadModal from '@/components/tienda/DownloadModal';
 import type { Product } from '@/lib/types';
+import { finalPrice } from '@/lib/pricing';
 
 export default function ProductDetailCTA({ product }: { product: Product }) {
   const { addBook, items, openCart } = useCart();
@@ -45,7 +46,7 @@ export default function ProductDetailCTA({ product }: { product: Product }) {
       <ServiceBookingButton
         productId={product.id}
         title={product.title}
-        price={product.price}
+        price={finalPrice(product)}
         calendarId={product.booking_calendar_id}
         buttonText={isService ? 'Solicitar Asesoría' : 'Agendar cita'}
         className="tienda-card-btn font-inter"

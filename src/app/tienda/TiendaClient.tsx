@@ -11,6 +11,8 @@ import ServiceBookingButton from '@/components/ui/ServiceBookingButton';
 import { formatUSD } from '@/lib/format';
 import type { Product as SupabaseProduct } from '@/lib/types';
 import { PRODUCT_SUBCATEGORIES, type ProductSubcategory } from '@/lib/product-subcategories';
+import DiscountBadge, { PriceLabel } from '@/components/ui/DiscountBadge';
+import { finalPrice } from '@/lib/pricing';
 
 type Category = 'Todos' | 'Sueño infantil' | 'Alimentación' | 'Regalo';
 type Subcategory = 'Todas' | ProductSubcategory;
@@ -53,11 +55,12 @@ function SupabaseProductCard({
             <span>{product.title}</span>
           </div>
         )}
+        <DiscountBadge product={product} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onClick={(e) => e.stopPropagation()}>
         <h3 className="tienda-card-title font-inter">{product.title}</h3>
         <p className="tienda-card-price font-inter">
-          {isGiftCard ? 'Monto a elección' : isFree ? 'Gratis' : formatUSD(product.price)}
+          {isGiftCard ? 'Monto a elección' : isFree ? 'Gratis' : <PriceLabel product={product} />}
         </p>
         {isPreviewable && (
           <button
@@ -97,7 +100,7 @@ function SupabaseProductCard({
           <ServiceBookingButton
             productId={product.id}
             title={product.title}
-            price={product.price}
+            price={finalPrice(product)}
             calendarId={product.booking_calendar_id}
             buttonText={isService ? 'Solicitar Asesoría' : 'Agendar cita'}
             className="tienda-card-btn font-inter"
@@ -217,7 +220,7 @@ export default function TiendaClient({ products }: { products: SupabaseProduct[]
         <PdfPreviewModal
           productId={previewTarget.item.id}
           productTitle={previewTarget.item.title}
-          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(previewTarget.item.price)}
+          badgeLabel={previewTarget.item.price === 0 ? 'Gratis' : formatUSD(finalPrice(previewTarget.item))}
           originRect={previewTarget.rect}
           onClose={() => setPreviewTarget(null)}
           ctaLabel={previewCta(previewTarget.item).label}
