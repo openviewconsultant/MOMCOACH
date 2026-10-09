@@ -106,7 +106,7 @@ export function PriceLabel({ product }: { product: DiscountProduct }) {
   if (!hasDiscount(product)) return <>{formatUSD(product.price)}</>;
   return (
     <>
-      <span className="dc-old-price">{formatUSD(product.price)}</span> {formatUSD(finalPrice(product))}
+      <span className="dc-old-price">{formatUSD(product.price)}</span> <span className="dc-final">{formatUSD(finalPrice(product))}</span>
     </>
   );
 }
