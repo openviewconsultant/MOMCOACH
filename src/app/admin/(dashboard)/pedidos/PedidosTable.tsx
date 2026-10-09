@@ -142,7 +142,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
         <p className="admin-empty">No hay pedidos que coincidan con el filtro.</p>
       ) : (
         <div className="admin-table-wrap">
-          <table className="admin-table">
+          <table className="admin-table admin-table-cards">
             <thead>
               <tr>
                 <th style={{ width: 36 }}>
@@ -169,7 +169,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                 const detail = friendlyStatusDetail(order.status_detail);
                 return (
                   <tr key={order.id} className={selected.has(order.id) ? 'is-selected' : undefined}>
-                    <td>
+                    <td data-label="">
                       <input
                         type="checkbox"
                         checked={selected.has(order.id)}
@@ -177,7 +177,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                         aria-label={`Seleccionar pedido ${order.id}`}
                       />
                     </td>
-                    <td>
+                    <td data-label="ID">
                       <code
                         title={order.id}
                         style={{ fontSize: '0.72rem', color: 'var(--foreground)', opacity: 0.6, cursor: 'help' }}
@@ -185,11 +185,11 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                         {order.id.slice(0, 8)}
                       </code>
                     </td>
-                    <td>{formatDateTimeCO(order.created_at)}</td>
-                    <td>{order.buyer_email}</td>
-                    <td>{order.buyerPhone || '—'}</td>
-                    <td className="admin-cell-wrap">{order.productTitles || '—'}</td>
-                    <td className="admin-cell-wrap">
+                    <td data-label="Fecha">{formatDateTimeCO(order.created_at)}</td>
+                    <td data-label="Comprador">{order.buyer_email}</td>
+                    <td data-label="Celular">{order.buyerPhone || '—'}</td>
+                    <td data-label="Producto(s)" className="admin-cell-wrap">{order.productTitles || '—'}</td>
+                    <td data-label="Cita" className="admin-cell-wrap">
                       {order.bookingStart
                         ? formatDateTimeCO(order.bookingStart, {
                             dateStyle: 'medium',
@@ -198,8 +198,8 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                           })
                         : '—'}
                     </td>
-                    <td>{formatUSD(order.total)}</td>
-                    <td className="admin-cell-wrap">
+                    <td data-label="Total">{formatUSD(order.total)}</td>
+                    <td data-label="Estado" className="admin-cell-wrap">
                       <span className={`admin-badge ${BADGE_CLASS[order.status]}`}>
                         {STATUS_LABEL[order.status]}
                       </span>
@@ -208,7 +208,7 @@ export default function PedidosTable({ orders }: { orders: OrderRow[] }) {
                       )}
                       {order.status === 'pending' && <ConfirmPaymentButton orderId={order.id} />}
                     </td>
-                    <td>{order.emailSent ? 'Sí' : 'No'}</td>
+                    <td data-label="Correo enviado">{order.emailSent ? 'Sí' : 'No'}</td>
                   </tr>
                 );
               })}

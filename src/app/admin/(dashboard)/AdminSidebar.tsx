@@ -91,11 +91,20 @@ const navItems = [
   },
 ];
 
+const BOTTOM_NAV_HREFS = ['/admin/productos', '/admin/pedidos', '/admin/calendario'];
+
 export default function AdminSidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const bottomItems = BOTTOM_NAV_HREFS.map((href) => navItems.find((item) => item.href === href)!).filter(Boolean);
+  const bottomShort: Record<string, string> = {
+    '/admin/productos': 'Productos',
+    '/admin/pedidos': 'Pedidos',
+    '/admin/calendario': 'Calendario',
+  };
 
   return (
+    <>
     <aside className="admin-sidebar">
       <div className="admin-sidebar-top-row">
         <div className="admin-sidebar-brand">
@@ -137,7 +146,9 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
         <div className="admin-sidebar-footer">
           <Link href="/" className="admin-sidebar-link admin-sidebar-view-site" onClick={() => setMenuOpen(false)}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 12h18M3 6h18M3 18h18" />
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
             Ver el sitio
           </Link>
@@ -158,5 +169,36 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
         </div>
       </div>
     </aside>
+
+    <nav className="admin-bottom-nav" aria-label="Navegación principal">
+      {bottomItems.map((item) => {
+        const active = !menuOpen && pathname?.startsWith(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`admin-bottom-link ${active ? 'active' : ''}`}
+            onClick={() => setMenuOpen(false)}
+          >
+            {item.icon}
+            <span>{bottomShort[item.href]}</span>
+          </Link>
+        );
+      })}
+      <button
+        type="button"
+        className={`admin-bottom-link ${menuOpen ? 'active' : ''}`}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((v) => !v)}
+      >
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="5" cy="12" r="1.5" />
+          <circle cx="12" cy="12" r="1.5" />
+          <circle cx="19" cy="12" r="1.5" />
+        </svg>
+        <span>Más</span>
+      </button>
+    </nav>
+    </>
   );
 }

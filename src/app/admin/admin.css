@@ -2032,3 +2032,494 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- Barra de filtros de productos ---------- */
+
+.admin-filterbar {
+  background: white;
+  border-radius: 16px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-filterbar-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.admin-filter-search {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.admin-filter-search span {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.admin-filter-search input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+  background: white;
+}
+
+.admin-filter-search input:focus,
+.admin-filter-select:focus {
+  border-color: var(--color-turquoise);
+  box-shadow: 0 0 0 3px rgba(113, 176, 180, 0.18);
+}
+
+.admin-filter-select {
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.88rem;
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+  max-width: 100%;
+}
+
+.admin-filter-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--foreground);
+}
+
+.admin-filter-meta > span {
+  opacity: 0.75;
+}
+
+.admin-filter-reset {
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--color-blue-gray);
+  font-weight: 500;
+}
+
+/* ---------- Navegación inferior (solo celular/tablet) ---------- */
+
+.admin-bottom-nav {
+  display: none;
+}
+
+/* =====================================================================
+   ADMIN EN CELULAR / TABLET (≤ 900px)
+   Navegación abajo (al alcance del pulgar), botón flotante para crear,
+   cabecera compacta, filtros en cuadrícula y tarjetas/tablas legibles.
+   ===================================================================== */
+@media (max-width: 900px) {
+  /* Barra superior fija y compacta */
+  .admin-sidebar {
+    padding: 10px 16px;
+  }
+
+  .admin-sidebar-top-row {
+    height: 40px;
+  }
+
+  .admin-sidebar-logo {
+    font-size: 1.05rem;
+  }
+
+  .admin-mobile-menu-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* El menú se abre como hoja a pantalla completa, entre la barra y la navegación inferior */
+  .admin-sidebar-menu.is-open {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    margin: 0;
+    padding: 12px 16px 20px;
+    background: white;
+    overflow-y: auto;
+    z-index: 50;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .admin-sidebar-link {
+    min-height: 52px;
+    font-size: 1rem;
+    padding: 12px 14px;
+  }
+
+  .admin-signout-btn {
+    min-height: 48px;
+  }
+
+  .admin-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 55;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .admin-bottom-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 64px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--color-blue-gray);
+    opacity: 0.7;
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .admin-bottom-link.active {
+    color: var(--color-turquoise);
+    opacity: 1;
+  }
+
+  .admin-bottom-link.active svg {
+    stroke-width: 2.4;
+  }
+
+  /* Contenido: deja espacio para la navegación inferior y el botón flotante */
+  .admin-content {
+    padding: 16px 16px calc(150px + env(safe-area-inset-bottom));
+  }
+
+  .admin-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .admin-page-header {
+    margin-bottom: 16px;
+    gap: 8px;
+  }
+
+  /* El "+ Nuevo ..." pasa a botón flotante, siempre a la mano */
+  .admin-page-header .admin-new-btn {
+    position: fixed;
+    right: 16px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    z-index: 45;
+    padding: 14px 22px;
+    font-size: 0.95rem;
+    box-shadow: 0 10px 24px rgba(76, 87, 124, 0.35);
+  }
+
+  /* La cabecera de Productos ya no se queda pegada ocupando media pantalla */
+  .admin-products-sticky-top,
+  .analytics-sticky-top {
+    position: static;
+    margin: 0 0 16px;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .admin-stats,
+  .admin-products-sticky-top .admin-stats {
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .admin-stat-card,
+  .admin-products-sticky-top .admin-stat-card {
+    padding: 10px 12px;
+  }
+
+  .admin-stat-label {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+  }
+
+  .admin-stat-value,
+  .admin-products-sticky-top .admin-stat-value {
+    font-size: 1.25rem;
+  }
+
+  /* Filtros: buscador arriba y selectores en dos columnas, todos del mismo tamaño */
+  .admin-filterbar {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .admin-filterbar-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .admin-filter-search {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .admin-filter-search input,
+  .admin-filter-select {
+    min-height: 44px;
+    font-size: 16px; /* evita el zoom automático de iOS al enfocar */
+  }
+
+  .admin-filter-select {
+    width: 100%;
+    min-width: 0;
+    text-overflow: ellipsis;
+  }
+
+  .admin-filter-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-filter-reset {
+    min-height: 36px;
+    padding: 6px 14px;
+  }
+
+  /* Botones de acción más grandes para el dedo */
+  .admin-row-actions button,
+  .admin-row-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* Formularios */
+  .admin-form input:not([type='checkbox']):not([type='radio']):not([type='file']),
+  .admin-form select,
+  .admin-form textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .admin-form-v2 .admin-form-section {
+    padding: 16px;
+  }
+
+  .admin-form-v2 .admin-submit-btn {
+    position: sticky;
+    bottom: calc(76px + env(safe-area-inset-bottom));
+    z-index: 20;
+    width: 100%;
+    min-height: 52px;
+    box-shadow: 0 10px 24px rgba(205, 128, 123, 0.4);
+  }
+}
+
+/* =====================================================================
+   PRODUCTOS EN CELULAR (≤ 640px): lista compacta (miniatura + datos)
+   ===================================================================== */
+@media (max-width: 640px) {
+  .admin-product-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-product-card {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    flex-direction: row;
+    border-radius: 14px;
+  }
+
+  .admin-product-card:hover {
+    transform: none;
+  }
+
+  .admin-product-card-image {
+    width: 104px;
+    height: 100%;
+    min-height: 132px;
+    aspect-ratio: auto;
+  }
+
+  .admin-product-card-image span {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+
+  /* Estado (Publicado / Borrador) abajo a la izquierda de la miniatura */
+  .admin-product-card-badges {
+    top: auto;
+    bottom: 6px;
+    left: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .admin-product-card-badges .admin-badge {
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    margin: 0;
+  }
+
+  /* En la miniatura solo la franja; sin telaraña ni araña */
+  .admin-product-card-image .dc-web,
+  .admin-product-card-image .dc-spider {
+    display: none;
+  }
+
+  .admin-product-card-body {
+    padding: 10px 12px 12px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .admin-product-card-title {
+    font-size: 0.92rem;
+    min-height: 0;
+  }
+
+  .admin-product-card-meta {
+    font-size: 0.8rem;
+  }
+}
+
+/* =====================================================================
+   PEDIDOS EN CELULAR (≤ 700px): cada fila de la tabla pasa a ser una tarjeta
+   ===================================================================== */
+@media (max-width: 700px) {
+  .admin-table-wrap:has(.admin-table-cards) {
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .admin-table-cards,
+  .admin-table-cards tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table-cards thead {
+    display: none;
+  }
+
+  .admin-table-cards tbody tr {
+    display: block;
+    position: relative;
+    background: white;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    padding: 8px 14px 6px;
+    margin-bottom: 10px;
+  }
+
+  .admin-table-cards tbody tr:hover {
+    background: white;
+  }
+
+  .admin-table-cards tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: normal;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .admin-table-cards tbody td:nth-child(2) {
+    padding-right: 40px; /* espacio para la casilla de selección */
+  }
+
+  .admin-table-cards tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .admin-table-cards tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-blue-gray);
+    opacity: 0.7;
+    text-align: left;
+  }
+
+  /* La casilla de selección va como esquina de la tarjeta, sin etiqueta */
+  .admin-table-cards tbody td:first-child {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    padding: 8px;
+    border: none;
+  }
+
+  .admin-table-cards tbody td:first-child::before {
+    display: none;
+  }
+
+  .admin-table-cards input[type='checkbox'] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .admin-table-subtext {
+    max-width: none;
+  }
+
+  .admin-toolbar-search {
+    min-width: 0;
+    flex-basis: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .admin-toolbar-pill {
+    min-height: 40px;
+  }
+}

@@ -151,66 +151,26 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
         </div>
 
         {/* Filter Toolbar */}
-        <div
-          style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '14px 20px',
-            boxShadow: 'var(--shadow-sm)',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '16px',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flex: 1, minWidth: '280px' }}>
-            {/* Search Input */}
-            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-              <span
-                style={{
-                  position: 'absolute',
-                  left: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  opacity: 0.5,
-                  fontSize: '0.9rem',
-                }}
-              >
-                🔍
-              </span>
+        <div className="admin-filterbar">
+          <div className="admin-filterbar-fields">
+            <div className="admin-filter-search">
+              <span aria-hidden="true">🔍</span>
               <input
-                type="text"
+                type="search"
                 placeholder="Buscar por título..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '9px 12px 9px 36px',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(0,0,0,0.12)',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                }}
+                aria-label="Buscar producto por título"
               />
             </div>
 
-            {/* Category Filter */}
             <select
+              className="admin-filter-select"
+              aria-label="Categoría"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              style={{
-                padding: '9px 14px',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.12)',
-                fontSize: '0.88rem',
-                background: 'white',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
             >
-              <option value="all">Todas las categorías</option>
+              <option value="all">Categorías</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -218,21 +178,13 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
               ))}
             </select>
 
-            {/* Subcategory Filter */}
             <select
+              className="admin-filter-select"
+              aria-label="Subcategoría"
               value={subcategoryFilter}
               onChange={(e) => setSubcategoryFilter(e.target.value)}
-              style={{
-                padding: '9px 14px',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.12)',
-                fontSize: '0.88rem',
-                background: 'white',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
             >
-              <option value="all">Todas las subcategorías</option>
+              <option value="all">Subcategorías</option>
               {SUBCATEGORIES.map((sub) => (
                 <option key={sub} value={sub}>
                   {sub}
@@ -240,65 +192,35 @@ export default function AdminProductsList({ products }: AdminProductsListProps) 
               ))}
             </select>
 
-            {/* Product Type / Modality Filter */}
             <select
+              className="admin-filter-select"
+              aria-label="Modalidad"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              style={{
-                padding: '9px 14px',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.12)',
-                fontSize: '0.88rem',
-                background: 'white',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
             >
-              <option value="all">Todas las modalidades</option>
+              <option value="all">Modalidades</option>
               <option value="digital">Productos Digitales (Guías, Recetarios)</option>
               <option value="service">Servicios / Asesorías</option>
             </select>
 
-            {/* Status Filter */}
             <select
+              className="admin-filter-select"
+              aria-label="Estado"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              style={{
-                padding: '9px 14px',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.12)',
-                fontSize: '0.88rem',
-                background: 'white',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
             >
-              <option value="all">Todos los estados</option>
+              <option value="all">Estados</option>
               <option value="published">Publicados</option>
               <option value="draft">Borradores / Ocultos</option>
             </select>
           </div>
 
-          {/* Counter and Reset */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--foreground)', opacity: 0.75 }}>
+          <div className="admin-filter-meta">
+            <span>
               Mostrando <strong>{filteredProducts.length}</strong> de <strong>{products.length}</strong>
             </span>
             {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={resetFilters}
-                style={{
-                  background: 'rgba(0,0,0,0.06)',
-                  border: 'none',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  cursor: 'pointer',
-                  color: 'var(--color-blue-gray)',
-                  fontWeight: 500,
-                }}
-              >
+              <button type="button" className="admin-filter-reset" onClick={resetFilters}>
                 Limpiar filtros
               </button>
             )}
